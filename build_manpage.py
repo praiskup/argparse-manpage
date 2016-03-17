@@ -16,17 +16,22 @@ class build_manpage(Command):
     user_options = [
         ('output=', 'O', 'output file'),
         ('parser=', None, 'module path to optparser (e.g. mymod:func'),
+        ('seealso=', None, 'list of manpages to put into the SEE ALSO section (e.g. bash:1)')
         ]
 
     def initialize_options(self):
         self.output = None
         self.parser = None
+        self.seealso = None
 
     def finalize_options(self):
         if self.output is None:
             raise DistutilsOptionError('\'output\' option is required')
         if self.parser is None:
             raise DistutilsOptionError('\'parser\' option is required')
+
+        self.ensure_string_list('seealso')
+
         mod_name, func_name = self.parser.split(':')
         fromlist = mod_name.split('.')
         try:
@@ -43,10 +48,11 @@ class build_manpage(Command):
         return txt.replace('-', '\\-')
 
     def _write_header(self):
+        version = self.distribution.get_version()
         appname = self.distribution.get_name()
         ret = []
-        ret.append('.TH %s 1 %s\n' % (self._markup(appname),
-                                      self._today.strftime('%Y\\-%m\\-%d')))
+        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(appname),
+                                      self._today.strftime('%Y\\-%m\\-%d'), appname, version))
         description = self.distribution.get_description()
         if description:
             name = self._markup('%s - %s' % (self._markup(appname),
@@ -69,6 +75,21 @@ class build_manpage(Command):
         ret.append(self._parser.format_option_help())
         return ''.join(ret)
 
+    def _write_seealso(self):
+        ret = []
+        if self.seealso is not None:
+            ret.append('.SH "SEE ALSO"\n')
+
+            for i in self.seealso:
+                name, sect = i.split(":")
+
+                if len(ret) > 1:
+                    ret.append(',\n')
+
+                ret.append('.BR %s (%s)' % (name, sect))
+
+        return ''.join(ret)
+
     def _write_footer(self):
         ret = []
         appname = self.distribution.get_name()
@@ -88,6 +109,7 @@ class build_manpage(Command):
         manpage.append(self._write_header())
         manpage.append(self._write_options())
         manpage.append(self._write_footer())
+        manpage.append(self._write_seealso())
         stream = open(self.output, 'w')
         stream.write(''.join(manpage))
         stream.close()
