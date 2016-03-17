@@ -1,5 +1,3 @@
-**This is work in progress. Don't use it yet.**
-
 This repository contains a command for `setup.py` to build
 a manpage for your project.
 
@@ -11,11 +9,8 @@ script.
 
 # Usage
 
-To install the package run
-
-```bash
-pip install build_manpage
-```
+Download `build_manpage.py` and place it somewhere where Python can
+find it.
 
 In your `setup.py` add:
 
@@ -28,6 +23,18 @@ setup(
   cmdclass={'build_manpage': build_manpage}
 )
 ```
+
+In your `setup.cfg` add:
+
+```
+[build_manpage]
+output=data/mymanpage.1
+parser=myapp.somemod:get_parser
+```
+
+where `output` is the destination path for the generated
+manpage and `parser` is an import path pointing to a optparser
+instance or a function returning such an instance.
 
 Then run `setup.py build_manpage` to build a manpage for
 your project.
