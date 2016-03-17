@@ -39,6 +39,11 @@ instance or a function returning such an instance.
 Then run `setup.py build_manpage` to build a manpage for
 your project.
 
+## Limitations
+
+- Works with optparse only (no argparse, yet).
+- No Python 3 support (yet).
+
 
 # License
 
