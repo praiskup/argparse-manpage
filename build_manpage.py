@@ -3,10 +3,12 @@
 """build_manpage command -- Generate man page from setup()"""
 
 import datetime
-from distutils.command.build import build
-from distutils.core import Command
-from distutils.errors import DistutilsOptionError
+import os
+import sys
 import optparse
+from distutils.errors import DistutilsOptionError
+
+from setuptools import Command
 
 
 class build_manpage(Command):
@@ -35,6 +37,9 @@ class build_manpage(Command):
         mod_name, func_name = self.parser.split(':')
         fromlist = mod_name.split('.')
         try:
+            print("##################### PATH")
+            print(sys.path)
+            print(os.getcwd())
             mod = __import__(mod_name, fromlist=fromlist)
             self._parser = getattr(mod, func_name)()
         except ImportError as err:
@@ -105,6 +110,7 @@ class build_manpage(Command):
         return ''.join(ret)
 
     def run(self):
+        print('Running build_manpage')
         manpage = []
         manpage.append(self._write_header())
         manpage.append(self._write_options())
@@ -144,6 +150,3 @@ class ManPageFormatter(optparse.HelpFormatter):
             help_text = '%s\n' % self._markup(self.expand_default(option))
             result.append(help_text)
         return ''.join(result)
-
-
-build.sub_commands.append(('build_manpage', None))
