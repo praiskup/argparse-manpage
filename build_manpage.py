@@ -37,9 +37,6 @@ class build_manpage(Command):
         mod_name, func_name = self.parser.split(':')
         fromlist = mod_name.split('.')
         try:
-            print("##################### PATH")
-            print(sys.path)
-            print(os.getcwd())
             mod = __import__(mod_name, fromlist=fromlist)
             self._parser = getattr(mod, func_name)()
         except ImportError as err:
