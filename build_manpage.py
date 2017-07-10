@@ -107,7 +107,6 @@ class build_manpage(Command):
         return ''.join(ret)
 
     def run(self):
-        print('Running build_manpage')
         manpage = []
         manpage.append(self._write_header())
         manpage.append(self._write_options())
