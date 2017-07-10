@@ -18,6 +18,8 @@ class build_manpage(Command):
     user_options = [
         ('output=', 'O', 'output file'),
         ('parser=', None, 'module path to optparser (e.g. mymod:func'),
+        ('parser_file=', None, 'file to the parser module'),
+
         ('seealso=', None, 'list of manpages to put into the SEE ALSO section (e.g. bash:1)')
         ]
 
@@ -25,6 +27,7 @@ class build_manpage(Command):
         self.output = None
         self.parser = None
         self.seealso = None
+        self.parser_file = None
 
     def finalize_options(self):
         if self.output is None:
@@ -36,11 +39,28 @@ class build_manpage(Command):
 
         mod_name, func_name = self.parser.split(':')
         fromlist = mod_name.split('.')
+
         try:
-            mod = __import__(mod_name, fromlist=fromlist)
+
+            if self.parser_file:
+                #
+                # Alternative method to load the module. We use the path to the module file (if the user provide it).
+                # This beacuse, if the module uses namespaces, the original method does not work
+                #
+                # inspired from https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
+                #
+                import importlib.util
+                spec = importlib.util.spec_from_file_location(mod_name, self.parser_file)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+            else:
+                mod = __import__(mod_name, fromlist=fromlist)
+
             self._parser = getattr(mod, func_name)()
+
         except ImportError as err:
             raise
+
         self._parser.formatter = ManPageFormatter()
         self._parser.formatter.set_parser(self._parser)
         self.announce('Writing man page %s' % self.output)
