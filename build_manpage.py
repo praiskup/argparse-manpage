@@ -17,6 +17,90 @@ def get_parser_from_file(filename, objname):
     return filedict[objname]
 
 
+class ManPageWriter(object):
+    _parser = None
+    _command = None
+
+    def __init__(self, parser, command):
+        self._parser = parser
+        self.description = command.description
+        self.distribution = command.distribution
+        self._today = datetime.date.today()
+
+        self._parser.formatter = ManPageFormatter()
+        self._parser.formatter.set_parser(self._parser)
+
+    def _markup(self, txt):
+        return txt.replace('-', '\\-')
+
+    def _write_header(self):
+        version = self.distribution.get_version()
+        appname = self.distribution.get_name()
+        ret = []
+        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(appname),
+                                      self._today.strftime('%Y\\-%m\\-%d'), appname, version))
+        description = self.distribution.get_description()
+        if description:
+            name = self._markup('%s - %s' % (self._markup(appname),
+                                             description.splitlines()[0]))
+        else:
+            name = self._markup(appname)
+        ret.append('.SH NAME\n%s\n' % name)
+        synopsis = self._parser.format_usage()
+        if synopsis:
+            synopsis = synopsis.replace('%s ' % appname, '')
+            ret.append('.SH SYNOPSIS\n.B %s\n%s\n' % (self._markup(appname),
+                                                      synopsis))
+        long_desc = self.distribution.get_long_description()
+        if long_desc:
+            ret.append('.SH DESCRIPTION\n%s\n' % self._markup(long_desc))
+        return ''.join(ret)
+
+    def _write_options(self):
+        ret = ['.SH OPTIONS\n']
+        ret.append(self._parser.format_help())
+        return ''.join(ret)
+
+    def _write_seealso(self, text):
+        ret = []
+        ret.append('.SH "SEE ALSO"\n')
+
+        for i in text:
+            name, sect = i.split(":")
+
+            if len(ret) > 1:
+                ret.append(',\n')
+
+            ret.append('.BR %s (%s)' % (name, sect))
+
+        return ''.join(ret)
+
+    def _write_footer(self):
+        ret = []
+        appname = self.distribution.get_name()
+        author = '%s <%s>' % (self.distribution.get_author(),
+                              self.distribution.get_author_email())
+        ret.append(('.SH AUTHORS\n.B %s\nwas written by %s.\n'
+                    % (self._markup(appname), self._markup(author))))
+        homepage = self.distribution.get_url()
+        ret.append(('.SH DISTRIBUTION\nThe latest version of %s may '
+                    'be downloaded from\n'
+                    '.UR %s\n.UE\n'
+                    % (self._markup(appname), self._markup(homepage),)))
+        return ''.join(ret)
+
+    def write(self, filename, seealso=None):
+        manpage = []
+        manpage.append(self._write_header())
+        manpage.append(self._write_options())
+        manpage.append(self._write_footer())
+        if seealso:
+            manpage.append(self._write_seealso(seealso))
+        stream = open(filename, 'w')
+        stream.write(''.join(manpage))
+        stream.close()
+
+
 class build_manpage(Command):
 
     description = 'Generate man page from setup().'
@@ -74,82 +158,13 @@ class build_manpage(Command):
             filename, objname = self.file_and_object.split(':')
             self._parser = get_parser_from_file(filename, objname)
         else:
-            self._parser = get_parser_from_module()
+            self._parser = self.get_parser_from_module()
 
-        self._parser.formatter = ManPageFormatter()
-        self._parser.formatter.set_parser(self._parser)
-        self.announce('Writing man page %s' % self.output)
-        self._today = datetime.date.today()
-
-    def _markup(self, txt):
-        return txt.replace('-', '\\-')
-
-    def _write_header(self):
-        version = self.distribution.get_version()
-        appname = self.distribution.get_name()
-        ret = []
-        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(appname),
-                                      self._today.strftime('%Y\\-%m\\-%d'), appname, version))
-        description = self.distribution.get_description()
-        if description:
-            name = self._markup('%s - %s' % (self._markup(appname),
-                                             description.splitlines()[0]))
-        else:
-            name = self._markup(appname)
-        ret.append('.SH NAME\n%s\n' % name)
-        synopsis = self._parser.format_usage()
-        if synopsis:
-            synopsis = synopsis.replace('%s ' % appname, '')
-            ret.append('.SH SYNOPSIS\n.B %s\n%s\n' % (self._markup(appname),
-                                                      synopsis))
-        long_desc = self.distribution.get_long_description()
-        if long_desc:
-            ret.append('.SH DESCRIPTION\n%s\n' % self._markup(long_desc))
-        return ''.join(ret)
-
-    def _write_options(self):
-        ret = ['.SH OPTIONS\n']
-        ret.append(self._parser.format_help())
-        return ''.join(ret)
-
-    def _write_seealso(self):
-        ret = []
-        if self.seealso is not None:
-            ret.append('.SH "SEE ALSO"\n')
-
-            for i in self.seealso:
-                name, sect = i.split(":")
-
-                if len(ret) > 1:
-                    ret.append(',\n')
-
-                ret.append('.BR %s (%s)' % (name, sect))
-
-        return ''.join(ret)
-
-    def _write_footer(self):
-        ret = []
-        appname = self.distribution.get_name()
-        author = '%s <%s>' % (self.distribution.get_author(),
-                              self.distribution.get_author_email())
-        ret.append(('.SH AUTHORS\n.B %s\nwas written by %s.\n'
-                    % (self._markup(appname), self._markup(author))))
-        homepage = self.distribution.get_url()
-        ret.append(('.SH DISTRIBUTION\nThe latest version of %s may '
-                    'be downloaded from\n'
-                    '.UR %s\n.UE\n'
-                    % (self._markup(appname), self._markup(homepage),)))
-        return ''.join(ret)
 
     def run(self):
-        manpage = []
-        manpage.append(self._write_header())
-        manpage.append(self._write_options())
-        manpage.append(self._write_footer())
-        manpage.append(self._write_seealso())
-        stream = open(self.output, 'w')
-        stream.write(''.join(manpage))
-        stream.close()
+        self.announce('Writing man page %s' % self.output)
+        mpw = ManPageWriter(self._parser, self)
+        mpw.write(self.output, seealso=self.seealso)
 
 
 class ManPageFormatter(optparse.HelpFormatter):
