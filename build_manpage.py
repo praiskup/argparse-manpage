@@ -65,8 +65,7 @@ class ManPageWriter(object):
                                       self._today.strftime('%Y\\-%m\\-%d'), appname, version))
         description = self.distribution.get_description()
         if description:
-            name = self._markup('%s - %s' % (self._markup(appname),
-                                             description.splitlines()[0]))
+            name = self._markup('%s - %s' % (appname, description.splitlines()[0]))
         else:
             name = self._markup(appname)
         ret.append('.SH NAME\n%s\n' % name)
