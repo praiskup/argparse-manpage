@@ -3,13 +3,10 @@
 """build_manpage command -- Generate man page from setup()"""
 
 import datetime
-import os
-import sys
 import optparse
+
+from distutils.core import Command
 from distutils.errors import DistutilsOptionError
-
-from setuptools import Command
-
 
 def get_parser_from_file(filename, objname):
     from runpy import run_path
