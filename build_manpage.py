@@ -11,6 +11,12 @@ from distutils.errors import DistutilsOptionError
 from setuptools import Command
 
 
+def get_parser_from_file(filename, objname):
+    from runpy import run_path
+    filedict = run_path(filename)
+    return filedict[objname]
+
+
 class build_manpage(Command):
 
     description = 'Generate man page from setup().'
@@ -19,6 +25,7 @@ class build_manpage(Command):
         ('output=', 'O', 'output file'),
         ('parser=', None, 'module path to optparser (e.g. mymod:func'),
         ('parser-file=', None, 'file to the parser module'),
+        ('file-and-object=', None, 'import parser object from file, e.g. "bin/blah.py:fooparser"'),
         ('seealso=', None, 'list of manpages to put into the SEE ALSO section (e.g. bash:1)')
         ]
 
@@ -27,20 +34,13 @@ class build_manpage(Command):
         self.parser = None
         self.seealso = None
         self.parser_file = None
+        self.file_and_object = None
 
-    def finalize_options(self):
-        if self.output is None:
-            raise DistutilsOptionError('\'output\' option is required')
-        if self.parser is None:
-            raise DistutilsOptionError('\'parser\' option is required')
-
-        self.ensure_string_list('seealso')
-
-        mod_name, func_name = self.parser.split(':')
+    def get_parser_from_module(self):
         fromlist = mod_name.split('.')
+        mod_name, func_name = self.parser.split(':')
 
         try:
-
             if self.parser_file:
                 #
                 # Alternative method to load the module. We use the path to the module file (if the user provide it).
@@ -48,6 +48,8 @@ class build_manpage(Command):
                 #
                 # inspired from https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
                 #
+                # praiskup: this is not working for python2, and is pretty
+                # hacky.  Kept for compat option parser-file..
                 import importlib.util
                 spec = importlib.util.spec_from_file_location(mod_name, self.parser_file)
                 mod = importlib.util.module_from_spec(spec)
@@ -55,10 +57,24 @@ class build_manpage(Command):
             else:
                 mod = __import__(mod_name, fromlist=fromlist)
 
-            self._parser = getattr(mod, func_name)()
+            return getattr(mod, func_name)()
 
         except ImportError as err:
             raise
+
+    def finalize_options(self):
+        if self.output is None:
+            raise DistutilsOptionError('\'output\' option is required')
+        if self.parser is None and self.file_and_object is None:
+            raise DistutilsOptionError('\'parser\' or \'file-and-object\' option is required')
+
+        self.ensure_string_list('seealso')
+
+        if self.file_and_object:
+            filename, objname = self.file_and_object.split(':')
+            self._parser = get_parser_from_file(filename, objname)
+        else:
+            self._parser = get_parser_from_module()
 
         self._parser.formatter = ManPageFormatter()
         self._parser.formatter.set_parser(self._parser)
