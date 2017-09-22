@@ -44,3 +44,12 @@ class build_manpages(Command):
             parser = get_parser_from_file(data['file'], data['object'])
             mw = ManPageWriter(parser, self)
             mw.write(page)
+
+
+def get_build_py(command):
+    class build_py(command):
+        def run(self):
+            self.run_command('build_manpages')
+            command.run(self)
+
+    return build_py
