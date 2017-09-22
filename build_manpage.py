@@ -5,6 +5,7 @@
 import os
 import datetime
 import optparse
+import argparse
 
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
@@ -19,6 +20,7 @@ def get_parser_from_file(filename, objname):
 class ManPageWriter(object):
     _parser = None
     _command = None
+    _type = None
 
     def __init__(self, parser, command):
         self._parser = parser
@@ -28,6 +30,9 @@ class ManPageWriter(object):
 
         self._parser.formatter = ManPageFormatter()
         self._parser.formatter.set_parser(self._parser)
+
+        if isinstance(parser, argparse.ArgumentParser):
+            self._type = 'argparse'
 
     def _markup(self, txt):
         return txt.replace('-', '\\-')
@@ -55,9 +60,31 @@ class ManPageWriter(object):
             ret.append('.SH DESCRIPTION\n%s\n' % self._markup(long_desc))
         return ''.join(ret)
 
-    def _write_options(self):
-        ret = ['.SH OPTIONS\n']
-        ret.append(self._parser.format_help())
+    def _write_options(self, action_name=None, parser=None):
+        if not parser:
+            parser = self._parser
+
+        if not action_name:
+            ret = ['.SH OPTIONS\n']
+        else:
+            ret = ['.SH OPTIONS ' + action_name.upper() + '\n']
+
+        ret.append(parser.format_help())
+        if self._type != 'argparse':
+            return ''.join(ret)
+
+        subparsers_actions = [
+            action for action in parser._actions
+                if isinstance(action, argparse._SubParsersAction)]
+
+        for subparser_action in subparsers_actions:
+            for name, obj in subparser_action.choices.items():
+                if action_name:
+                    an = action_name + " " + name
+                else:
+                    an = name
+                ret.append(self._write_options(an, obj))
+
         return ''.join(ret)
 
     def _write_seealso(self, text):
