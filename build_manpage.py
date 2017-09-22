@@ -2,6 +2,7 @@
 
 """build_manpage command -- Generate man page from setup()"""
 
+import os
 import datetime
 import optparse
 
@@ -93,6 +94,11 @@ class ManPageWriter(object):
         manpage.append(self._write_footer())
         if seealso:
             manpage.append(self._write_seealso(seealso))
+
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+
         stream = open(filename, 'w')
         stream.write(''.join(manpage))
         stream.close()
