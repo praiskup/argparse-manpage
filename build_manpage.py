@@ -10,6 +10,7 @@ from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
 def get_parser_from_file(filename, objname):
+    os.environ['BUILD_MANPAGES_RUNNING'] = 'TRUE'
     from runpy import run_path
     filedict = run_path(filename)
     return filedict[objname]
