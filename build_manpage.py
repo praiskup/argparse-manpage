@@ -18,8 +18,7 @@ class build_manpage(Command):
     user_options = [
         ('output=', 'O', 'output file'),
         ('parser=', None, 'module path to optparser (e.g. mymod:func'),
-        ('parser_file=', None, 'file to the parser module'),
-
+        ('parser-file=', None, 'file to the parser module'),
         ('seealso=', None, 'list of manpages to put into the SEE ALSO section (e.g. bash:1)')
         ]
 
