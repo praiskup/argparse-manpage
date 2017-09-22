@@ -121,8 +121,8 @@ class build_manpage(Command):
         self.file_and_object = None
 
     def get_parser_from_module(self):
-        fromlist = mod_name.split('.')
         mod_name, func_name = self.parser.split(':')
+        fromlist = mod_name.split('.')
 
         try:
             if self.parser_file:
