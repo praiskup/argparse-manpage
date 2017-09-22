@@ -10,11 +10,31 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-def get_parser_from_file(filename, objname):
+
+def get_obj(obj, objtype):
+    if objtype == 'object':
+        return obj
+    return obj()
+
+
+def get_parser_from_module(module, objname, objtype='object'):
+    import importlib
+    mod = importlib.import_module(module)
+    obj = getattr(mod, objname)
+    return get_obj(obj, objtype)
+
+
+def get_parser_from_file(filename, objname, objtype='object'):
     os.environ['BUILD_MANPAGES_RUNNING'] = 'TRUE'
     from runpy import run_path
     filedict = run_path(filename)
-    return filedict[objname]
+    return get_obj(filedict[objname], objtype)
+
+
+def get_parser(import_type, import_from, objname, objtype):
+    if import_type == 'pyfile':
+        return get_parser_from_file(import_from, objname, objtype)
+    return get_parser_from_module(import_from, objname, objtype)
 
 
 class ManPageWriter(object):

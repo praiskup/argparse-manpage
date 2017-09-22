@@ -6,7 +6,7 @@ command.
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from .build_manpage import ManPageWriter, get_parser_from_file
+from .build_manpage import ManPageWriter, get_parser
 
 class build_manpages(Command):
     description = 'Generate set of man pages from setup().'
@@ -18,14 +18,27 @@ class build_manpages(Command):
 
     def parse_manpages_option(self):
         for spec in self.manpages.strip().split('\n'):
-            filename, objectname, outputfile = spec.split(':')
-            if outputfile in self.manpages_parsed:
-                raise DistutilsOptionError('multiple "{0}" manpages requested'.format(outputfile))
+            manpagedata = {}
+            output = True
+            for option in spec.split(':'):
+                if output:
+                    outputfile = option
+                    output = False
+                    continue
 
-            self.manpages_parsed[outputfile] = {
-                'file': filename,
-                'object': objectname,
-            }
+                oname, ovalue = option.split('=')
+
+                if oname == 'function' or oname == 'object':
+                    assert(not 'objtype' in manpagedata)
+                    manpagedata['objtype'] = oname
+                    manpagedata['objname'] = ovalue
+
+                elif oname == 'pyfile' or oname == 'module':
+                    assert(not 'import_type' in manpagedata)
+                    manpagedata['import_type'] = oname
+                    manpagedata['import_from'] = ovalue
+
+            self.manpages_parsed[outputfile] = manpagedata
 
 
     def initialize_options(self):
@@ -41,7 +54,8 @@ class build_manpages(Command):
     def run(self):
         for page, data in self.manpages_parsed.items():
             print ("generating " + page)
-            parser = get_parser_from_file(data['file'], data['object'])
+            parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'])
+            type(parser)
             mw = ManPageWriter(parser, self)
             mw.write(page)
 
