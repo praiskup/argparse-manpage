@@ -38,6 +38,10 @@ class build_manpages(Command):
                     manpagedata['import_type'] = oname
                     manpagedata['import_from'] = ovalue
 
+                elif oname == 'format':
+                    assert(not 'format' in manpagedata)
+                    manpagedata[oname] = ovalue
+
             self.manpages_parsed[outputfile] = manpagedata
 
 
@@ -55,9 +59,11 @@ class build_manpages(Command):
         for page, data in self.manpages_parsed.items():
             print ("generating " + page)
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'])
-            type(parser)
             mw = ManPageWriter(parser, self)
-            mw.write(page)
+            if not 'format' in data or data['format'] == 'pretty':
+                mw.write_with_manpage(page)
+            elif data['format'] == 'old':
+                mw.write(page)
 
 
 def get_build_py(command):
