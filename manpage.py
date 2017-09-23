@@ -1,9 +1,15 @@
-from argparse import SUPPRESS, HelpFormatter
+from argparse import SUPPRESS, HelpFormatter, _SubParsersAction, _HelpAction
+from collections import OrderedDict
+
+
 
 class Manpage(object):
     def __init__(self, parser):
         self.prog = parser.prog
         self.parser = parser
+        if not getattr(parser, '_manpage', None):
+            self.parser._manpage = []
+
         self.formatter = self.parser._get_formatter()
         self.mf = _ManpageFormatter(self.prog, self.formatter)
         self.synopsis = self.parser.format_usage().split(':')[-1].split()
@@ -12,6 +18,17 @@ class Manpage(object):
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
         return self.mf.format_text(self.formatter._format_text(text)).strip('\n')
+
+
+    def _has_options(self):
+        for action in self.parser._actions:
+            if isinstance(action, _HelpAction):
+                continue
+            if isinstance(action, _SubParsersAction):
+                continue
+            return True
+        return False
+
 
     def __str__(self):
         lines = []
@@ -35,27 +52,10 @@ class Manpage(object):
             lines.append(self.format_text(self.description))
 
         # Options
-        lines.append('.SH OPTIONS')
+        if self._has_options():
+            lines.append('.SH OPTIONS')
         for action_group in self.parser._action_groups:
-            ag_lines = []
-            for action in action_group._group_actions:
-                if action.help == SUPPRESS:
-                    continue
-                ag_lines.append('.TP')
-                fa = self.mf.format_action(action)
-                if len(fa) == 1:
-                    ag_lines.extend(fa)
-                else:
-                    # This is a subcommand
-                    for command in fa:
-                        if isinstance(command, list):
-                            ag_lines.extend(command)
-                        else:
-                            ag_lines.append(command)
-
-            if action_group.title and ag_lines:
-                lines.append('.SS ' + action_group.title)
-                lines.extend(ag_lines)
+            lines.append(self.mf.format_action_group(action_group))
 
         # Additional Section
         for section in self.parser._manpage:
@@ -67,7 +67,8 @@ class Manpage(object):
 
 class _ManpageFormatter(HelpFormatter):
     def __init__(self, prog, old_formatter):
-        super().__init__(prog)
+        super(HelpFormatter, self).__init__()
+        self._prog = prog
         self.of = old_formatter
 
     def _markup(self, text):
@@ -90,6 +91,7 @@ class _ManpageFormatter(HelpFormatter):
             metavar, = self._metavar_formatter(action, action.dest)(1)
             metavar = self._bold(metavar)
             return metavar
+
         else:
             parts = []
 
@@ -108,43 +110,59 @@ class _ManpageFormatter(HelpFormatter):
                                                 args_string))
             return ', '.join(parts)
 
+
+    def _format_parser(self, parser, name):
+        lines = []
+        lines.append('.SH OPTIONS "{0}"'.format(name).upper())
+        lines.append(parser.format_usage())
+        groups = parser._action_groups
+        if len(groups):
+            for group in groups:
+                lines.append(self._format_action_group(group))
+
+        return lines
+
+
     def _format_action(self, action):
-        # determine the required width and the entry label
-        help_position = min(self._action_max_length + 2,
-                            self._max_help_position)
-        action_width = help_position - self._current_indent - 2
+        if '--help' in action.option_strings:
+            return ""
+
+        parts = []
+        parts.append('.TP')
+
         action_header = self._format_action_invocation(action)
-
-        if not action.help:
-            # no help; start on same line and add a final newline
-            tup = self._current_indent, '', action_header
-            action_header = '%*s%s' % tup
-        elif len(action_header) <= action_width:
-            # short action name; start on the same line and pad two spaces
-            tup = self._current_indent, '', action_width, action_header
-            action_header = '%*s%-*s  ' % tup
-        else:
-            # long action name; start on the next line
-            tup = self._current_indent, '', action_header
-            action_header = '%*s%s' % tup
-
-        # collect the pieces of the action help
-        parts = [action_header]
+        parts.append(action_header)
 
         # if there was help for the action, add lines of help text
         if action.help:
             help_text = self.of._format_text(self._expand_help(action)).strip('\n')
-            help_text = help_text.replace('\n', '\n.br\n')
-            parts.append(help_text)
-
-        # if there are any sub-actions, add their help as well
-        for subaction in self._iter_indented_subactions(action):
-            parts.append(self._format_action(subaction))
+            parts.append(self.format_text(help_text))
 
         return [self._markup(p) for p in parts]
 
+
+    def _format_action_group(self, action_group):
+        lines = []
+
+        actions = action_group._group_actions
+        for action in actions:
+            if action.help == SUPPRESS:
+                continue
+
+            if isinstance(action, _SubParsersAction):
+                for name, choice  in action.choices.items():
+                    lines.extend(self._format_parser(choice, name))
+                continue
+
+            lines.extend(self._format_action(action))
+
+        return '\n'.join(lines)
+
     def format_action(self, action):
         return self._format_action(action)
+
+    def format_action_group(self, action_group):
+        return self._format_action_group(action_group)
 
     def format_text(self, text):
         return self._markup(text.strip('\n').replace('\n', '\n.br\n') + '\n')

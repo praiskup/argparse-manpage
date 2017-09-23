@@ -10,6 +10,8 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
+from .manpage import Manpage
+
 
 def get_obj(obj, objtype):
     if objtype == 'object':
@@ -134,6 +136,15 @@ class ManPageWriter(object):
                     % (self._markup(appname), self._markup(homepage),)))
         return ''.join(ret)
 
+    def _write_filename(self, filename, what):
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        stream = open(filename, 'w')
+        stream.write(what)
+        stream.close()
+
+
     def write(self, filename, seealso=None):
         manpage = []
         manpage.append(self._write_header())
@@ -141,14 +152,13 @@ class ManPageWriter(object):
         manpage.append(self._write_footer())
         if seealso:
             manpage.append(self._write_seealso(seealso))
+        self._write_filename(filename, ''.join(manpage))
 
-        dirname = os.path.dirname(filename)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
 
-        stream = open(filename, 'w')
-        stream.write(''.join(manpage))
-        stream.close()
+    def write_with_manpage(self, filename):
+        man = Manpage(self._parser)
+        man = str(man) + "\n" +  self._write_footer()
+        self._write_filename(filename, man)
 
 
 class build_manpage(Command):
