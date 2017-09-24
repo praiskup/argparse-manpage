@@ -10,7 +10,7 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from manpage import Manpage
+from .manpage import Manpage
 
 
 def get_obj(obj, objtype):

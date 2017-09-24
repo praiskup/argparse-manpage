@@ -18,9 +18,7 @@ from distutils.core import setup
 # Just to make sure that build_manpage can be found.
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-
-from build_manpage import build_manpage
-
+from build_manpages.build_manpage import build_manpage
 
 setup(
     name='example',
