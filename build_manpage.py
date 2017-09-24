@@ -10,7 +10,7 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from .manpage import Manpage
+from manpage import Manpage
 
 
 def get_obj(obj, objtype):
@@ -71,7 +71,11 @@ class ManPageWriter(object):
         else:
             name = self._markup(appname)
         ret.append('.SH NAME\n%s\n' % name)
-        synopsis = self._parser.format_usage()
+        if getattr(self._parser, 'format_usage', None):
+            synopsis = self._parser.format_usage()
+        else:
+            synopsis = self._parser.get_usage()
+
         if synopsis:
             synopsis = synopsis.replace('%s ' % appname, '')
             ret.append('.SH SYNOPSIS\n.B %s\n%s\n' % (self._markup(appname),
@@ -90,7 +94,7 @@ class ManPageWriter(object):
         else:
             ret = ['.SH OPTIONS ' + action_name.upper() + '\n']
 
-        ret.append(parser.format_help())
+        ret.append(parser.format_option_help())
         if self._type != 'argparse':
             return ''.join(ret)
 
@@ -138,7 +142,7 @@ class ManPageWriter(object):
 
     def _write_filename(self, filename, what):
         dirname = os.path.dirname(filename)
-        if not os.path.exists(dirname):
+        if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
         stream = open(filename, 'w')
         stream.write(what)
