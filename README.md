@@ -30,15 +30,18 @@ In your `setup.py` add:
 
 ```python
 [...]
-from build_manpages import build_manpages, get_build_py
+from build_manpages import build_manpages, get_build_py_cmd, get_install_cmd
 from setuptools.command.build_py import build_py
+from setuptools.command.install import install
 
 setup(
   [...]
   cmdclass={
       'build_manpages': build_manpages,
-      # Re-define build-py with new command also calling 'build_manpages'
-      'build': get_build_py(build_py),
+      # Re-define build_py and install commands so the manual pages
+      # are automatically re-generated and installed (optional)
+      'build_py': get_build_py_cmd(build_py),
+      'install': get_install_cmd(install),
   }
 )
 ```

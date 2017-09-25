@@ -6,13 +6,18 @@
 import os
 import sys
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # Just to make sure that build_manpage can be found.
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-sys.path.append(os.getcwd())
+sys.path = [os.getcwd()] + sys.path
+sys.path = [os.path.join(os.getcwd(), 'fake-deps')] + sys.path
 
-from build_manpages.build_manpages import build_manpages
+from build_manpages.build_manpages \
+        import build_manpages, get_build_py_cmd, get_install_cmd
+
+from setuptools.command.build_py import build_py
+from setuptools.command.install import install
 
 setup(
     name='example',
@@ -22,6 +27,10 @@ setup(
     author_email='jd@example.com',
     version='0.1.0',
     url='http://example.com',
-    py_modules=['example'],
-    cmdclass={'build_manpages': build_manpages}
+    cmdclass={
+        'build_manpages': build_manpages,
+        'build_py': get_build_py_cmd(build_py),
+        'install': get_install_cmd(install),
+    },
+    packages=find_packages(),
 )

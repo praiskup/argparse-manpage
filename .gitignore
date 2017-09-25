@@ -1,2 +1,4 @@
 *.pyc
-example.1
+*.1
+i
+*.egg-info

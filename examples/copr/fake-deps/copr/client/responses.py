@@ -1,0 +1,2 @@
+class CoprResponse:
+    pass

@@ -3,10 +3,14 @@ build_manpages command -- generate set of manual pages by the setup()
 command.
 """
 
+import os
+
 DEFAULT_CMD_NAME = 'build_manpages'
 
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
+import shutil
+
 import configparser
 from .build_manpage import ManPageWriter, get_parser
 
@@ -71,10 +75,32 @@ class build_manpages(Command):
                 mw.write(page)
 
 
-def get_build_py(command):
+def get_build_py_cmd(command):
     class build_py(command):
         def run(self):
             self.run_command(DEFAULT_CMD_NAME)
             command.run(self)
 
     return build_py
+
+
+def get_install_cmd(command):
+    class install(command):
+        def install_manual_pages(self):
+            config = configparser.ConfigParser()
+            config.read('setup.cfg')
+            spec = config[DEFAULT_CMD_NAME]['manpages']
+            data = parse_manpages_spec(spec)
+
+            mandir = os.path.join(self.install_data, 'share/man/man1')
+            if not os.path.exists(mandir):
+                os.makedirs(mandir)
+            for key, _ in data.items():
+                print ('installing {0}'.format(key))
+                shutil.copy(key, mandir)
+
+        def run(self):
+            command.run(self)
+            self.install_manual_pages()
+
+    return install

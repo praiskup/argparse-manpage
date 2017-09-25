@@ -62,10 +62,16 @@ class TestAllExapmles(object):
     def test_copr(self):
         with on_syspath(os.getcwd()):
             with pushd('examples/copr'):
-                with change_argv(['setup.py', 'build_manpages']):
+                name = 'copr-cli.1'
+                prefix = '/usr'
+                idir = os.path.join(os.getcwd(), 'i')
+                with change_argv(['setup.py', 'install', '--root', idir, '--prefix', prefix]):
                     try:
-                        os.remove('example.1')
+                        os.remove(name)
                     except OSError:
                         pass
                     runpy.run_path('setup.py')
-                    file_cmp('example.1', 'expected-output.1')
+                    import subprocess
+                    subprocess.call('find i', shell=True)
+                    file_cmp('i/usr/share/man/man1/' + name, 'expected-output.1')
+                    file_cmp(name, 'expected-output.1')
