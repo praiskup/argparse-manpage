@@ -1,0 +1,83 @@
+.TH dg "1" Manual
+.SH NAME
+dg
+.SH SYNOPSIS
+.B dg
+[-h] [--projectdir PROJECTDIR] [--distro DIST] [--multispec MULTISPEC] [--multispec-selector MULTISPEC_SELECTOR] [--spec SPEC] [--output OUTPUT] [--macros-from PROJECTDIR] [--container CONTAINER_TYPE] [--macro MACRO] [--max-passes PASSES] (--template TEMPLATE | --multispec-combinations)
+.SH DESCRIPTION
+Generate script using predefined metadata about distribution and
+.br
+templates.
+.br
+
+.br
+As an example of 'dg' usage, to generate _Dockerfile_ for Fedora
+.br
+21 64\-bit system, you may use command(s):
+.br
+
+.br
+ $ cd project/directory
+.br
+ $ dg \-\-spec      docker\-data.yaml      \\
+.br
+      \-\-template  docker.tpl            \\
+.br
+      \-\-distro    fedora\-21\-x86_64.yaml
+.SH OPTIONS
+
+.TP
+\fB\-\-projectdir\fR PROJECTDIR
+Directory with project (defaults to CWD)
+
+.TP
+\fB\-\-distro\fR DIST
+Use distribution metadata specified by DIST yaml file
+
+.TP
+\fB\-\-multispec\fR MULTISPEC
+Use MULTISPEC yaml file to fill the TEMPLATE file
+
+.TP
+\fB\-\-multispec\-selector\fR MULTISPEC_SELECTOR
+Selectors for the multispec file
+
+.TP
+\fB\-\-spec\fR SPEC
+Use SPEC yaml file to fill the TEMPLATE file
+
+.TP
+\fB\-\-output\fR OUTPUT
+Write result to OUTPUT file instead of stdout
+
+.TP
+\fB\-\-macros\-from\fR PROJECTDIR
+Load variables from PROJECTDIR
+
+.TP
+\fB\-\-container\fR CONTAINER_TYPE
+Container type, e.g. 'docker'
+
+.TP
+\fB\-\-macro\fR MACRO
+Define distgen's macro
+
+.TP
+\fB\-\-max\-passes\fR PASSES
+Maximum number of rendering passes, defaults to 1 (== no re\\-rendering)
+
+.TP
+\fB\-\-template\fR TEMPLATE
+Use TEMPLATE file, e.g. docker.tpl or a template string, e.g. "{{ config.docker.from }}"
+
+.TP
+\fB\-\-multispec\-combinations\fR
+Print available multispec combinations
+
+.SH AUTHORS
+.B example
+was written by John Doe <jd@example.com>.
+.SH DISTRIBUTION
+The latest version of example may be downloaded from
+.UR http://example.com
+.UE

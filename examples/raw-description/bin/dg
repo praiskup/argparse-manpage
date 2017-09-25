@@ -1,0 +1,193 @@
+#!/bin/python
+
+from __future__ import print_function
+
+import sys
+import tempfile
+import shutil
+
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+
+def error(msg):
+    print(msg, file=sys.stderr)
+
+def die(msg):
+    error(msg)
+    sys.exit(1)
+
+description = \
+"""
+Generate script using predefined metadata about distribution and
+templates.
+
+As an example of 'dg' usage, to generate _Dockerfile_ for Fedora
+21 64-bit system, you may use command(s):
+
+ $ cd project/directory
+ $ dg --spec      docker-data.yaml      \\
+      --template  docker.tpl            \\
+      --distro    fedora-21-x86_64.yaml
+"""
+
+parser = ArgumentParser(
+    description=description,
+    formatter_class=RawDescriptionHelpFormatter,
+)
+parser.add_argument(
+    '--projectdir',
+    metavar='PROJECTDIR',
+    type=str,
+    help='Directory with project (defaults to CWD)',
+    default="."
+)
+
+parser.add_argument(
+    '--distro',
+    metavar='DIST',
+    type=str,
+    help='Use distribution metadata specified by DIST yaml file',
+    default="fedora-21-x86_64.yaml",
+)
+
+parser.add_argument(
+    '--multispec',
+    metavar='MULTISPEC',
+    type=str,
+    help='Use MULTISPEC yaml file to fill the TEMPLATE file',
+)
+
+parser.add_argument(
+    '--multispec-selector',
+    metavar='MULTISPEC_SELECTOR',
+    type=str,
+    help='Selectors for the multispec file',
+    action='append',
+    default=[],
+)
+
+parser.add_argument(
+    '--spec',
+    metavar='SPEC',
+    type=str,
+    help='Use SPEC yaml file to fill the TEMPLATE file',
+    action='append',
+)
+
+parser.add_argument(
+    '--output',
+    metavar='OUTPUT',
+    type=str,
+    help='Write result to OUTPUT file instead of stdout',
+)
+
+parser.add_argument(
+    '--macros-from',
+    metavar='PROJECTDIR',
+    type=str,
+    action='append',
+    help='Load variables from PROJECTDIR',
+)
+
+parser.add_argument(
+    '--container',
+    metavar='CONTAINER_TYPE',
+    type=str,
+    help='Container type, e.g. \'docker\'',
+    default=False,
+)
+
+parser.add_argument(
+    '--macro',
+    metavar='MACRO',
+    type=str,
+    action='append',
+    help='Define distgen\'s macro',
+)
+
+parser.add_argument(
+    '--max-passes',
+    metavar='PASSES',
+    type=int,
+    default=1,
+    help='Maximum number of rendering passes, defaults to 1 (== no re-rendering)',
+)
+
+tpl_or_combinations = parser.add_mutually_exclusive_group(required=True)
+
+tpl_or_combinations.add_argument(
+    '--template',
+    metavar='TEMPLATE',
+    type=str,
+    help='Use TEMPLATE file, e.g. docker.tpl or a template string, '
+    'e.g. "{{ config.docker.from }}"'
+)
+
+tpl_or_combinations.add_argument(
+    '--multispec-combinations',
+    action='store_true',
+    help='Print available multispec combinations',
+)
+
+def print_multispec_combinations(args):
+    ms = Multispec.from_path(args.projectdir, args.multispec)
+    for c in ms.get_all_combinations():
+        to_print = ['--distro {0}'.format(c.pop('distro'))]
+        [to_print.append('--multispec-selector {0}={1}'.format(k, v)) for k, v in c.items()]
+        print(' '.join(to_print))
+
+
+def render_template(args):
+    temp_filename = False
+    output = sys.stdout
+    try:
+        if args.output:
+            _, temp_filename = tempfile.mkstemp(prefix="distgen-")
+            output = open(temp_filename, 'w')
+    except:
+        die("can't create temporary file for '{0}'".format(args.output))
+
+    cmd_cfg = CommandsConfig()
+    cmd_cfg.container = args.container
+
+    explicit_macros = {}
+    if args.macro:
+        for i in args.macro:
+            key, value = i.split(' ', 1)
+            explicit_macros[key] = value
+
+    if args.template == '-':
+        args.template = "/proc/self/fd/0"
+
+    generator = Generator()
+    generator.load_project(args.projectdir)
+    generator.render(
+        args.spec,
+        args.multispec,
+        args.multispec_selector,
+        args.template,
+        args.distro,
+        cmd_cfg,
+        output,
+        args.macros_from,
+        explicit_macros,
+        args.max_passes,
+    )
+
+    if temp_filename:
+        try:
+            output.close()
+            shutil.move(temp_filename, args.output)
+        except:
+            die("can't move '{0}' into '{1}'".format(temp_filename, args.output))
+
+
+def main():
+    args = parser.parse_args()
+    if args.multispec_combinations:
+        print_multispec_combinations(args)
+    else:
+        render_template(args)
+
+
+if __name__ == "__main__":
+    main()

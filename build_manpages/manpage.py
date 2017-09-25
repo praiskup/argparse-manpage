@@ -165,4 +165,6 @@ class _ManpageFormatter(HelpFormatter):
         return self._format_action_group(action_group)
 
     def format_text(self, text):
-        return self._markup(text.strip('\n').replace('\n', '\n.br\n') + '\n')
+        return self._markup(text.strip('\n')\
+                   .replace('\n', '\n.br\n') + '\n')\
+                   .replace('\\\n', '\\\\\n')
