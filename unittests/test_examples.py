@@ -57,3 +57,15 @@ class TestAllExapmles(object):
                         pass
                     runpy.run_path('setup.py')
                     file_cmp('example.1', 'expected-output.1')
+
+
+    def test_copr(self):
+        with on_syspath(os.getcwd()):
+            with pushd('examples/copr'):
+                with change_argv(['setup.py', 'build_manpages']):
+                    try:
+                        os.remove('example.1')
+                    except OSError:
+                        pass
+                    runpy.run_path('setup.py')
+                    file_cmp('example.1', 'expected-output.1')

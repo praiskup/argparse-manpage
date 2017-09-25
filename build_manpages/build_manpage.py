@@ -19,7 +19,12 @@ def get_obj(obj, objtype):
     return obj()
 
 
+def environ_hack():
+    os.environ['BUILD_MANPAGES_RUNNING'] = 'TRUE'
+
+
 def get_parser_from_module(module, objname, objtype='object'):
+    environ_hack()
     import importlib
     mod = importlib.import_module(module)
     obj = getattr(mod, objname)
@@ -27,7 +32,7 @@ def get_parser_from_module(module, objname, objtype='object'):
 
 
 def get_parser_from_file(filename, objname, objtype='object'):
-    os.environ['BUILD_MANPAGES_RUNNING'] = 'TRUE'
+    environ_hack()
     from runpy import run_path
     filedict = run_path(filename)
     return get_obj(filedict[objname], objtype)
