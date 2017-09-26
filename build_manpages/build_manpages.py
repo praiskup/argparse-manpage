@@ -11,7 +11,11 @@ from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 import shutil
 
-import configparser
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import SafeConfigParser as ConfigParser
+
 from .build_manpage import ManPageWriter, get_parser
 
 
@@ -87,9 +91,9 @@ def get_build_py_cmd(command):
 def get_install_cmd(command):
     class install(command):
         def install_manual_pages(self):
-            config = configparser.ConfigParser()
+            config = ConfigParser()
             config.read('setup.cfg')
-            spec = config[DEFAULT_CMD_NAME]['manpages']
+            spec = config.get(DEFAULT_CMD_NAME, 'manpages')
             data = parse_manpages_spec(spec)
 
             mandir = os.path.join(self.install_data, 'share/man/man1')
