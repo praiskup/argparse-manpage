@@ -14,6 +14,7 @@ class Manpage(object):
         self.mf = _ManpageFormatter(self.prog, self.formatter)
         self.synopsis = self.parser.format_usage().split(':')[-1].split()
         self.description = self.parser.description
+        self.epilog = self.parser.epilog
 
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
@@ -38,7 +39,10 @@ class Manpage(object):
 
         # Name
         lines.append('.SH NAME')
-        lines.append(self.prog)
+        if self.description:
+            lines.append("%s - %s" % (self.prog, self.description))
+        else:
+            lines.append(self.prog)
 
         # Synopsis
         if self.synopsis:
@@ -46,10 +50,10 @@ class Manpage(object):
             lines.append('.B {}'.format(self.synopsis[0]))
             lines.append(' '.join(self.synopsis[1:]))
 
-        # Description
-        if self.description:
+        # Manpage description
+        if self.epilog:
             lines.append('.SH DESCRIPTION')
-            lines.append(self.format_text(self.description))
+            lines.append(self.format_text(self.epilog))
 
         # Options
         if self._has_options():
