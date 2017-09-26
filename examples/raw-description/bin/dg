@@ -33,6 +33,9 @@ parser = ArgumentParser(
     description=description,
     formatter_class=RawDescriptionHelpFormatter,
 )
+
+parser.man_short_description = "templating system/generator for distributions"
+
 parser.add_argument(
     '--projectdir',
     metavar='PROJECTDIR',

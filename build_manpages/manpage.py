@@ -38,7 +38,10 @@ class Manpage(object):
 
         # Name
         lines.append('.SH NAME')
-        lines.append(self.prog)
+        line = self.prog
+        if getattr(self.parser, 'man_short_description', None):
+            line += " \\- " + self.parser.man_short_description
+        lines.append(line)
 
         # Synopsis
         if self.synopsis:
