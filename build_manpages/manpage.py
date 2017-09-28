@@ -24,8 +24,6 @@ class Manpage(object):
         for action in self.parser._actions:
             if isinstance(action, _HelpAction):
                 continue
-            if isinstance(action, _SubParsersAction):
-                continue
             return True
         return False
 
@@ -58,7 +56,7 @@ class Manpage(object):
         if self._has_options():
             lines.append('.SH OPTIONS')
         for action_group in self.parser._action_groups:
-            lines.append(self.mf.format_action_group(action_group))
+            lines.append(self.mf.format_action_group(action_group, self.parser.prog))
 
         # Additional Section
         for section in self.parser._manpage:
@@ -116,12 +114,16 @@ class _ManpageFormatter(HelpFormatter):
 
     def _format_parser(self, parser, name):
         lines = []
-        lines.append('.SH OPTIONS "{0}"'.format(name).upper())
+        lines.append(".SH OPTIONS '{0}'".format(name))
         lines.append(parser.format_usage())
+
+        if parser.description:
+            lines.append(self.format_text(parser.description))
+
         groups = parser._action_groups
         if len(groups):
             for group in groups:
-                lines.append(self._format_action_group(group))
+                lines.append(self._format_action_group(group, name))
 
         return lines
 
@@ -144,7 +146,22 @@ class _ManpageFormatter(HelpFormatter):
         return [self._markup(p) for p in parts]
 
 
-    def _format_action_group(self, action_group):
+    def _format_ag_subcommands(self, actions, prog):
+        lines = [
+            '.SS',
+            self._bold('Sub-commands'),
+        ]
+
+        for action in actions:
+            lines.append('.TP')
+            lines.append(self._bold(prog) + ' ' + self._underline(action.dest))
+            if hasattr(action, 'help'):
+                lines.append(action.help)
+
+        return '\n'.join(lines)
+
+
+    def _format_action_group(self, action_group, prog):
         lines = []
 
         actions = action_group._group_actions
@@ -153,8 +170,11 @@ class _ManpageFormatter(HelpFormatter):
                 continue
 
             if isinstance(action, _SubParsersAction):
-                for name, choice  in action.choices.items():
-                    lines.extend(self._format_parser(choice, name))
+                lines.append(self._format_ag_subcommands(
+                        action._choices_actions, prog))
+
+                for name, choice in action.choices.items():
+                    lines.extend(self._format_parser(choice, prog + ' ' + name))
                 continue
 
             lines.extend(self._format_action(action))
@@ -164,8 +184,8 @@ class _ManpageFormatter(HelpFormatter):
     def format_action(self, action):
         return self._format_action(action)
 
-    def format_action_group(self, action_group):
-        return self._format_action_group(action_group)
+    def format_action_group(self, action_group, prog):
+        return self._format_action_group(action_group, prog)
 
     def format_text(self, text):
         return self._markup(text.strip('\n')\
