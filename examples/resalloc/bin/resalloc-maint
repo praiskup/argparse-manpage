@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+# Resalloc administrating tool.
+# Copyright (C) 2017 Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+import sys
+import argparse
+
+from resallocserver.maint import Maintainer
+
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers(title="actions", dest='subparser')
+subparsers.required = True
+
+parser.add_argument("--duh", help="huhh")
+
+p_list = subparsers.add_parser(
+        "resource-list",
+        help="List available resources")
+p_list.add_argument(
+        "--up", dest='up', action='store_true',
+        help="List only ready-to-take resources")
+
+parser_resource_delete = subparsers.add_parser(
+        "resource-delete",
+        help="Delete resource")
+parser_resource_delete.add_argument(
+        "resource",
+        help="The resource ID")
+
+p_t_list = subparsers.add_parser(
+        "ticket-list",
+        help="List not-yet-closed tickets")
+
+
+def main():
+    try:
+        args = parser.parse_args()
+        maint = Maintainer()
+
+        if 'resource-list' in args.subparser:
+            maint.resource_list(up=args.up)
+
+        elif 'resource-delete' in args.subparser:
+            maint.resource_delete(args.resource)
+
+        elif 'ticket-list' in args.subparser:
+            maint.ticket_list()
+
+    except KeyboardInterrupt:
+        sys.stderr.write("\nInterrupted by user.")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    sys.exit(main())

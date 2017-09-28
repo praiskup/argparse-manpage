@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+
+# Resalloc client.
+# Copyright (C) 2017 Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+import sys
+import argparse
+
+from resalloc.client import Ticket, Connection
+from resalloc.version import resalloc_version
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+        "--connection", dest="connection", default="http://localhost:49100")
+parser.add_argument(
+        '--version', action='version',
+        version='%(prog)s (client) {0}'.format(resalloc_version))
+
+subparsers = parser.add_subparsers(title="actions", dest='subparser')
+subparsers.required = True
+parser_new_ticket = subparsers.add_parser(
+        "ticket",
+        help="Create ticket")
+parser_new_ticket.add_argument(
+        "--tag", dest="tags", action="append",
+        required=True,
+        help="What tag the Resource should have")
+parser_get_ticket = subparsers.add_parser(
+        "ticket-check",
+        help="Obtain ticket")
+parser_get_ticket.add_argument(
+        "ticket",
+        help="Get the ticket")
+parser_wait_ticket = subparsers.add_parser(
+        "ticket-wait",
+        help="Wait till ticket is ready and write the output"
+)
+parser_wait_ticket.add_argument(
+        "ticket",
+        help="ID of ticket to wait for")
+parser_close_ticket = subparsers.add_parser(
+        "ticket-close",
+        help="Close a ticket")
+parser_close_ticket.add_argument(
+        "ticket",
+        help="ID of ticket to be closed")
+
+def main():
+    try:
+        arg = parser.parse_args()
+
+        conn = Connection(arg.connection)
+        if 'ticket' == arg.subparser:
+            ticket = conn.newTicket(arg.tags)
+            print(ticket.id)
+
+        elif 'ticket-check' == arg.subparser:
+            ticket = conn.getTicket(arg.ticket)
+            if ticket.collect():
+                sys.stdout.write(str(ticket.output))
+            else:
+                sys.stderr.write("ticket is still not processed\n")
+                return 1
+
+        elif 'ticket-wait' == arg.subparser:
+            ticket = conn.getTicket(arg.ticket)
+            output = ticket.wait()
+            print(str(output))
+
+        elif 'ticket-close' == arg.subparser:
+            ticket = conn.getTicket(arg.ticket)
+            ticket.close()
+
+        else:
+            assert(0)
+
+    except KeyboardInterrupt:
+        sys.stderr.write("\nInterrupted by user.")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    sys.exit(main())

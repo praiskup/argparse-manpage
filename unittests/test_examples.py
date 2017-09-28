@@ -71,8 +71,6 @@ class TestAllExapmles(object):
                     except OSError:
                         pass
                     runpy.run_path('setup.py')
-                    import subprocess
-                    subprocess.call('find i', shell=True)
                     file_cmp('i/usr/share/man/man1/' + name, 'expected-output.1')
                     file_cmp(name, 'expected-output.1')
 
@@ -88,7 +86,23 @@ class TestAllExapmles(object):
                     except OSError:
                         pass
                     runpy.run_path('setup.py')
-                    import subprocess
-                    subprocess.call('find i', shell=True)
                     file_cmp('i/usr/share/man/man1/' + os.path.basename(name), 'expected-output.1')
                     file_cmp(name, 'expected-output.1')
+
+    def test_resalloc(self):
+        with on_syspath(os.getcwd()):
+            with pushd('examples/resalloc'):
+                prefix = '/usr'
+                idir = os.path.join(os.getcwd(), 'i')
+                with change_argv(['setup.py', 'install', '--root', idir, '--prefix', prefix]):
+                    for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
+                        try:
+                            os.remove(name)
+                        except OSError:
+                            pass
+
+                    runpy.run_path('setup.py')
+                    for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
+                        file_cmp('i/usr/share/man/man1/' + os.path.basename(name),
+                                 'expected/' + name)
+                        file_cmp(name, 'expected/' + name)

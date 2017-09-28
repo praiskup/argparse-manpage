@@ -1,0 +1,66 @@
+.TH resalloc "1" Manual
+.SH NAME
+resalloc
+.SH SYNOPSIS
+.B resalloc
+[-h] [--connection CONNECTION] [--version] {ticket,ticket-check,ticket-wait,ticket-close} ...
+.SH OPTIONS
+
+.TP
+\fB\-\-connection\fR \fI\,CONNECTION\/\fR
+.TP
+\fB\-\-version\fR
+show program's version number and exit
+
+.SS
+\fBSub-commands\fR
+.TP
+\fBresalloc\fR \fI\,ticket\/\fR
+Create ticket
+.TP
+\fBresalloc\fR \fI\,ticket-check\/\fR
+Obtain ticket
+.TP
+\fBresalloc\fR \fI\,ticket-wait\/\fR
+Wait till ticket is ready and write the output
+.TP
+\fBresalloc\fR \fI\,ticket-close\/\fR
+Close a ticket
+.SH OPTIONS 'resalloc ticket'
+usage: resalloc ticket [-h] --tag TAGS
+
+
+.TP
+\fB\-\-tag\fR \fI\,TAGS\/\fR
+What tag the Resource should have
+
+.SH OPTIONS 'resalloc ticket-check'
+usage: resalloc ticket-check [-h] ticket
+
+.TP
+\fBticket\fR
+Get the ticket
+
+
+.SH OPTIONS 'resalloc ticket-wait'
+usage: resalloc ticket-wait [-h] ticket
+
+.TP
+\fBticket\fR
+ID of ticket to wait for
+
+
+.SH OPTIONS 'resalloc ticket-close'
+usage: resalloc ticket-close [-h] ticket
+
+.TP
+\fBticket\fR
+ID of ticket to be closed
+
+.SH AUTHORS
+.B resalloc
+was written by Pavel Raiskup <praiskup@redhat.com>.
+.SH DISTRIBUTION
+The latest version of resalloc may be downloaded from
+.UR https://github.com/praiskup/resalloc
+.UE

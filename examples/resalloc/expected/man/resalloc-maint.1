@@ -1,0 +1,49 @@
+.TH resalloc-maint "1" Manual
+.SH NAME
+resalloc-maint
+.SH SYNOPSIS
+.B resalloc-maint
+[-h] [--duh DUH] {resource-list,resource-delete,ticket-list} ...
+.SH OPTIONS
+
+.TP
+\fB\-\-duh\fR \fI\,DUH\/\fR
+huhh
+
+.SS
+\fBSub-commands\fR
+.TP
+\fBresalloc-maint\fR \fI\,resource-list\/\fR
+List available resources
+.TP
+\fBresalloc-maint\fR \fI\,resource-delete\/\fR
+Delete resource
+.TP
+\fBresalloc-maint\fR \fI\,ticket-list\/\fR
+List not-yet-closed tickets
+.SH OPTIONS 'resalloc-maint resource-list'
+usage: resalloc-maint resource-list [-h] [--up]
+
+
+.TP
+\fB\-\-up\fR
+List only ready\-to\-take resources
+
+.SH OPTIONS 'resalloc-maint resource-delete'
+usage: resalloc-maint resource-delete [-h] resource
+
+.TP
+\fBresource\fR
+The resource ID
+
+
+.SH OPTIONS 'resalloc-maint ticket-list'
+usage: resalloc-maint ticket-list [-h]
+
+.SH AUTHORS
+.B resalloc
+was written by Pavel Raiskup <praiskup@redhat.com>.
+.SH DISTRIBUTION
+The latest version of resalloc may be downloaded from
+.UR https://github.com/praiskup/resalloc
+.UE

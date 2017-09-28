@@ -136,14 +136,14 @@ class _ManpageFormatter(HelpFormatter):
         parts.append('.TP')
 
         action_header = self._format_action_invocation(action)
-        parts.append(action_header)
+        parts.append(self._markup(action_header))
 
         # if there was help for the action, add lines of help text
         if action.help:
             help_text = self.of._format_text(self._expand_help(action)).strip('\n')
             parts.append(self.format_text(help_text))
 
-        return [self._markup(p) for p in parts]
+        return parts
 
 
     def _format_ag_subcommands(self, actions, prog):
