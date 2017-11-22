@@ -23,7 +23,7 @@ find it.  E.g. by:
 
 ```bash
 git submodule add --name build_manpages https://github.com/praiskup/build_manpages
-git submodulde update --init
+git submodule update --init
 ```
 
 In your `setup.py` add:
