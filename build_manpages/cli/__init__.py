@@ -1,7 +1,6 @@
 # Copyright (C) 2017 Red Hat, Inc.
 
 import argparse
-from enum import Enum
 
 from build_manpages.build_manpage import ManPageWriter, get_parser
 from build_manpages.cli import hack

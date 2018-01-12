@@ -4,3 +4,6 @@ i
 build
 *.egg-info
 .cache
+MANIFEST
+dist/
+man/
