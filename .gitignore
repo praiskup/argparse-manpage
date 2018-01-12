@@ -3,3 +3,4 @@
 i
 build
 *.egg-info
+.cache

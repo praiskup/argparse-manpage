@@ -51,7 +51,6 @@ class ManPageWriter(object):
 
     def __init__(self, parser, command):
         self._parser = parser
-        self.description = command.description
         self.distribution = command.distribution
         self._today = datetime.date.today()
 
