@@ -14,7 +14,7 @@ Generate manual page an automatic way from ArgumentParser object, so the manpage
 1:1 corresponds to the automatically generated --help output.  The manpage
 generator needs to known the location of the object, user can specify that by
 (a) the module name or corresponding python filename and (b) the object name or
-the function name which returns the object.  There's a limitted support for
+the function name which returns the object.  There's a limited support for
 (deprecated) optparse objects, too.
 """
 
