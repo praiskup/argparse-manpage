@@ -25,8 +25,8 @@ There is a limited support for (deprecated) optparse objects, too.
 
 
 Name:           argparse-manpage
-Version:        1.0.0
-Release:        1%{?dist}
+Version:        @VERSION@
+Release:        @RELEASE@%{?dist}
 Summary:        %{sum Python}
 BuildArch:      noarch
 
@@ -138,5 +138,5 @@ PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest
 
 
 %changelog
-* Mon Feb 19 2018 Pavel Raiskup <praiskup@redhat.com> - 1.0.0-1
-- initial RPM packaging
+* @DATE@ Pavel Raiskup <praiskup@redhat.com> - @VERSION@-@RELEASE@
+- built from upstream, changelog ignored
