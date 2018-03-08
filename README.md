@@ -1,3 +1,5 @@
+CI
+
 # Automatically build manpage from argparse
 
 This repository contains a command for `setup.py` to build
