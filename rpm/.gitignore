@@ -1,0 +1,5 @@
+*.spec
+*.tar.gz
+*.src.rpm
+noarch/
+argparse-manpage*/
