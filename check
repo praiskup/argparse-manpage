@@ -1,5 +1,5 @@
-#! /bin/sh -x
+#! /bin/bash -x
 
 for python in ${PYTHON-python2 python3}; do
-    PYTHONPATH=`pwd` $python -m pytest "$@" || exit 1
+    PYTHONPATH=$(pwd) ${python/-dev/} -m pytest "$@" || exit 1
 done
