@@ -2,8 +2,6 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-sys.path = [os.getcwd()] + sys.path
-
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
 from build_manpages.build_manpages \

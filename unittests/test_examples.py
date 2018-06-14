@@ -1,6 +1,6 @@
 import os, sys
 import re
-import runpy
+import subprocess
 from contextlib import contextmanager
 
 @contextmanager
@@ -21,14 +21,11 @@ def change_argv(argv):
     finally:
         sys.argv = old_argv
 
-@contextmanager
-def on_syspath(dirpath):
-    old_path = sys.path
-    sys.path = [dirpath] + sys.path
-    try:
-        yield
-    finally:
-        sys.path = old_path
+
+def run_setup_py(args):
+    with change_argv(['setup.py'] + args):
+        subprocess.call([sys.executable, 'setup.py'] + args,
+                        env={'PYTHONPATH': ':'.join(sys.path)})
 
 
 def file_cmp(file1, file2):
@@ -48,61 +45,55 @@ def file_cmp(file1, file2):
 
 class TestAllExapmles(object):
     def test_old_example(self):
-        with on_syspath(os.getcwd()):
-            with pushd('examples/old_format'):
-                with change_argv(['setup.py', 'build_manpage']):
-                    try:
-                        os.remove('example.1')
-                    except OSError:
-                        pass
-                    runpy.run_path('setup.py')
-                    file_cmp('example.1', 'expected-output.1')
+        with pushd('examples/old_format'):
+            try:
+                os.remove('example.1')
+            except OSError:
+                pass
+            run_setup_py(['build_manpage'])
+            file_cmp('example.1', 'expected-output.1')
 
 
     def test_copr(self):
-        with on_syspath(os.getcwd()):
-            with pushd('examples/copr'):
-                name = 'copr-cli.1'
-                prefix = '/usr'
-                idir = os.path.join(os.getcwd(), 'i')
-                with change_argv(['setup.py', 'install', '--root', idir, '--prefix', prefix]):
-                    try:
-                        os.remove(name)
-                    except OSError:
-                        pass
-                    runpy.run_path('setup.py')
-                    file_cmp('i/usr/share/man/man1/' + name, 'expected-output.1')
-                    file_cmp(name, 'expected-output.1')
+        with pushd('examples/copr'):
+            name = 'copr-cli.1'
+            prefix = '/usr'
+            try:
+                os.remove(name)
+            except OSError:
+                pass
+            idir = os.path.join(os.getcwd(), 'i')
+            run_setup_py(['install', '--root', idir, '--prefix', prefix])
+            file_cmp('i/usr/share/man/man1/' + name, 'expected-output.1')
+            file_cmp(name, 'expected-output.1')
+
 
     def test_distgen(self):
-        with on_syspath(os.getcwd()):
-            with pushd('examples/raw-description'):
-                name = 'man/dg.1'
-                prefix = '/usr'
-                idir = os.path.join(os.getcwd(), 'i')
-                with change_argv(['setup.py', 'install', '--root', idir, '--prefix', prefix]):
-                    try:
-                        os.remove(name)
-                    except OSError:
-                        pass
-                    runpy.run_path('setup.py')
-                    file_cmp('i/usr/share/man/man1/' + os.path.basename(name), 'expected-output.1')
-                    file_cmp(name, 'expected-output.1')
+        with pushd('examples/raw-description'):
+            name = 'man/dg.1'
+            try:
+                os.remove(name)
+            except OSError:
+                pass
+            idir = os.path.join(os.getcwd(), 'i')
+            run_setup_py (['install', '--root', idir, '--prefix', '/usr'])
+            file_cmp('i/usr/share/man/man1/' + os.path.basename(name), 'expected-output.1')
+            file_cmp(name, 'expected-output.1')
+
 
     def test_resalloc(self):
-        with on_syspath(os.getcwd()):
-            with pushd('examples/resalloc'):
-                prefix = '/usr'
-                idir = os.path.join(os.getcwd(), 'i')
-                with change_argv(['setup.py', 'install', '--root', idir, '--prefix', prefix]):
-                    for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
-                        try:
-                            os.remove(name)
-                        except OSError:
-                            pass
+        with pushd('examples/resalloc'):
+            prefix = '/usr'
+            for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
+                try:
+                    os.remove(name)
+                except OSError:
+                    pass
 
-                    runpy.run_path('setup.py')
-                    for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
-                        file_cmp('i/usr/share/man/man1/' + os.path.basename(name),
-                                 'expected/' + name)
-                        file_cmp(name, 'expected/' + name)
+            idir = os.path.join(os.getcwd(), 'i')
+            run_setup_py(['install', '--root', idir, '--prefix', prefix])
+
+            for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
+                file_cmp('i/usr/share/man/man1/' + os.path.basename(name),
+                         'expected/' + name)
+                file_cmp(name, 'expected/' + name)

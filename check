@@ -1,0 +1,5 @@
+#! /bin/sh -x
+
+for python in ${PYTHON-python2 python3}; do
+    PYTHONPATH=`pwd` $python -m pytest "$@" || exit 1
+done

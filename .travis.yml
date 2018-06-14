@@ -8,4 +8,4 @@ python:
 install:
   - "pip install -r requirements.txt"
 
-script: "python$TRAVIS_PYTHON_VERSION setup.py build && python$TRAVIS_PYTHON_VERSION -m pytest"
+script: "PYTHON=python$TRAVIS_PYTHON_VERSION ./check"

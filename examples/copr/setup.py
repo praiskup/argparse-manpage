@@ -9,8 +9,6 @@ import sys
 from setuptools import setup, find_packages
 
 # Just to make sure that build_manpage can be found.
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-sys.path = [os.getcwd()] + sys.path
 sys.path = [os.path.join(os.getcwd(), 'fake-deps')] + sys.path
 
 from build_manpages.build_manpages \
