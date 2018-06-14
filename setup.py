@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
+from build_manpages import __version__
 from build_manpages.build_manpages \
     import build_manpages, get_build_py_cmd, get_install_cmd
 
@@ -18,7 +19,7 @@ the function name which returns the object.  There's a limited support for
 
 setup(
     name='argparse-manpage',
-    version='1.0.0',
+    version=__version__,
     url='https://github.com/praiskup/argparse-manpage',
     license='Apache 2.0',
     py_modules = ['build_manpage'],
