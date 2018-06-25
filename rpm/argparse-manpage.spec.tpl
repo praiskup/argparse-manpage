@@ -14,7 +14,7 @@
 %bcond_without check
 
 
-%global sum()   Build manual page from %1 ArgumentParser object
+%global sum()   Build manual page from %* ArgumentParser object
 %global desc \
 Generate manual page an automatic way from ArgumentParser object, so the \
 manpage 1:1 corresponds to the automatically generated --help output.  The \
@@ -61,14 +61,14 @@ Requires: python2-%name = %version-%release
 
 
 %package -n     python2-%name
-Summary:        %{sum 'Python 2'}
+Summary:        %{sum Python 2}
 
 %description -n python2-%name
 %{desc}
 
 
 %package -n     python3-%name
-Summary:        %{sum 'Python 3'}
+Summary:        %{sum Python 3}
 
 %description -n python3-%name
 %{desc}
