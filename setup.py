@@ -29,7 +29,7 @@ setup(
     maintainer_email='praiskup@redhat.com',
     packages=find_packages(),
     scripts=['bin/argparse-manpage'],
-    data_files=[("", ["LICENSE"])],
+    data_files=[("", ["LICENSE", "NEWS"])],
     description='Build manual page from python\'s ArgumentParser object.',
     long_description=ld,
     cmdclass={
