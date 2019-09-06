@@ -145,12 +145,12 @@ class ManPageWriter(object):
         return ''.join(ret)
 
     def _write_filename(self, filename, what):
+        filename = filename if filename != '-' else '/dev/stdout'
         dirname = os.path.dirname(filename)
         if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
-        stream = open(filename, 'w')
-        stream.write(what)
-        stream.close()
+        with open(filename, 'w') as stream:
+            stream.write(what)
 
 
     def write(self, filename, seealso=None):

@@ -7,4 +7,7 @@ New in version 1.2
 
 * LICENSE file included in release tarball.
 
+* 'build_manpage' executable now takes an optional 'OUTFILE' argument. This
+  default to '-' (stdout).
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

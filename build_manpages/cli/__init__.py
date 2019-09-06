@@ -21,7 +21,6 @@ src_group.add_argument(
     "--module",
     help="search the OBJECT/FUNCTION in MODULE"
 )
-
 src_group.add_argument(
     "--pyfile",
     help="search the OBJECT/FUNCTION in FILE"
@@ -34,7 +33,8 @@ obj_group.add_argument(
 )
 obj_group.add_argument(
     "--object",
-    help="obtain ArgumentParser OBJECT from FUNCTION (to get argparse object) from MODULE or FILE",
+    help="obtain ArgumentParser OBJECT from FUNCTION (to get argparse object) "
+    "from MODULE or FILE",
 )
 
 
@@ -42,6 +42,9 @@ ap.add_argument("--author", action=fake_cmd.getAction())
 ap.add_argument("--author-email", action=fake_cmd.getAction())
 ap.add_argument("--project-name", dest='name', action=fake_cmd.getAction())
 ap.add_argument("--url", action=fake_cmd.getAction())
+ap.add_argument(
+    "outfile", nargs='?', default='-',
+    help="output file; default to stdout")
 
 
 def main():
@@ -61,4 +64,4 @@ def main():
 
     parser = get_parser(import_type, import_from, obj_name, obj_type)
     mw = ManPageWriter(parser, fake_cmd)
-    mw.write_with_manpage('/dev/stdout')
+    mw.write_with_manpage(args.outfile)
