@@ -8,14 +8,12 @@ from build_manpages import __version__
 from build_manpages.build_manpages \
     import build_manpages, get_build_py_cmd, get_install_cmd
 
-ld = """
-Generate manual page an automatic way from ArgumentParser object, so the manpage
-1:1 corresponds to the automatically generated --help output.  The manpage
-generator needs to known the location of the object, user can specify that by
-(a) the module name or corresponding python filename and (b) the object name or
-the function name which returns the object.  There's a limited support for
-(deprecated) optparse objects, too.
-"""
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def get_readme():
+    with open(os.path.join(ROOT_DIR, 'README.md')) as fh:
+        return ''.join(fh.readlines())
 
 setup(
     name='argparse-manpage',
@@ -31,7 +29,7 @@ setup(
     scripts=['bin/argparse-manpage'],
     data_files=[("", ["LICENSE", "NEWS"])],
     description='Build manual page from python\'s ArgumentParser object.',
-    long_description=ld,
+    long_description=get_readme(),
     cmdclass={
         'build_manpages': build_manpages,
         'build_py': get_build_py_cmd(build_py),
