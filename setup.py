@@ -30,6 +30,7 @@ setup(
     data_files=[("", ["LICENSE", "NEWS"])],
     description='Build manual page from python\'s ArgumentParser object.',
     long_description=get_readme(),
+    long_description_content_type='text/markdown',
     cmdclass={
         'build_manpages': build_manpages,
         'build_py': get_build_py_cmd(build_py),
