@@ -42,6 +42,8 @@ ap.add_argument("--author", action=fake_cmd.getAction())
 ap.add_argument("--author-email", action=fake_cmd.getAction())
 ap.add_argument("--project-name", dest='name', action=fake_cmd.getAction())
 ap.add_argument("--url", action=fake_cmd.getAction())
+ap.add_argument("--output", dest='outfile', default='-',
+                help="output file; default to stdout")
 
 
 def main():
@@ -61,4 +63,4 @@ def main():
 
     parser = get_parser(import_type, import_from, obj_name, obj_type)
     mw = ManPageWriter(parser, fake_cmd)
-    mw.write_with_manpage('/dev/stdout')
+    mw.write_with_manpage(args.outfile)

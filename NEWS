@@ -7,4 +7,6 @@ New in version 1.2
 
 * LICENSE file included in release tarball.
 
+* Command-line executable now takes an optional '--output' argument.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
