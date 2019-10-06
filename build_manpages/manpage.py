@@ -190,4 +190,4 @@ class _ManpageFormatter(HelpFormatter):
     def format_text(self, text):
         return self._markup(text.strip('\n')\
                    .replace('\\', '\\\\')\
-                   .replace('\n', '\n.br\n') + '\n')
+                   .replace('\n', '\n') + '\n')

@@ -136,7 +136,6 @@ usage: copr list [-h] [username|@groupname]
 .TP
 \fBusername|@groupname\fR
 The username or @groupname that you would like to list the coprs of (defaults
-.br
 to current user)
 
 
@@ -146,7 +145,6 @@ usage: copr mock-config [-h] project chroot
 .TP
 \fBproject\fR
 Expected format is <user>/<project>, <group>/<project> (including '@') or
-.br
 <project> (name of project you own).
 
 .TP
@@ -202,13 +200,11 @@ The project will not be shown on COPR home page
 .TP
 \fB\-\-persistent\fR
 Project and its builds will be undeletable. This option can only be specified
-.br
 by a COPR admin.
 
 .TP
 \fB\-\-auto\-prune\fR {on,off}
 If auto\-deletion of project's obsoleted builds should be enabled (default is
-.br
 on). This option can only be specified by a COPR admin.
 
 .SH OPTIONS 'copr modify'
@@ -246,7 +242,6 @@ Disable metadata auto generation
 .TP
 \fB\-\-enable\-net\fR {on,off}
 If net should be enabled for builds in this project (default is "don't
-.br
 change")
 
 .TP
@@ -256,7 +251,6 @@ The project will not be shown on COPR home page
 .TP
 \fB\-\-auto\-prune\fR {on,off}
 If auto\-deletion of project's obsoleted builds should be enabled. This option
-.br
 can only be specified by a COPR admin.
 
 .SH OPTIONS 'copr delete'
@@ -290,7 +284,6 @@ usage: copr build [-h] [--memory MEMORY] [--timeout TIMEOUT] [--nowait]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -308,13 +301,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .SH OPTIONS 'copr buildpypi'
@@ -327,7 +318,6 @@ usage: copr buildpypi [-h] [--pythonversions [VERSION [VERSION ...]]]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -353,13 +343,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .SH OPTIONS 'copr buildgem'
@@ -370,7 +358,6 @@ usage: copr buildgem [-h] [--gem GEM] [--memory MEMORY] [--timeout TIMEOUT]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -388,13 +375,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .SH OPTIONS 'copr buildfedpkg'
@@ -406,7 +391,6 @@ usage: copr buildfedpkg [-h] --clone-url URL [--branch BRANCH]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -428,13 +412,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .SH OPTIONS 'copr buildtito'
@@ -447,7 +429,6 @@ usage: copr buildtito [-h] --git-url URL [--git-dir DIRECTORY]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -477,13 +458,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .SH OPTIONS 'copr buildmock'
@@ -496,7 +475,6 @@ usage: copr buildmock [-h] [--scm-type TYPE] [--scm-url URL]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -524,13 +502,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .SH OPTIONS 'copr status'
@@ -622,7 +598,6 @@ usage: copr add-package-tito [-h] --git-url URL [--git-dir DIRECTORY]
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -658,7 +633,6 @@ usage: copr edit-package-tito [-h] --git-url URL [--git-dir DIRECTORY]
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -695,7 +669,6 @@ usage: copr add-package-pypi [-h] [--pythonversions [VERSION [VERSION ...]]]
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -728,7 +701,6 @@ usage: copr edit-package-pypi [-h] [--pythonversions [VERSION [VERSION ...]]]
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -760,7 +732,6 @@ usage: copr add-package-mockscm [-h] [--scm-type TYPE] [--scm-url URL]
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -794,7 +765,6 @@ usage: copr edit-package-mockscm [-h] [--scm-type TYPE] [--scm-url URL]
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -827,7 +797,6 @@ usage: copr add-package-rubygems [-h] [--gem GEM] --name PKGNAME
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -850,7 +819,6 @@ usage: copr edit-package-rubygems [-h] [--gem GEM] --name PKGNAME
 .TP
 \fBcopr\fR
 The copr repo for the package. Can be just name of project or even in format
-.br
 username/project or @groupname/project.
 
 .TP
@@ -873,7 +841,6 @@ usage: copr list-packages [-h] [--with-latest-build]
 .TP
 \fBcopr\fR
 The copr repo to list the packages of. Can be just name of project or even in
-.br
 format owner/project.
 
 .TP
@@ -894,7 +861,6 @@ usage: copr list-package-names [-h] copr
 .TP
 \fBcopr\fR
 The copr repo to list the packages of. Can be just name of project or even in
-.br
 format owner/project.
 
 
@@ -906,7 +872,6 @@ usage: copr get-package [-h] --name PKGNAME [--with-latest-build]
 .TP
 \fBcopr\fR
 The copr repo to list the packages of. Can be just name of project or even in
-.br
 format owner/project.
 
 .TP
@@ -931,7 +896,6 @@ usage: copr delete-package [-h] --name PKGNAME copr
 .TP
 \fBcopr\fR
 The copr repo to list the packages of. Can be just name of project or even in
-.br
 format owner/project.
 
 .TP
@@ -944,7 +908,6 @@ usage: copr reset-package [-h] --name PKGNAME copr
 .TP
 \fBcopr\fR
 The copr repo to list the packages of. Can be just name of project or even in
-.br
 format owner/project.
 
 .TP
@@ -960,7 +923,6 @@ usage: copr build-package [-h] [--memory MEMORY] [--timeout TIMEOUT]
 .TP
 \fBcopr\fR
 The copr repo to build the package in. Can be just name of project or even in
-.br
 format username/project or @groupname/project.
 
 .TP
@@ -974,13 +936,11 @@ Don't wait for build
 .TP
 \fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
 If you don't need this build for all the project's chroots. You can use it
-.br
 several times for each chroot you need.
 
 .TP
 \fB\-\-background\fR
 Mark the build as a background job. It will have lesser priority than regular
-.br
 builds.
 
 .TP
@@ -993,7 +953,6 @@ usage: copr build-module [-h] (--url URL | --yaml YAML) [copr]
 .TP
 \fBcopr\fR
 The copr repo to list the packages of. Can be just name of project or even in
-.br
 format owner/project.
 
 .TP

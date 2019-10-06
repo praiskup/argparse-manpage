@@ -6,23 +6,14 @@ dg \- templating system/generator for distributions
 [-h] [--projectdir PROJECTDIR] [--distro DIST] [--multispec MULTISPEC] [--multispec-selector MULTISPEC_SELECTOR] [--spec SPEC] [--output OUTPUT] [--macros-from PROJECTDIR] [--container CONTAINER_TYPE] [--macro MACRO] [--max-passes PASSES] (--template TEMPLATE | --multispec-combinations)
 .SH DESCRIPTION
 Generate script using predefined metadata about distribution and
-.br
 templates.
-.br
 
-.br
 As an example of 'dg' usage, to generate _Dockerfile_ for Fedora
-.br
 21 64\-bit system, you may use command(s):
-.br
 
-.br
  $ cd project/directory
-.br
  $ dg \-\-spec      docker\-data.yaml      \\
-.br
       \-\-template  docker.tpl            \\
-.br
       \-\-distro    fedora\-21\-x86_64.yaml
 .SH OPTIONS
 
