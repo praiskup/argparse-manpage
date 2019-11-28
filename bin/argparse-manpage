@@ -1,8 +1,0 @@
-#! /usr/bin/python
-
-# Copyright (C) 2017 Red Hat, Inc.
-
-from build_manpages.cli import main
-
-if __name__ == "__main__":
-    main()

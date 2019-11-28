@@ -26,7 +26,11 @@ setup(
     maintainer='Pavel Raiskup',
     maintainer_email='praiskup@redhat.com',
     packages=find_packages(),
-    scripts=['bin/argparse-manpage'],
+    entry_points={
+        'console_scripts': [
+            'argparse-manpage=build_manpages.cli:main',
+        ],
+    },
     description='Build manual page from python\'s ArgumentParser object.',
     long_description=get_readme(),
     long_description_content_type='text/markdown',

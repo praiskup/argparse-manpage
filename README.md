@@ -74,11 +74,11 @@ manual pages.
 
 You can also use `argparse-manpage` command on a command-line. Example:
 
-    bin/argparse-manpage --pyfile ./pythonfile --function get_parser --author me --author-email me@domain.com --project-name myproject --url https://pagure.io/myproject > cool-manpage.1
+    argparse-manpage --pyfile ./pythonfile --function get_parser --author me --author-email me@domain.com --project-name myproject --url https://pagure.io/myproject > cool-manpage.1
 
 This reads `./pythonfile` and executes function `get_parser` from it. The function should be programmed to return an `ArgumentParser` instance which is then used together with the other info supplied on the command-line to generate the man page.
 
-See `bin/argparse-manpage --help` for full info.
+See `argparse-manpage --help` for full info.
 
 # License
 
