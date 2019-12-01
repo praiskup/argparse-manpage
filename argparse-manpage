@@ -1,1 +1,13 @@
-wrap
+#! /bin/sh
+
+# Copyright (C) 2019 Red Hat, Inc.
+
+srcdir=$(readlink -f "$(dirname "$0")")
+script_name=$(basename "$0")
+
+echo >&2
+echo >&2 " !! running argparse-manpage from git, this is not supported !!"
+echo >&2
+
+export PYTHONPATH=$srcdir/${PYTHONPATH+:$PYTHONPATH}
+exec ${PYTHON-python3} -c 'from build_manpages.cli import main; main()' "$@"
