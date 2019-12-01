@@ -1,5 +1,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+New in version 1.3
+
+* drop additional .br tag from paragraphs so the multiline text is nicer
+
+* provide argparse-manpage via entry_point
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 New in version 1.2
 
 * Fixed shebang in /bin/argparse-manpage script so it works on
