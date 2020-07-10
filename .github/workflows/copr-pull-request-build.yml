@@ -1,17 +1,19 @@
-name: Copr build
+---
+name: RPM build argparse-manpage in Fedora Copr
 on:
   pull_request:
+    # Build only pull requests against master branch
     branches: [master]
 
 jobs:
   build:
-    name: Build
+    name: Build in Fedora container
     container: fedora:latest
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out sources
-        uses: actions/checkout@v2
+      - name: Check out proper version of sources
+        uses: actions/checkout@v1
 
       - name: Install Copr API token
         env:
