@@ -22,5 +22,15 @@ argparse-manpage.spec: argparse-manpage.spec.tpl ../setup.py
 	    $< > $@.output ; \
 	mv "$@.output" "$@" # move when successful
 
+srpm: all
+	dir=`pwd` ; \
+	rm *.src.rpm ; \
+	rpmbuild --define "_sourcedir $$dir" \
+		 --define "_rpmdir    $$dir" \
+		 --define "_builddir  $$dir" \
+		 --define "_specdir   $$dir" \
+		 --define "_srcrpmdir $$dir" \
+	     -bs *.spec
+
 clean:
 	rm -rf *.src.rpm *.tar.gz *.spec noarch

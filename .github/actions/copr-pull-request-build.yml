@@ -1,0 +1,34 @@
+name: Copr build
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    name: Build
+    container: fedora:latest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v2
+
+      - name: Install Copr API token
+        env:
+          API_TOKEN_CONTENT: ${{ secrets.COPR_API_TOKEN }}
+        run: |
+          mkdir -p "$HOME/.config"
+          echo "$API_TOKEN_CONTENT" > "$HOME/.config/copr"
+
+      - name: Install tooling for source RPM build
+        run: |
+          dnf -y install @development-tools @rpm-development-tools
+          dnf -y install copr-cli make
+
+      - name: Build the source RPM
+        run: |
+          cd rpm && make srpm
+
+      - name: Build the source RPM in Copr
+        run: |
+          copr build praiskup/argparse-manpage-pull-requests rpm/*.src.rpm
