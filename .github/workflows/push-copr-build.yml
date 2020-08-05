@@ -32,4 +32,4 @@ jobs:
 
       - name: Submit the build by uploading the source RPM
         run: |
-          copr build praiskup/argparse-manpage-pull-requests rpm/*.src.rpm
+          copr build praiskup/argparse-manpage-ci rpm/*.src.rpm
