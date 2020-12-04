@@ -605,7 +605,7 @@ def setup_parser():
     ###                    General options                ###
     #########################################################
 
-    parser = argparse.ArgumentParser(prog="copr")
+    parser = argparse.ArgumentParser(prog="copr", epilog="dummy text")
     # General connection options
 
     parser.add_argument("--debug", dest="debug", action="store_true",

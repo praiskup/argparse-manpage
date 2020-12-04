@@ -58,6 +58,10 @@ class Manpage(object):
         for action_group in self.parser._action_groups:
             lines.append(self.mf.format_action_group(action_group, self.parser.prog))
 
+        if self.parser.epilog != None:
+            lines.append('.SH COMMENTS')
+            lines.append(self.format_text(self.parser.epilog))
+
         # Additional Section
         for section in self.parser._manpage:
             lines.append('.SH {}'.format(section['heading'].upper()))
