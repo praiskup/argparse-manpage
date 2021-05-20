@@ -1,7 +1,10 @@
+import unittest
 import os, sys
 import re
 import subprocess
 from contextlib import contextmanager
+
+sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')]+sys.path
 
 @contextmanager
 def pushd(path):
@@ -48,7 +51,7 @@ def file_cmp(file1, file2, filter_string=None):
                 assert left == right
 
 
-class TestAllExapmles(object):
+class TestAllExapmles(unittest.TestCase):
     def test_old_example(self):
         with pushd('examples/old_format'):
             try:
@@ -109,3 +112,6 @@ class TestAllExapmles(object):
                 file_cmp('i/usr/share/man/man1/' + os.path.basename(name),
                          'expected/' + name)
                 file_cmp(name, 'expected/' + name)
+
+if __name__ == "__main__":
+    unittest.main()
