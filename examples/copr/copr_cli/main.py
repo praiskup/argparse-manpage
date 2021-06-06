@@ -617,7 +617,7 @@ def setup_parser():
     parser.add_argument("--version", action="version",
                         version="%(prog)s version " + version())
 
-    subparsers = parser.add_subparsers(title="actions")
+    subparsers = parser.add_subparsers()
 
     #########################################################
     ###                    Project options                ###
