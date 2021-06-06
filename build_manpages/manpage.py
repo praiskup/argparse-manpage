@@ -1,6 +1,7 @@
 from argparse import SUPPRESS, HelpFormatter, _SubParsersAction, _HelpAction
 from collections import OrderedDict
 
+DEFAULT_ACTION_GROUPS = ('positional arguments','optional arguments')
 
 
 class Manpage(object):
@@ -18,14 +19,6 @@ class Manpage(object):
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
         return self.mf.format_text(self.formatter._format_text(text)).strip('\n')
-
-
-    def _has_options(self):
-        for action in self.parser._actions:
-            if isinstance(action, _HelpAction):
-                continue
-            return True
-        return False
 
 
     def __str__(self):
@@ -52,11 +45,29 @@ class Manpage(object):
             lines.append('.SH DESCRIPTION')
             lines.append(self.format_text(self.description))
 
-        # Options
-        if self._has_options():
-            lines.append('.SH OPTIONS')
+        # Global options
+        printed_option_header = False
         for action_group in self.parser._action_groups:
-            lines.append(self.mf.format_action_group(action_group, self.parser.prog))
+            if action_group.title in DEFAULT_ACTION_GROUPS and \
+                action_group != self.parser._subparsers:
+                entry = self.mf.format_action_group(action_group, self.parser.prog)
+                if entry != '':
+                    if not printed_option_header:
+                        lines.append('.SH OPTIONS')
+                        printed_option_header = True
+                    lines.append(entry)
+
+        # Subparsers definition
+        for action_group in self.parser._action_groups:
+            if action_group == self.parser._subparsers:
+                lines.append(self.mf.format_action_group(action_group, self.parser.prog))
+
+        # Named argument groups
+        for action_group in self.parser._action_groups:
+            if action_group.title not in DEFAULT_ACTION_GROUPS and \
+                action_group != self.parser._subparsers:
+                    lines.append('.SH {}'.format(action_group.title.upper()))
+                    lines.append(self.mf.format_action_group(action_group, self.parser.prog))
 
         if self.parser.epilog != None:
             lines.append('.SH COMMENTS')
@@ -151,10 +162,7 @@ class _ManpageFormatter(HelpFormatter):
 
 
     def _format_ag_subcommands(self, actions, prog):
-        lines = [
-            '.SS',
-            self._bold('Sub-commands'),
-        ]
+        lines = []
 
         for action in actions:
             lines.append('.TP')
@@ -174,6 +182,14 @@ class _ManpageFormatter(HelpFormatter):
                 continue
 
             if isinstance(action, _SubParsersAction):
+                # By default, 'positional arguments' is the title of the
+                # subcommand action group.
+                if action_group.title != 'positional arguments':
+                    lines.append('.SH')
+                    lines.append(action_group.title.upper())
+                else:
+                    lines.append('.SS')
+                    lines.append(self._bold('Sub-commands'))
                 lines.append(self._format_ag_subcommands(
                         action._choices_actions, prog))
 
