@@ -40,14 +40,18 @@ def _rmtree(directory):
             raise
 
 def run_pip(args):
+    environ = os.environ.copy()
+    environ['PYTHONPATH'] = ':'.join(sys.path)
     subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
-                    env={'PYTHONPATH': ':'.join(sys.path)})
+                    env=environ)
 
 
 def run_setup_py(args):
+    environ = os.environ.copy()
+    environ['PYTHONPATH'] = ':'.join(sys.path)
     with change_argv(['setup.py'] + args):
         subprocess.call([sys.executable, 'setup.py'] + args,
-                        env={'PYTHONPATH': ':'.join(sys.path)})
+                        env=environ)
 
 def skip_if_older_python(min_version):
     def _get_int(version):
