@@ -16,11 +16,13 @@ $(TARBALL):
 
 argparse-manpage.spec: argparse-manpage.spec.tpl ../setup.py
 	@echo "  GEN $@" ; \
+	rm -f "$@.output" ; \
 	sed -e "s|@VERSION@|$(VERSION)|g" \
 	    -e "s|@RELEASE@|$(RELEASE)|g" \
 	    -e "s|@DATE@|$(DATE)|g" \
 	    $< > $@.output ; \
-	mv "$@.output" "$@" # move when successful
+	chmod 0444 "$@.output" ; \
+	mv -f "$@.output" "$@" # move when successful
 
 srpm: all
 	dir=`pwd` ; \
