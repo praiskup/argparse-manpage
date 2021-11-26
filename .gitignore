@@ -1,6 +1,6 @@
 *.pyc
 *.1
-i
+*_install_dir/
 build
 *.egg-info
 .cache

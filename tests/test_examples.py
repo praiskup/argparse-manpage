@@ -1,8 +1,15 @@
+import errno
 import unittest
-import os, sys
+import os
+from platform import python_version
 import re
+import shutil
 import subprocess
+import sys
 from contextlib import contextmanager
+
+from pkg_resources import parse_version
+import pytest
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')]+sys.path
 
@@ -25,10 +32,40 @@ def change_argv(argv):
         sys.argv = old_argv
 
 
+def _rmtree(directory):
+    try:
+        shutil.rmtree(directory)
+    except OSError as err:
+        if err.errno != errno.ENOENT:
+            raise
+
+def run_pip(args):
+    subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
+                    env={'PYTHONPATH': ':'.join(sys.path)})
+
+
 def run_setup_py(args):
     with change_argv(['setup.py'] + args):
         subprocess.call([sys.executable, 'setup.py'] + args,
                         env={'PYTHONPATH': ':'.join(sys.path)})
+
+def skip_if_older_python(min_version):
+    def _get_int(version):
+        int_v = [int(sv) for sv in version.split(".")]
+
+
+
+
+def run_one_installer(installer, args):
+    """
+    Run 'pip <args> .' or 'python setup.py <args>'
+    """
+    if parse_version(python_version()) < parse_version("3.10"):
+        if installer == "pip":
+            raise pytest.skip("pip install not supported with python %s" %
+                              python_version())
+    method = run_pip if installer == "pip" else run_setup_py
+    method(args)
 
 
 def file_cmp(file1, file2, filter_string=None):
@@ -36,7 +73,10 @@ def file_cmp(file1, file2, filter_string=None):
         with open(file2, 'r') as f2:
             a1 = f1.readlines()
             a2 = f2.readlines()
-            assert len(a1) == len(a2)
+            if len(a1) != len(a2):
+                # get the pretty diff
+                assert a1 == a2
+
             first = True
             for left, right in zip(a1, a2):
                 if first:
@@ -51,7 +91,7 @@ def file_cmp(file1, file2, filter_string=None):
                 assert left == right
 
 
-class TestAllExapmles(unittest.TestCase):
+class TestAllExapmles:
     def test_old_example(self):
         with pushd('examples/old_format'):
             try:
@@ -62,54 +102,50 @@ class TestAllExapmles(unittest.TestCase):
             file_cmp('example.1', 'expected-output.1')
 
 
-    def test_copr(self):
+    @pytest.mark.parametrize("installer", ["pip", "setuppy"])
+    def test_copr(self, installer):
         with pushd('examples/copr'):
             name = 'copr-cli.1'
             prefix = '/usr'
-            try:
-                os.remove(name)
-            except OSError:
-                pass
-            idir = os.path.join(os.getcwd(), 'i')
-            run_setup_py(['install', '--root', idir, '--prefix', prefix])
+            idir = os.path.join(os.getcwd(), installer + "_install_dir")
+            mandir = os.path.join(idir, "usr/share/man/man1")
+            _rmtree(idir)
+            run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
 
             def version_version_filter(string):
                 return string.replace('[VERSION [VERSION ...]]',
                                       '[VERSION ...]')
 
-            file_cmp('i/usr/share/man/man1/' + name, 'expected-output.1',
+            file_cmp(os.path.join(mandir, os.path.basename(name)),
+                     'expected-output.1',
                      filter_string=version_version_filter)
             file_cmp(name, 'expected-output.1',
                      filter_string=version_version_filter)
 
 
-    def test_distgen(self):
+    @pytest.mark.parametrize("installer", ["pip", "setuppy"])
+    def test_distgen(self, installer):
         with pushd('examples/raw-description'):
             name = 'man/dg.1'
-            try:
-                os.remove(name)
-            except OSError:
-                pass
-            idir = os.path.join(os.getcwd(), 'i')
-            run_setup_py (['install', '--root', idir, '--prefix', '/usr'])
-            file_cmp('i/usr/share/man/man1/' + os.path.basename(name), 'expected-output.1')
+            prefix = "/usr"
+            idir = os.path.join(os.getcwd(), installer + "_install_dir")
+            _rmtree(idir)
+            mandir = os.path.join(idir, "usr/share/man/man1")
+            run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
+            file_cmp(os.path.join(mandir, os.path.basename(name)), 'expected-output.1')
             file_cmp(name, 'expected-output.1')
 
 
-    def test_resalloc(self):
+    @pytest.mark.parametrize("installer", ["pip", "setuppy"])
+    def test_resalloc(self, installer):
         with pushd('examples/resalloc'):
-            prefix = '/usr'
+            prefix = "/usr"
+            idir = os.path.join(os.getcwd(), installer + "_install_dir")
+            _rmtree(idir)
+            mandir = os.path.join(idir, "usr/share/man/man1")
+            run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
             for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
-                try:
-                    os.remove(name)
-                except OSError:
-                    pass
-
-            idir = os.path.join(os.getcwd(), 'i')
-            run_setup_py(['install', '--root', idir, '--prefix', prefix])
-
-            for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
-                file_cmp('i/usr/share/man/man1/' + os.path.basename(name),
+                file_cmp(os.path.join(mandir, os.path.basename(name)),
                          'expected/' + name)
                 file_cmp(name, 'expected/' + name)
 
