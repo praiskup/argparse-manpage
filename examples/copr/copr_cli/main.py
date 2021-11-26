@@ -8,15 +8,14 @@ import argparse
 import sys
 import datetime
 import time
-import six
 import simplejson
 from collections import defaultdict
 
 import logging
-if six.PY2:
-    from urlparse import urlparse
-else:
+try:
     from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 if sys.version_info < (2, 7):
     class NullHandler(logging.Handler):

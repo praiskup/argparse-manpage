@@ -40,9 +40,9 @@ Source0:        https://github.com/praiskup/%{name}/archive/v%{version}/%{name}-
 BuildRequires: python2-setuptools python2-devel
 %if %{with check}
 %if 0%{?rhel} && 0%{?rhel} == 7
-BuildRequires: pytest python-six
+BuildRequires: pytest
 %else
-BuildRequires: python2-pytest python2-six
+BuildRequires: python2-pytest
 %endif
 %endif
 %endif
@@ -50,7 +50,7 @@ BuildRequires: python2-pytest python2-six
 %if %{with python3}
 BuildRequires: python3-setuptools python3-devel
 %if %{with check}
-BuildRequires: python3-pytest python3-six
+BuildRequires: python3-pytest
 %endif
 %endif
 
