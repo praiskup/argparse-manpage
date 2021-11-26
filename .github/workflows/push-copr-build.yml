@@ -1,35 +1,24 @@
 ---
 name: RPM build in Fedora Copr
 on:
-  # Build only on pushes into master branch.
   push:
-    branches: [master]
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
 
 jobs:
   build:
-    name: Submit a build from Fedora container
-    container: fedora:latest
+    name: Submit a Copr build
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out proper version of sources
         uses: actions/checkout@v1
 
-      - name: Install API token for copr-cli
+      - name: Submit the build
         env:
-          API_TOKEN_CONTENT: ${{ secrets.COPR_API_TOKEN }}
+          COPR_PR_WEBHOOK: https://copr.fedorainfracloud.org/webhooks/custom/33631/780e2120-1749-4623-8222-b8705b3414c7/argparse-manpage/
+          COPR_PUSH_WEBHOOK: ${{ secrets.COPR_PUSH_WEBHOOK }}
         run: |
-          mkdir -p "$HOME/.config"
-          echo "$API_TOKEN_CONTENT" > "$HOME/.config/copr"
-
-      - name: Install tooling for source RPM build
-        run: |
-          dnf -y install @development-tools @rpm-development-tools copr-cli make
-
-      - name: Build the source RPM
-        run: |
-          cd rpm && make srpm
-
-      - name: Submit the build by uploading the source RPM
-        run: |
-          copr build praiskup/argparse-manpage-ci rpm/*.src.rpm
+          curl https://raw.githubusercontent.com/praiskup/copr-ci-tooling/main/copr-gh-actions-submit > submit
+          bash submit ${{ github.event.pull_request.number }}
