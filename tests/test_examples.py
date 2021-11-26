@@ -25,6 +25,11 @@ def change_argv(argv):
         sys.argv = old_argv
 
 
+def run_pip(args):
+    subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
+                    env={'PYTHONPATH': ':'.join(sys.path)})
+
+
 def run_setup_py(args):
     with change_argv(['setup.py'] + args):
         subprocess.call([sys.executable, 'setup.py'] + args,
@@ -71,7 +76,7 @@ class TestAllExapmles(unittest.TestCase):
             except OSError:
                 pass
             idir = os.path.join(os.getcwd(), 'i')
-            run_setup_py(['install', '--root', idir, '--prefix', prefix])
+            run_pip(['install', '--root', idir, '--prefix', prefix])
 
             def version_version_filter(string):
                 return string.replace('[VERSION [VERSION ...]]',
@@ -91,7 +96,7 @@ class TestAllExapmles(unittest.TestCase):
             except OSError:
                 pass
             idir = os.path.join(os.getcwd(), 'i')
-            run_setup_py (['install', '--root', idir, '--prefix', '/usr'])
+            run_pip (['install', '--root', idir, '--prefix', '/usr'])
             file_cmp('i/usr/share/man/man1/' + os.path.basename(name), 'expected-output.1')
             file_cmp(name, 'expected-output.1')
 
@@ -106,7 +111,7 @@ class TestAllExapmles(unittest.TestCase):
                     pass
 
             idir = os.path.join(os.getcwd(), 'i')
-            run_setup_py(['install', '--root', idir, '--prefix', prefix])
+            run_pip(['install', '--root', idir, '--prefix', prefix])
 
             for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
                 file_cmp('i/usr/share/man/man1/' + os.path.basename(name),
