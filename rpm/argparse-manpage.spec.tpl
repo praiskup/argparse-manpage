@@ -122,10 +122,10 @@ Summary:        %{sum Python 3}
 %if %{with check}
 %check
 %if %{with python2}
-PYTHONPATH=%buildroot%python2_sitearch %__python2 -m pytest
+PYTHONPATH=%buildroot%python2_sitearch %__python2 -m pytest -vv
 %endif
 %if %{with python3}
-PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest
+PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest -vv
 %endif
 %if %{with pyproject}
 %pytest
