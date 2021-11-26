@@ -26,14 +26,18 @@ def change_argv(argv):
 
 
 def run_pip(args):
+    environ = os.environ.copy()
+    environ['PYTHONPATH'] = ':'.join(sys.path)
     subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
-                    env={'PYTHONPATH': ':'.join(sys.path)})
+                    env=environ)
 
 
 def run_setup_py(args):
+    environ = os.environ.copy()
+    environ['PYTHONPATH'] = ':'.join(sys.path)
     with change_argv(['setup.py'] + args):
         subprocess.call([sys.executable, 'setup.py'] + args,
-                        env={'PYTHONPATH': ':'.join(sys.path)})
+                        env=environ)
 
 
 def file_cmp(file1, file2, filter_string=None):
