@@ -1,0 +1,31 @@
+#! /bin/bash
+
+# Helper script (used by praiskup atm) to update CI scripting on Copr side.
+
+script=$(readlink -f "$(dirname "$0")")/copr-custom-script
+script_resultdir=argparse-manpage/rpm
+pkgname=argparse-manpage
+
+PROJECT_PR=praiskup/argparse-manpage-ci
+PROJECT_PUSH=praiskup/argparse-manpage-pull-requests
+
+build_deps=(
+    git
+    make
+    python3-setuptools
+    python-unversioned-command
+)
+
+for PROJECT in $PROJECT_PR $PROJECT_PUSH; do
+    copr_cmd=(
+        copr edit-package-custom "$PROJECT" \
+            --webhook-rebuild on \
+            --script "$script" \
+            --script-chroot "fedora-latest-x86_64" \
+            --script-builddeps "${build_deps[*]}" \
+            --name "$pkgname" \
+            --script-resultdir "$script_resultdir"
+    )
+    test "$PROJECT" = "$PROJECT_PR" && copr_cmd+=( --max-builds 20 )
+    "${copr_cmd[@]}"
+done
