@@ -1,11 +1,9 @@
 %if 0%{?fedora}
-  %bcond_without python3
-  %if 0%{?fedora} > 29
-    %bcond_with python2
-  %else
-    %bcond_without python2
-  %endif
+  %bcond_without   pyproject
+  %bcond_with      python2
+  %bcond_with      python3
 %else
+  %bcond_with      pyproject
   %if 0%{?rhel} > 7
     %bcond_with    python2
     %bcond_without python3
@@ -48,13 +46,22 @@ BuildRequires: python2-pytest python2-six
 %endif
 %endif
 %endif
+
 %if %{with python3}
 BuildRequires: python3-setuptools python3-devel
 %if %{with check}
 BuildRequires: python3-pytest python3-six
 %endif
 %endif
-%if %{with python3}
+
+%if %{with pyproject}
+BuildRequires: python3-devel
+%if %{with check}
+BuildRequires: python3-pytest
+%endif
+%endif
+
+%if %{with python3} || %{with pyproject}
 Requires: python3-%name = %version-%release
 %else
 Requires: python2-%name = %version-%release
@@ -81,6 +88,11 @@ Summary:        %{sum Python 3}
 %prep
 %setup -q
 
+%if %{with pyproject}
+%generate_buildrequires
+%pyproject_buildrequires
+%endif
+
 
 %build
 %if %{with python2}
@@ -88,6 +100,9 @@ Summary:        %{sum Python 3}
 %endif
 %if %{with python3}
 %py3_build
+%endif
+%if %{with pyproject}
+%pyproject_wheel
 %endif
 
 
@@ -97,6 +112,9 @@ Summary:        %{sum Python 3}
 %endif
 %if %{with python3}
 %py3_install
+%endif
+%if %{with pyproject}
+%pyproject_install
 %endif
 
 
@@ -109,6 +127,9 @@ PYTHONPATH=%buildroot%python2_sitearch %__python2 -m pytest
 %if %{with python3}
 PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest
 %endif
+%if %{with pyproject}
+%pytest
+%endif
 %endif
 
 
@@ -116,7 +137,7 @@ PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest
 %license LICENSE
 %{_bindir}/argparse-manpage
 %_mandir/man1/argparse-manpage.1.*
-%if %{with python3}
+%if %{with python3} || %{with pyproject}
 %python3_sitelib/build_manpages/cli
 %else
 %python2_sitelib/build_manpages/cli
@@ -132,11 +153,15 @@ PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest
 %endif
 
 
-%if %{with python3}
+%if %{with python3} || %{with pyproject}
 %files -n python3-%name
 %license LICENSE
 %python3_sitelib/build_manpages
+%if %{with pyproject}
+%python3_sitelib/argparse_manpage-*dist-info
+%else
 %python3_sitelib/argparse_manpage-%{version}*.egg-info
+%endif
 %exclude %python3_sitelib/build_manpages/cli
 %endif
 
