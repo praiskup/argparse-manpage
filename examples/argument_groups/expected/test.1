@@ -6,11 +6,11 @@ test \- templating system/generator for distributions
 [-h] [--group-1-option PROJECTDIR] [--group-2-option DIST] [--top-option MULTISPEC] (--template TEMPLATE | --multispec-combinations) g2arg {subparserA} ...
 .SH OPTIONS
 .TP
-\fB\-\-top\-option\fR MULTISPEC
+\fB\-\-top\-option\fR \fI\,MULTISPEC\/\fR
 Use MULTISPEC yaml file to fill the TEMPLATE file
 
 .TP
-\fB\-\-template\fR TEMPLATE
+\fB\-\-template\fR \fI\,TEMPLATE\/\fR
 Use TEMPLATE file, e.g. docker.tpl or a template string, e.g. "{{
 config.docker.from }}"
 
@@ -22,11 +22,11 @@ Print available multispec combinations
 description for group 1
 
 .TP
-\fB\-\-group\-1\-option\fR PROJECTDIR
+\fB\-\-group\-1\-option\fR \fI\,PROJECTDIR\/\fR
 Directory with project (defaults to CWD)
 
 .TP
-\fB\-\-group\-2\-option\fR DIST
+\fB\-\-group\-2\-option\fR \fI\,DIST\/\fR
 Use distribution metadata specified by DIST yaml file
 
 .TP

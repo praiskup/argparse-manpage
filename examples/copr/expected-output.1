@@ -186,11 +186,11 @@ Instructions for the copr
 Disable metadata auto generation
 
 .TP
-\fB\-\-enable\-net\fR {on,off}
+\fB\-\-enable\-net\fR \fI\,{on,off}\/\fR
 If net should be enabled for builds in this project (default is off)
 
 .TP
-\fB\-\-unlisted\-on\-hp\fR {on,off}
+\fB\-\-unlisted\-on\-hp\fR \fI\,{on,off}\/\fR
 The project will not be shown on COPR home page
 
 .TP
@@ -199,7 +199,7 @@ Project and its builds will be undeletable. This option can only be specified
 by a COPR admin.
 
 .TP
-\fB\-\-auto\-prune\fR {on,off}
+\fB\-\-auto\-prune\fR \fI\,{on,off}\/\fR
 If auto\-deletion of project's obsoleted builds should be enabled (default is
 on). This option can only be specified by a COPR admin.
 
@@ -237,16 +237,16 @@ Repository to add to this copr
 Disable metadata auto generation
 
 .TP
-\fB\-\-enable\-net\fR {on,off}
+\fB\-\-enable\-net\fR \fI\,{on,off}\/\fR
 If net should be enabled for builds in this project (default is "don't
 change")
 
 .TP
-\fB\-\-unlisted\-on\-hp\fR {on,off}
+\fB\-\-unlisted\-on\-hp\fR \fI\,{on,off}\/\fR
 The project will not be shown on COPR home page
 
 .TP
-\fB\-\-auto\-prune\fR {on,off}
+\fB\-\-auto\-prune\fR \fI\,{on,off}\/\fR
 If auto\-deletion of project's obsoleted builds should be enabled. This option
 can only be specified by a COPR admin.
 
@@ -320,15 +320,15 @@ format username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr buildpypi'\/\fR
 .TP
-\fB\-\-pythonversions\fR [VERSION ...]
+\fB\-\-pythonversions\fR \fI\,[VERSION ...]\/\fR
 For what Python versions to build (by default: 3 2)
 
 .TP
-\fB\-\-packageversion\fR PYPIVERSION
+\fB\-\-packageversion\fR \fI\,PYPIVERSION\/\fR
 Version of the PyPI package to be built (by default latest)
 
 .TP
-\fB\-\-packagename\fR PYPINAME
+\fB\-\-packagename\fR \fI\,PYPINAME\/\fR
 Name of the PyPI package to be built, required.
 
 .TP
@@ -361,7 +361,7 @@ format username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr buildgem'\/\fR
 .TP
-\fB\-\-gem\fR GEM
+\fB\-\-gem\fR \fI\,GEM\/\fR
 Specify gem name
 
 .TP
@@ -395,11 +395,11 @@ format username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr buildfedpkg'\/\fR
 .TP
-\fB\-\-clone\-url\fR URL
+\fB\-\-clone\-url\fR \fI\,URL\/\fR
 Specify clone url for the distgit repository
 
 .TP
-\fB\-\-branch\fR BRANCH
+\fB\-\-branch\fR \fI\,BRANCH\/\fR
 Specify branch to be used
 
 .TP
@@ -434,19 +434,19 @@ format username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr buildtito'\/\fR
 .TP
-\fB\-\-git\-url\fR URL
+\fB\-\-git\-url\fR \fI\,URL\/\fR
 URL to a project managed by Tito
 
 .TP
-\fB\-\-git\-dir\fR DIRECTORY
+\fB\-\-git\-dir\fR \fI\,DIRECTORY\/\fR
 Relative path from Git root to directory containing .spec file
 
 .TP
-\fB\-\-git\-branch\fR BRANCH
+\fB\-\-git\-branch\fR \fI\,BRANCH\/\fR
 Git branch that you want to build from
 
 .TP
-\fB\-\-test\fR {on,off}
+\fB\-\-test\fR \fI\,{on,off}\/\fR
 Build the last commit instead of the last release tag
 
 .TP
@@ -481,17 +481,17 @@ format username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr buildmock'\/\fR
 .TP
-\fB\-\-scm\-type\fR TYPE
+\fB\-\-scm\-type\fR \fI\,TYPE\/\fR
 specify versioning tool, default is 'git'
 
 .TP
-\fB\-\-scm\-url\fR URL
+\fB\-\-scm\-url\fR \fI\,URL\/\fR
 url to a project versioned by Git or SVN, required
 
 .TP
-\fB\-\-scm\-branch\fR BRANCH
+\fB\-\-scm\-branch\fR \fI\,BRANCH\/\fR
 .TP
-\fB\-\-spec\fR FILE
+\fB\-\-spec\fR \fI\,FILE\/\fR
 relative path from SCM root to .spec file, required
 
 .TP
@@ -567,7 +567,7 @@ Path to a project chroot as owner/project/chroot or project/chroot
 
 .SH OPTIONS \fI\,'copr edit-chroot'\/\fR
 .TP
-\fB\-\-upload\-comps\fR FILEPATH
+\fB\-\-upload\-comps\fR \fI\,FILEPATH\/\fR
 filepath to the comps.xml file to be uploaded
 
 .TP
@@ -602,27 +602,27 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr add-package-tito'\/\fR
 .TP
-\fB\-\-git\-url\fR URL
+\fB\-\-git\-url\fR \fI\,URL\/\fR
 URL to a project managed by Tito
 
 .TP
-\fB\-\-git\-dir\fR DIRECTORY
+\fB\-\-git\-dir\fR \fI\,DIRECTORY\/\fR
 Relative path from Git root to directory containing .spec file
 
 .TP
-\fB\-\-git\-branch\fR BRANCH
+\fB\-\-git\-branch\fR \fI\,BRANCH\/\fR
 Git branch that you want to build from
 
 .TP
-\fB\-\-test\fR {on,off}
+\fB\-\-test\fR \fI\,{on,off}\/\fR
 Build the last commit instead of the last release tag
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr edit-package-tito'\/\fR
@@ -638,27 +638,27 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr edit-package-tito'\/\fR
 .TP
-\fB\-\-git\-url\fR URL
+\fB\-\-git\-url\fR \fI\,URL\/\fR
 URL to a project managed by Tito
 
 .TP
-\fB\-\-git\-dir\fR DIRECTORY
+\fB\-\-git\-dir\fR \fI\,DIRECTORY\/\fR
 Relative path from Git root to directory containing .spec file
 
 .TP
-\fB\-\-git\-branch\fR BRANCH
+\fB\-\-git\-branch\fR \fI\,BRANCH\/\fR
 Git branch that you want to build from
 
 .TP
-\fB\-\-test\fR {on,off}
+\fB\-\-test\fR \fI\,{on,off}\/\fR
 Build the last commit instead of the last release tag
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr add-package-pypi'\/\fR
@@ -675,23 +675,23 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr add-package-pypi'\/\fR
 .TP
-\fB\-\-pythonversions\fR [VERSION ...]
+\fB\-\-pythonversions\fR \fI\,[VERSION ...]\/\fR
 For what Python versions to build (by default: 3 2)
 
 .TP
-\fB\-\-packageversion\fR PYPIVERSION
+\fB\-\-packageversion\fR \fI\,PYPIVERSION\/\fR
 Version of the PyPI package to be built (by default latest)
 
 .TP
-\fB\-\-packagename\fR PYPINAME
+\fB\-\-packagename\fR \fI\,PYPINAME\/\fR
 Name of the PyPI package to be built, required.
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr edit-package-pypi'\/\fR
@@ -708,23 +708,23 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr edit-package-pypi'\/\fR
 .TP
-\fB\-\-pythonversions\fR [VERSION ...]
+\fB\-\-pythonversions\fR \fI\,[VERSION ...]\/\fR
 For what Python versions to build (by default: 3 2)
 
 .TP
-\fB\-\-packageversion\fR PYPIVERSION
+\fB\-\-packageversion\fR \fI\,PYPIVERSION\/\fR
 Version of the PyPI package to be built (by default latest)
 
 .TP
-\fB\-\-packagename\fR PYPINAME
+\fB\-\-packagename\fR \fI\,PYPINAME\/\fR
 Name of the PyPI package to be built, required.
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr add-package-mockscm'\/\fR
@@ -740,25 +740,25 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr add-package-mockscm'\/\fR
 .TP
-\fB\-\-scm\-type\fR TYPE
+\fB\-\-scm\-type\fR \fI\,TYPE\/\fR
 specify versioning tool, default is 'git'
 
 .TP
-\fB\-\-scm\-url\fR URL
+\fB\-\-scm\-url\fR \fI\,URL\/\fR
 url to a project versioned by Git or SVN, required
 
 .TP
-\fB\-\-scm\-branch\fR BRANCH
+\fB\-\-scm\-branch\fR \fI\,BRANCH\/\fR
 .TP
-\fB\-\-spec\fR FILE
+\fB\-\-spec\fR \fI\,FILE\/\fR
 relative path from SCM root to .spec file, required
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr edit-package-mockscm'\/\fR
@@ -774,25 +774,25 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr edit-package-mockscm'\/\fR
 .TP
-\fB\-\-scm\-type\fR TYPE
+\fB\-\-scm\-type\fR \fI\,TYPE\/\fR
 specify versioning tool, default is 'git'
 
 .TP
-\fB\-\-scm\-url\fR URL
+\fB\-\-scm\-url\fR \fI\,URL\/\fR
 url to a project versioned by Git or SVN, required
 
 .TP
-\fB\-\-scm\-branch\fR BRANCH
+\fB\-\-scm\-branch\fR \fI\,BRANCH\/\fR
 .TP
-\fB\-\-spec\fR FILE
+\fB\-\-spec\fR \fI\,FILE\/\fR
 relative path from SCM root to .spec file, required
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr add-package-rubygems'\/\fR
@@ -807,15 +807,15 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr add-package-rubygems'\/\fR
 .TP
-\fB\-\-gem\fR GEM
+\fB\-\-gem\fR \fI\,GEM\/\fR
 Specify gem name
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr edit-package-rubygems'\/\fR
@@ -830,15 +830,15 @@ username/project or @groupname/project.
 
 .SH OPTIONS \fI\,'copr edit-package-rubygems'\/\fR
 .TP
-\fB\-\-gem\fR GEM
+\fB\-\-gem\fR \fI\,GEM\/\fR
 Specify gem name
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of the package to be edited or created
 
 .TP
-\fB\-\-webhook\-rebuild\fR {on,off}
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
 Enable auto\-rebuilding.
 
 .SH COMMAND \fI\,'copr list-packages'\/\fR
@@ -884,7 +884,7 @@ format owner/project.
 
 .SH OPTIONS \fI\,'copr get-package'\/\fR
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of a single package to be displayed
 
 .TP
@@ -909,7 +909,7 @@ format owner/project.
 
 .SH OPTIONS \fI\,'copr delete-package'\/\fR
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of a package to be deleted
 
 .SH COMMAND \fI\,'copr reset-package'\/\fR
@@ -922,7 +922,7 @@ format owner/project.
 
 .SH OPTIONS \fI\,'copr reset-package'\/\fR
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of a package to be reseted
 
 .SH COMMAND \fI\,'copr build-package'\/\fR
@@ -956,7 +956,7 @@ Mark the build as a background job. It will have lesser priority than regular
 builds.
 
 .TP
-\fB\-\-name\fR PKGNAME
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
 Name of a package to be built
 
 .SH COMMAND \fI\,'copr build-module'\/\fR

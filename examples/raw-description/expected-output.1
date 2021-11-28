@@ -18,47 +18,47 @@ As an example of 'dg' usage, to generate _Dockerfile_ for Fedora
 
 .SH OPTIONS
 .TP
-\fB\-\-projectdir\fR PROJECTDIR
+\fB\-\-projectdir\fR \fI\,PROJECTDIR\/\fR
 Directory with project (defaults to CWD)
 
 .TP
-\fB\-\-distro\fR DIST
+\fB\-\-distro\fR \fI\,DIST\/\fR
 Use distribution metadata specified by DIST yaml file
 
 .TP
-\fB\-\-multispec\fR MULTISPEC
+\fB\-\-multispec\fR \fI\,MULTISPEC\/\fR
 Use MULTISPEC yaml file to fill the TEMPLATE file
 
 .TP
-\fB\-\-multispec\-selector\fR MULTISPEC_SELECTOR
+\fB\-\-multispec\-selector\fR \fI\,MULTISPEC_SELECTOR\/\fR
 Selectors for the multispec file
 
 .TP
-\fB\-\-spec\fR SPEC
+\fB\-\-spec\fR \fI\,SPEC\/\fR
 Use SPEC yaml file to fill the TEMPLATE file
 
 .TP
-\fB\-\-output\fR OUTPUT
+\fB\-\-output\fR \fI\,OUTPUT\/\fR
 Write result to OUTPUT file instead of stdout
 
 .TP
-\fB\-\-macros\-from\fR PROJECTDIR
+\fB\-\-macros\-from\fR \fI\,PROJECTDIR\/\fR
 Load variables from PROJECTDIR
 
 .TP
-\fB\-\-container\fR CONTAINER_TYPE
+\fB\-\-container\fR \fI\,CONTAINER_TYPE\/\fR
 Container type, e.g. 'docker'
 
 .TP
-\fB\-\-macro\fR MACRO
+\fB\-\-macro\fR \fI\,MACRO\/\fR
 Define distgen's macro
 
 .TP
-\fB\-\-max\-passes\fR PASSES
+\fB\-\-max\-passes\fR \fI\,PASSES\/\fR
 Maximum number of rendering passes, defaults to 1 (== no re\-rendering)
 
 .TP
-\fB\-\-template\fR TEMPLATE
+\fB\-\-template\fR \fI\,TEMPLATE\/\fR
 Use TEMPLATE file, e.g. docker.tpl or a template string, e.g. "{{ config.docker.from }}"
 
 .TP
