@@ -5,13 +5,12 @@ resalloc-maint
 .B resalloc-maint
 [-h] [--duh DUH] {resource-list,resource-delete,ticket-list} ...
 .SH OPTIONS
-
 .TP
 \fB\-\-duh\fR \fI\,DUH\/\fR
 huhh
 
-.SS
-\fBSub-commands\fR
+.SH
+ACTIONS
 .TP
 \fBresalloc-maint\fR \fI\,resource-list\/\fR
 List available resources
@@ -21,23 +20,22 @@ Delete resource
 .TP
 \fBresalloc-maint\fR \fI\,ticket-list\/\fR
 List not-yet-closed tickets
-.SH OPTIONS 'resalloc-maint resource-list'
+.SH COMMAND \fI\,'resalloc-maint resource-list'\/\fR
 usage: resalloc-maint resource-list [-h] [--up]
 
-
+.SH OPTIONS \fI\,'resalloc-maint resource-list'\/\fR
 .TP
 \fB\-\-up\fR
 List only ready\-to\-take resources
 
-.SH OPTIONS 'resalloc-maint resource-delete'
+.SH COMMAND \fI\,'resalloc-maint resource-delete'\/\fR
 usage: resalloc-maint resource-delete [-h] resource
 
 .TP
 \fBresource\fR
 The resource ID
 
-
-.SH OPTIONS 'resalloc-maint ticket-list'
+.SH COMMAND \fI\,'resalloc-maint ticket-list'\/\fR
 usage: resalloc-maint ticket-list [-h]
 
 .SH AUTHORS

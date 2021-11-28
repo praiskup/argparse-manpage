@@ -153,5 +153,20 @@ class TestAllExapmles:
                          'expected/' + name)
                 file_cmp(name, 'expected/' + name)
 
+    @pytest.mark.parametrize("installer", ["pip", "setuppy"])
+    def test_argument_groups_example(self, installer):
+        with pushd('examples/argument_groups'):
+            prefix = "/usr"
+            idir = os.path.join(os.getcwd(), installer + "_install_dir")
+            _rmtree(idir)
+            mandir = os.path.join(idir, "usr/share/man/man1")
+            run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
+            compiled = os.path.join('man', 'test.1')
+            base = os.path.basename(compiled)
+            expected = os.path.join('expected', base)
+            installed = os.path.join(mandir, base)
+            file_cmp(installed, expected)
+            file_cmp(compiled, expected)
+
 if __name__ == "__main__":
     unittest.main()
