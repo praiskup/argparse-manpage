@@ -1,5 +1,18 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+New in version 2
+
+* Split out options by generic argument groups, not only predefined
+  "positional arguments", "options", and Subparsers.
+
+* RPM spec file updated to comply with the recent (Fedora 35+) guidelines.
+
+* Drop python3-six requirment.
+
+* Properly highligh all option argument METAVARs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 New in version 1.5
 
 * The "epilog" from argparse object is dumped to "COMMENTS" sections.
