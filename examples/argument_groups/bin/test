@@ -1,0 +1,92 @@
+#!/bin/python
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+
+parser.man_short_description = "templating system/generator for distributions"
+
+group1 = parser.add_argument_group("group1 title", "description for group 1")
+group2 = parser.add_argument_group()
+
+group1.add_argument(
+    '--group-1-option',
+    metavar='PROJECTDIR',
+    type=str,
+    help='Directory with project (defaults to CWD)',
+    default="."
+)
+
+group2.add_argument(
+    '--group-2-option',
+    metavar='DIST',
+    type=str,
+    help='Use distribution metadata specified by DIST yaml file',
+    default="fedora-21-x86_64.yaml",
+)
+
+group2.add_argument(
+    "g2arg",
+    help=(
+        "Some longer multiline description should go here, "
+        "and here and here.  If you want, even here."
+    ),
+)
+
+parser.add_argument(
+    '--top-option',
+    metavar='MULTISPEC',
+    type=str,
+    help='Use MULTISPEC yaml file to fill the TEMPLATE file',
+)
+
+subparsers = parser.add_subparsers(
+    title="subparsers",
+    description="subparsers description",
+    help="subparsers help")
+
+parser_a = subparsers.add_parser('subparserA', help='a help')
+
+group = parser_a.add_argument_group(
+    "subgroup",
+    description=(
+        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris "
+        "tincidunt sem sed arcu. Etiam dictum tincidunt diam. Duis sapien "
+        "nunc, commodo et, interdum suscipit, sollicitudin et, dolor. "
+    ))
+
+group.add_argument("--subgroup-option")
+
+parser_a.add_argument("--sub-parser-option")
+
+subsubparsers = parser_a.add_subparsers(
+    title="sub-subparsers title",
+    help="Some help text for sub-subparser",
+)
+
+subsubparser_a = subsubparsers.add_parser('sub-subparserA', help='a help')
+subsubparser_a.add_argument("--doh")
+
+
+tpl_or_combinations = parser.add_mutually_exclusive_group(required=True)
+
+tpl_or_combinations.add_argument(
+    '--template',
+    metavar='TEMPLATE',
+    type=str,
+    help='Use TEMPLATE file, e.g. docker.tpl or a template string, '
+    'e.g. "{{ config.docker.from }}"'
+)
+
+tpl_or_combinations.add_argument(
+    '--multispec-combinations',
+    action='store_true',
+    help='Print available multispec combinations',
+)
+
+
+def _main():
+    parser.parse_args()
+
+if __name__ == "__main__":
+    _main()

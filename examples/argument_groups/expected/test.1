@@ -1,0 +1,73 @@
+.TH test "1" Manual
+.SH NAME
+test \- templating system/generator for distributions
+.SH SYNOPSIS
+.B test
+[-h] [--group-1-option PROJECTDIR] [--group-2-option DIST] [--top-option MULTISPEC] (--template TEMPLATE | --multispec-combinations) g2arg {subparserA} ...
+.SH OPTIONS
+.TP
+\fB\-\-top\-option\fR MULTISPEC
+Use MULTISPEC yaml file to fill the TEMPLATE file
+
+.TP
+\fB\-\-template\fR TEMPLATE
+Use TEMPLATE file, e.g. docker.tpl or a template string, e.g. "{{
+config.docker.from }}"
+
+.TP
+\fB\-\-multispec\-combinations\fR
+Print available multispec combinations
+
+.SH GROUP1 TITLE
+description for group 1
+
+.TP
+\fB\-\-group\-1\-option\fR PROJECTDIR
+Directory with project (defaults to CWD)
+
+.TP
+\fB\-\-group\-2\-option\fR DIST
+Use distribution metadata specified by DIST yaml file
+
+.TP
+\fBg2arg\fR
+Some longer multiline description should go here, and here and here. If you
+want, even here.
+
+.SH
+SUBPARSERS
+.TP
+\fBtest\fR \fI\,subparserA\/\fR
+a help
+.SH COMMAND \fI\,'test subparserA'\/\fR
+usage: test g2arg subparserA [-h] [--subgroup-option SUBGROUP_OPTION]
+                             [--sub-parser-option SUB_PARSER_OPTION]
+                             {sub-subparserA} ...
+
+.SH OPTIONS \fI\,'test subparserA'\/\fR
+.TP
+\fB\-\-sub\-parser\-option\fR \fI\,SUB_PARSER_OPTION\/\fR
+.SH SUBGROUP \fI\,'test subparserA'\/\fR
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris tincidunt sem sed arcu. Etiam dictum tincidunt diam. Duis sapien nunc, commodo et, interdum suscipit, sollicitudin et, dolor. 
+
+.TP
+\fB\-\-subgroup\-option\fR \fI\,SUBGROUP_OPTION\/\fR
+.SH
+SUB-SUBPARSERS TITLE \fI\,'test subparserA'\/\fR
+.TP
+\fBtest subparserA\fR \fI\,sub-subparserA\/\fR
+a help
+.SH COMMAND \fI\,'test subparserA sub-subparserA'\/\fR
+usage: test g2arg subparserA sub-subparserA [-h] [--doh DOH]
+
+.SH OPTIONS \fI\,'test subparserA sub-subparserA'\/\fR
+.TP
+\fB\-\-doh\fR \fI\,DOH\/\fR
+
+.SH AUTHORS
+.B example
+was written by John Doe <jd@example.com>.
+.SH DISTRIBUTION
+The latest version of example may be downloaded from
+.UR http://example.com
+.UE
