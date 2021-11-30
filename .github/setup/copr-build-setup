@@ -6,8 +6,8 @@ script=$(readlink -f "$(dirname "$0")")/copr-custom-script
 script_resultdir=argparse-manpage/rpm
 pkgname=argparse-manpage
 
-PROJECT_PR=praiskup/argparse-manpage-ci
-PROJECT_PUSH=praiskup/argparse-manpage-pull-requests
+PROJECT_PUSH=praiskup/argparse-manpage-ci
+PROJECT_PR=praiskup/argparse-manpage-pull-requests
 
 build_deps=(
     git
