@@ -80,6 +80,17 @@ This reads `./pythonfile` and executes function `get_parser` from it. The functi
 
 See `argparse-manpage --help` for full info.
 
+
+# Packaging status
+
+
+Git snapshot Fedora Copr builds: [![build status](https://copr.fedorainfracloud.org/coprs/praiskup/argparse-manpage-ci/package/argparse-manpage/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/praiskup/argparse-manpage-ci/)
+
+Packaging status in distributions:
+
+![build status](https://repology.org/badge/vertical-allrepos/argparse-manpage.svg?exclude_unsupported=1&header=argparse-manpage)
+
+
 # License
 
 This work is released under the terms of the Apache License v2.0.
