@@ -2,7 +2,9 @@
 
 """build_manpage command -- Generate man page from setup()"""
 
+import imp
 import os
+import sys
 import datetime
 import optparse
 import argparse
@@ -32,10 +34,29 @@ def get_parser_from_module(module, objname, objtype='object'):
 
 
 def get_parser_from_file(filename, objname, objtype='object'):
+    """
+    Load the given filename as a module and return the requested object from
+    there.
+    """
     environ_hack()
-    from runpy import run_path
-    filedict = run_path(filename)
-    return get_obj(filedict[objname], objtype)
+    # We need to set argv[0] to properly so argparse returns appropriate "usage"
+    # strings.  Like "usage: argparse-manpage [-h] ...", instead of
+    # "usage: setup.py ...".
+    backup_argv = sys.argv
+    sys.argv = [os.path.basename(filename)]
+
+    # We used to call 'runpy.run_path()' here, but that did not work correctly
+    # with Python 2.7 where the imported object did not see it's own
+    # globals/imported modules (including the 'argparse' module).
+    module_loaded = imp.load_source("argparse_manpage_loaded_file", filename)
+
+    # Get the ArgumentParser object
+    obj = getattr(module_loaded, objname)
+    obj = get_obj(obj, objtype)
+
+    # Restore callee's argv
+    sys.argv = backup_argv
+    return obj
 
 
 def get_parser(import_type, import_from, objname, objtype):
