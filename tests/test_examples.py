@@ -105,6 +105,14 @@ class TestAllExapmles:
             run_setup_py(['build_manpage'])
             file_cmp('example.1', 'expected-output.1')
 
+    def test_old_example_file_name(self):
+        with pushd('examples/old_format_file_name'):
+            try:
+                os.remove('example.1')
+            except OSError:
+                pass
+            run_setup_py(['build_manpage'])
+            file_cmp('example.1', 'expected-output.1')
 
     @pytest.mark.parametrize("installer", ["pip", "setuppy"])
     def test_copr(self, installer):
