@@ -15,10 +15,14 @@ from distutils.errors import DistutilsOptionError
 from .manpage import Manpage
 
 
-def get_obj(obj, objtype):
-    if objtype == 'object':
-        return obj
-    return obj()
+def get_obj(module, objname, objtype):
+    """
+    Get OBJNAME from MODULE, and call first if OBJTYPE is function
+    """
+    obj = getattr(module, objname)
+    if objtype != 'object':
+        obj = obj()
+    return obj
 
 
 def environ_hack():
@@ -29,8 +33,7 @@ def get_parser_from_module(module, objname, objtype='object'):
     environ_hack()
     import importlib
     mod = importlib.import_module(module)
-    obj = getattr(mod, objname)
-    return get_obj(obj, objtype)
+    return get_obj(mod, objname, objtype)
 
 
 def get_parser_from_file(filename, objname, objtype='object'):
@@ -51,8 +54,7 @@ def get_parser_from_file(filename, objname, objtype='object'):
     module_loaded = imp.load_source("argparse_manpage_loaded_file", filename)
 
     # Get the ArgumentParser object
-    obj = getattr(module_loaded, objname)
-    obj = get_obj(obj, objtype)
+    obj = get_obj(module_loaded, objname, objtype)
 
     # Restore callee's argv
     sys.argv = backup_argv
