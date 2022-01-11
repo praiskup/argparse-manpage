@@ -211,31 +211,15 @@ class build_manpage(Command):
         self.parser_file = None
         self.file_and_object = None
 
-    def get_parser_from_module(self):
+    def _get_parser_from_module(self):
         mod_name, func_name = self.parser.split(':')
-        fromlist = mod_name.split('.')
-
-        try:
-            if self.parser_file:
-                #
-                # Alternative method to load the module. We use the path to the module file (if the user provide it).
-                # This beacuse, if the module uses namespaces, the original method does not work
-                #
-                # inspired from https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
-                #
-                # praiskup: this is not working for python2, and is pretty
-                # hacky.  Kept for compat option parser-file..
-                import importlib.util
-                spec = importlib.util.spec_from_file_location(mod_name, self.parser_file)
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)
-            else:
-                mod = __import__(mod_name, fromlist=fromlist)
-
-            return getattr(mod, func_name)()
-
-        except ImportError as err:
-            raise
+        if self.parser_file:
+            # The 'modname' is entirely ignored in this case.  This is a design
+            # issue from 516ca12512979ab8e1a45f24e502a9cd1331f284.  But we keep
+            # the 'build_manpage' for compatibility reasons.
+            return get_parser_from_file(self.parser_file, func_name,
+                                            'function')
+        return get_parser_from_module(mod_name, func_name, 'function')
 
     def finalize_options(self):
         if self.output is None:
@@ -249,7 +233,7 @@ class build_manpage(Command):
             filename, objname = self.file_and_object.split(':')
             self._parser = get_parser_from_file(filename, objname)
         else:
-            self._parser = self.get_parser_from_module()
+            self._parser = self._get_parser_from_module()
 
 
     def run(self):
