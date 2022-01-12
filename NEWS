@@ -1,5 +1,17 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+New in version 2.1
+
+* Output manual pages should be built reproducibly, no matter the current
+  size of the terminal.
+
+* Methods build_manpages, get_build_py_cmd, get_install_cmd are now
+  provided in top-level module.
+
+* More portable opening and parsing given by python file name.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 New in version 2
 
 * Split out options by generic argument groups, not only predefined
