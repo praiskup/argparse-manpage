@@ -79,6 +79,13 @@ class ManPageWriter(object):
 
         if isinstance(parser, argparse.ArgumentParser):
             self._type = 'argparse'
+            if parser.formatter_class == argparse.HelpFormatter:
+                # Hack for issue #36, to have reproducible manual page content
+                # regardless the terminal window size.  Long term we should avoid
+                # using the built-in usage formatter, and generate our own.
+                parser.formatter_class = \
+                        lambda prog: argparse.HelpFormatter(prog, width=78)
+
         else:
             self._parser.formatter = ManPageFormatter()
             self._parser.formatter.set_parser(self._parser)
