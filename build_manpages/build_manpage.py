@@ -77,11 +77,11 @@ class ManPageWriter(object):
         self.distribution = command.distribution
         self._today = datetime.date.today()
 
-        self._parser.formatter = ManPageFormatter()
-        self._parser.formatter.set_parser(self._parser)
-
         if isinstance(parser, argparse.ArgumentParser):
             self._type = 'argparse'
+        else:
+            self._parser.formatter = ManPageFormatter()
+            self._parser.formatter.set_parser(self._parser)
 
     def _markup(self, txt):
         return txt.replace('-', '\\-')
