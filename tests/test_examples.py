@@ -85,6 +85,7 @@ def file_cmp(file1, file2, filter_string=None):
             for left, right in zip(a1, a2):
                 if first:
                     left  = re.sub('[0-9]{4}\\\\-[0-9]{2}\\\\-[0-9]{2}', '!!DATE!!', left)
+                    left = left.replace("-dev", ".dev0") # issue #50, setuptools < v60
                     right = re.sub('[0-9]{4}\\\\-[0-9]{2}\\\\-[0-9]{2}', '!!DATE!!', right)
                     first = False
 
