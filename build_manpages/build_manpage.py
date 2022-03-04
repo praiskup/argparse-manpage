@@ -29,14 +29,25 @@ def environ_hack():
     os.environ['BUILD_MANPAGES_RUNNING'] = 'TRUE'
 
 
-def get_parser_from_module(module, objname, objtype='object'):
+def get_parser_from_module(module, objname, objtype='object', prog=None):
     environ_hack()
+    # We need to set argv[0] to properly so argparse returns appropriate "usage"
+    # strings.  Like "usage: argparse-manpage [-h] ...", instead of
+    # "usage: setup.py ...".
+    backup_argv = sys.argv
+    if prog:
+        sys.argv = [prog]
+
     import importlib
     mod = importlib.import_module(module)
-    return get_obj(mod, objname, objtype)
+    obj = get_obj(mod, objname, objtype)
+
+    # Restore callee's argv
+    sys.argv = backup_argv
+    return obj
 
 
-def get_parser_from_file(filename, objname, objtype='object'):
+def get_parser_from_file(filename, objname, objtype='object', prog=None):
     """
     Load the given filename as a module and return the requested object from
     there.
@@ -46,7 +57,10 @@ def get_parser_from_file(filename, objname, objtype='object'):
     # strings.  Like "usage: argparse-manpage [-h] ...", instead of
     # "usage: setup.py ...".
     backup_argv = sys.argv
-    sys.argv = [os.path.basename(filename)]
+    if prog:
+        sys.argv = [prog]
+    else:
+        sys.argv = [os.path.basename(filename)]
 
     # We used to call 'runpy.run_path()' here, but that did not work correctly
     # with Python 2.7 where the imported object did not see it's own
@@ -61,10 +75,10 @@ def get_parser_from_file(filename, objname, objtype='object'):
     return obj
 
 
-def get_parser(import_type, import_from, objname, objtype):
+def get_parser(import_type, import_from, objname, objtype, prog=None):
     if import_type == 'pyfile':
-        return get_parser_from_file(import_from, objname, objtype)
-    return get_parser_from_module(import_from, objname, objtype)
+        return get_parser_from_file(import_from, objname, objtype, prog=prog)
+    return get_parser_from_module(import_from, objname, objtype, prog=prog)
 
 
 class ManPageWriter(object):

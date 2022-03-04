@@ -41,6 +41,7 @@ obj_group.add_argument(
 ap.add_argument("--author", action=fake_cmd.getAction())
 ap.add_argument("--author-email", action=fake_cmd.getAction())
 ap.add_argument("--project-name", dest='name', action=fake_cmd.getAction())
+ap.add_argument("--prog", help="substitutes %%prog in ArgumentParser's usage")
 ap.add_argument("--url", action=fake_cmd.getAction())
 ap.add_argument("--output", dest='outfile', default='-',
                 help="output file; default to stdout")
@@ -61,6 +62,6 @@ def main():
         obj_type = 'function'
         obj_name = args.function
 
-    parser = get_parser(import_type, import_from, obj_name, obj_type)
+    parser = get_parser(import_type, import_from, obj_name, obj_type, prog=args.prog)
     mw = ManPageWriter(parser, fake_cmd)
     mw.write_with_manpage(args.outfile)

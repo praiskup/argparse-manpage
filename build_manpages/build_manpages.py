@@ -46,6 +46,9 @@ def parse_manpages_spec(string):
                 assert(not 'format' in manpagedata)
                 manpagedata[oname] = ovalue
 
+            elif oname == 'prog':
+                manpagedata[oname] = ovalue
+
         manpages_parsed[outputfile] = manpagedata
 
     return manpages_parsed
@@ -71,7 +74,7 @@ class build_manpages(Command):
     def run(self):
         for page, data in self.manpages_parsed.items():
             print ("generating " + page)
-            parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'])
+            parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
             mw = ManPageWriter(parser, self)
             if not 'format' in data or data['format'] == 'pretty':
                 mw.write_with_manpage(page)
