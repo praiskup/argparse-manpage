@@ -172,6 +172,8 @@ class _ManpageFormatter(HelpFormatter):
         lines = []
 
         for action in actions:
+            if getattr(action, 'help', None) == SUPPRESS:
+                continue
             lines.append('.TP')
             lines.append(bold(prog) + ' ' + underline(action.dest))
             if hasattr(action, 'help'):
