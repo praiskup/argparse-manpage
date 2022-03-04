@@ -53,6 +53,7 @@ In your `setup.cfg` add:
 manpages =
     man/foo.1:object=parser:pyfile=bin/foo.py
     man/bar.1:function=get_parser:pyfile=bin/bar
+    man/baz.1:function=get_parser:pyfile=bin/bar:prog=baz
 ```
 
 where each line means one manual page to be generated.  The format of the lines
@@ -65,6 +66,7 @@ Supported values are:
 - pyfile - what python file the argparse object resides in
 - object - the name of arparse object in "pyfile" to import
 - function - the name of function in pyfile to call to get the argparse object
+- prog - value that substitutes %prog in ArgumentParser's usage
 
 Then run `setup.py build_manpages` to build a manpages for your project.  Also,
 if you used `get_build_py` helper, `setup.py build` then transitively builds the
