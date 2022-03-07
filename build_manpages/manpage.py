@@ -191,7 +191,21 @@ class _ManpageFormatter(HelpFormatter):
 
         lines.append(self._format_ag_subcommands(action._choices_actions,
                      subcommand or self._prog))
+
+        # gather (sub-)command aliases
+        command_aliases = {}
+        command_aliases_names = set()
+        for name, command in action._name_parser_map.items():
+            if command not in command_aliases:
+                command_aliases[command] = []
+            else:
+                command_aliases[command].append(name)
+                command_aliases_names.add(name)
+
         for name, choice in action.choices.items():
+            if name in command_aliases_names:
+                # don't print aliased commands multiple times
+                continue
             new_subcommand = "{} {}".format(subcommand or self._prog, name)
             lines.extend(self._format_parser(choice, new_subcommand))
         return lines
