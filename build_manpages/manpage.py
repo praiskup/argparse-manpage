@@ -30,12 +30,11 @@ class Manpage(object):
         # Wrap by parser formatter and convert to manpage format
         return self.mf.format_text(self.formatter._format_text(text)).strip('\n')
 
-
     def __str__(self):
         lines = []
 
         # Header
-        lines.append('.TH {prog} "1" Manual'.format(prog=self.prog))
+        lines.append('.TH {prog} "1" Manual'.format(prog=self.prog.upper()))
 
         # Name
         lines.append('.SH NAME')
@@ -122,7 +121,6 @@ class _ManpageFormatter(HelpFormatter):
                                             underline(args_string)))
         return ', '.join(parts)
 
-
     def _format_parser(self, parser, subcommand=None):
         # The parser "tree" looks like
         # ----------------------------
@@ -167,7 +165,6 @@ class _ManpageFormatter(HelpFormatter):
 
         return parts
 
-
     def _format_ag_subcommands(self, actions, prog):
         lines = []
 
@@ -209,7 +206,6 @@ class _ManpageFormatter(HelpFormatter):
             new_subcommand = "{} {}".format(subcommand or self._prog, name)
             lines.extend(self._format_parser(choice, new_subcommand))
         return lines
-
 
     def _format_action_group(self, action_group, subcommand=None):
         # Parser consists of these action_groups:

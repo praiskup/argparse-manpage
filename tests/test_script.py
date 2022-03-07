@@ -22,7 +22,7 @@ if __name__ == "__main__":
 """
 
 SIMPLE_OUTPUT = """\
-.TH {name} "1" Manual
+.TH {NAME} "1" Manual
 .SH NAME
 {name}
 .SH SYNOPSIS
@@ -70,7 +70,7 @@ class TestsArgparseManpageScript:
             "--function", "get_parser",
         ]
         output = subprocess.check_output(cmd).decode("utf-8")
-        assert output == SIMPLE_OUTPUT.format(name=name)
+        assert output == SIMPLE_OUTPUT.format(name=name, NAME=name.upper())
 
     def test_filepath_prog(self):
         """
@@ -88,4 +88,5 @@ class TestsArgparseManpageScript:
             "--function", "get_parser",
         ]
         output = subprocess.check_output(cmd).decode("utf-8")
-        assert output == SIMPLE_OUTPUT.format(name="progname")
+        name="progname"
+        assert output == SIMPLE_OUTPUT.format(name=name, NAME=name.upper())
