@@ -1,8 +1,12 @@
+include argparse-manpage
 include AUTHORS
 include LICENSE
 include NEWS
 recursive-include examples *.py *.txt *.cfg *.md
+recursive-include tests *.py
 recursive-include unittests *.py
+include examples/argument_groups/bin/test
+include examples/argument_groups/expected/test.1
 include examples/copr/expected-output.1
 include examples/old_format/expected-output.1
 include examples/raw-description/expected-output.1
@@ -13,3 +17,4 @@ include examples/copr/fake-deps/copr/README
 include examples/raw-description/bin/dg
 include examples/resalloc/bin/resalloc
 include examples/resalloc/bin/resalloc-maint
+include examples/old_format_file_name/expected-output.1
