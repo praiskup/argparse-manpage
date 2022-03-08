@@ -16,11 +16,11 @@ try:
 except ImportError:
     from ConfigParser import SafeConfigParser as ConfigParser
 
-from .build_manpage import ManPageWriter, get_parser
+from .build_manpage import ManPageWriter, get_parser, build_manpage, MANPAGE_DATA_ATTRS
 
 
 def parse_manpages_spec(string):
-    manpages_parsed = {}
+    manpages_data = {}
     for spec in string.strip().split('\n'):
         manpagedata = {}
         output = True
@@ -41,17 +41,26 @@ def parse_manpages_spec(string):
                 assert(not 'import_type' in manpagedata)
                 manpagedata['import_type'] = oname
                 manpagedata['import_from'] = ovalue
+                if oname == 'pyfile':
+                    manpagedata['prog'] = os.path.basename(ovalue)
 
             elif oname == 'format':
                 assert(not 'format' in manpagedata)
                 manpagedata[oname] = ovalue
 
-            elif oname == 'prog':
+            elif oname == 'author':
+                manpagedata.setdefault("authors", []).append(ovalue)
+
+            elif oname in MANPAGE_DATA_ATTRS and oname != "authors":
+                assert(not oname in manpagedata)
                 manpagedata[oname] = ovalue
 
-        manpages_parsed[outputfile] = manpagedata
+            else:
+                raise ValueError("Unknown manpage configuration option: {}".format(oname))
 
-    return manpages_parsed
+        manpages_data[outputfile] = manpagedata
+
+    return manpages_data
 
 
 class build_manpages(Command):
@@ -68,14 +77,17 @@ class build_manpages(Command):
         if not self.manpages:
             raise DistutilsOptionError('\'manpages\' option is required')
 
-        self.manpages_parsed = parse_manpages_spec(self.manpages)
+        self.manpages_data = parse_manpages_spec(self.manpages)
 
+        # if a value wasn't set in setup.cfg, use the value from setup.py
+        for page, data in self.manpages_data.items():
+            build_manpage.get_manpage_data(self, data)
 
     def run(self):
-        for page, data in self.manpages_parsed.items():
+        for page, data in self.manpages_data.items():
             print ("generating " + page)
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
-            mw = ManPageWriter(parser, self)
+            mw = ManPageWriter(parser, data)
             if not 'format' in data or data['format'] == 'pretty':
                 mw.write_with_manpage(page)
             elif data['format'] == 'old':

@@ -31,13 +31,6 @@ SIMPLE_OUTPUT = """\
 .TP
 \\fBtest\\fR
 
-.SH AUTHORS
-.B <<UNSET \\-\\-project\\-name OPTION>>
-was written by <<UNSET \\-\\-author OPTION>> <<<UNSET \\-\\-author_email OPTION>>>.
-.SH DISTRIBUTION
-The latest version of <<UNSET \\-\\-project\\-name OPTION>> may be downloaded from
-.UR <<UNSET \\-\\-url OPTION>>
-.UE
 """
 
 

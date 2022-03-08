@@ -1,5 +1,19 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+New in version 3
+
+* Add CLI and conf options to explicitly specify %prog value
+* Skip showing commands with help == SUPPRESS
+* Avoid rendering docs for command aliases
+* Print program name in upper case in header and footer
+* Dropped --author-email CLI option
+* The --author CLI option can be specified multiple times
+* All CLI options can be specified also in setup.cfg
+* Don't render AUTHORS and DISTRIBUTION if they would contain undefined values
+* Remove '... was written by' from AUTHORS
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Bugfixes in version 2.2
 
 * Fixed the testsuite against the setuptools v60+

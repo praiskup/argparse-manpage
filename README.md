@@ -66,7 +66,16 @@ Supported values are:
 - pyfile - what python file the argparse object resides in
 - object - the name of arparse object in "pyfile" to import
 - function - the name of function in pyfile to call to get the argparse object
+- author - author of the program; can be specified multiple times
+- description - description of the program
+- long_description - verbose description of the program
+- project_name - name of the project the program is part of
 - prog - value that substitutes %prog in ArgumentParser's usage
+- url - link to project download page
+- version - version of the program
+
+The values from setup.cfg override values from setup.py's setup().
+
 
 Then run `setup.py build_manpages` to build a manpages for your project.  Also,
 if you used `get_build_py` helper, `setup.py build` then transitively builds the

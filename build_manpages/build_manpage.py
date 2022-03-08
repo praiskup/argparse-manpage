@@ -15,6 +15,18 @@ from distutils.errors import DistutilsOptionError
 from .manpage import Manpage
 
 
+# all manpage attributes that can be set via CLI or setup.cfg
+MANPAGE_DATA_ATTRS = (
+    "authors",  # just "author" in setup.cfg, can be specified multiple times
+    "description",
+    "long_description",
+    "project_name",  # maps to distribution.get_name()
+    "prog",
+    "url",
+    "version",
+)
+
+
 def get_obj(module, objname, objtype):
     """
     Get OBJNAME from MODULE, and call first if OBJTYPE is function
@@ -86,9 +98,9 @@ class ManPageWriter(object):
     _command = None
     _type = None
 
-    def __init__(self, parser, command):
+    def __init__(self, parser, values):
         self._parser = parser
-        self.distribution = command.distribution
+        self.values = values
         self._today = datetime.date.today()
 
         if isinstance(parser, argparse.ArgumentParser):
@@ -108,16 +120,19 @@ class ManPageWriter(object):
         return txt.replace('-', '\\-')
 
     def _write_header(self):
-        version = self.distribution.get_version()
-        appname = self.distribution.get_name()
+        version = self.values["version"]
+        prog = self.values["prog"]
         ret = []
-        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(appname),
-                                      self._today.strftime('%Y\\-%m\\-%d'), appname, version))
-        description = self.distribution.get_description()
+
+        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(prog),
+                                      self._today.strftime('%Y\\-%m\\-%d'), prog, version))
+
+        description = self.values["description"]
         if description:
-            name = self._markup('%s - %s' % (appname, description.splitlines()[0]))
+            name = self._markup('%s - %s' % (prog, description.splitlines()[0]))
         else:
-            name = self._markup(appname)
+            name = self._markup(prog)
+
         ret.append('.SH NAME\n%s\n' % name)
         if getattr(self._parser, 'format_usage', None):
             synopsis = self._parser.format_usage()
@@ -125,10 +140,10 @@ class ManPageWriter(object):
             synopsis = self._parser.get_usage()
 
         if synopsis:
-            synopsis = synopsis.replace('%s ' % appname, '')
-            ret.append('.SH SYNOPSIS\n.B %s\n%s\n' % (self._markup(appname),
+            synopsis = synopsis.replace('%s ' % prog, '')
+            ret.append('.SH SYNOPSIS\n.B %s\n%s\n' % (self._markup(prog),
                                                       synopsis))
-        long_desc = self.distribution.get_long_description()
+        long_desc = self.values.get("long_description", "")
         if long_desc:
             ret.append('.SH DESCRIPTION\n%s\n' % self._markup(long_desc))
         return ''.join(ret)
@@ -176,16 +191,24 @@ class ManPageWriter(object):
 
     def _write_footer(self):
         ret = []
-        appname = self.distribution.get_name()
-        author = '%s <%s>' % (self.distribution.get_author(),
-                              self.distribution.get_author_email())
-        ret.append(('.SH AUTHORS\n.B %s\nwas written by %s.\n'
-                    % (self._markup(appname), self._markup(author))))
-        homepage = self.distribution.get_url()
-        ret.append(('.SH DISTRIBUTION\nThe latest version of %s may '
-                    'be downloaded from\n'
-                    '.UR %s\n.UE\n'
-                    % (self._markup(appname), self._markup(homepage),)))
+
+        project_name = self.values["project_name"]
+        authors = self.values["authors"]
+        url = self.values["url"]
+
+        if authors:
+            ret.append('.SH AUTHORS\n')
+            for author in authors:
+                ret.append(".nf\n" + author + "\n.fi")
+            ret.append("\n")
+            ret.append("\n")
+
+        if url:
+            ret.append(('.SH DISTRIBUTION\nThe latest version of %s may '
+                        'be downloaded from\n'
+                        '.UR %s\n.UE\n'
+                        % (self._markup(project_name), self._markup(url),)))
+
         return ''.join(ret)
 
     def _write_filename(self, filename, what):
@@ -225,6 +248,36 @@ class build_manpage(Command):
         ('seealso=', None, 'list of manpages to put into the SEE ALSO section (e.g. bash:1)')
         ]
 
+    @staticmethod
+    def get_manpage_data(command, data):
+        """
+        Update `data` with values from `command.distribution`.
+        """
+        # authors
+        if not "authors" in data:
+            author = command.distribution.get_author()
+            if command.distribution.get_author_email():
+                author += " <{}>".format(command.distribution.get_author_email())
+            data["authors"] = [author]
+
+        attrs = list(MANPAGE_DATA_ATTRS)
+        attrs.remove("authors")
+        attrs.remove("prog")  # not available, copied from 'project_name' later
+        for attr in attrs:
+            if data.get(attr, None):
+                continue
+
+            # map data["project_name"] to distribution.get_name()
+            get_attr = "name" if attr == "project_name" else attr
+
+            getter = getattr(command.distribution, "get_" + get_attr)
+            value = getter()
+
+            data[attr] = value
+
+        if "prog" not in data:
+            data["prog"] = data["project_name"]
+
     def initialize_options(self):
         self.output = None
         self.parser = None
@@ -259,7 +312,11 @@ class build_manpage(Command):
 
     def run(self):
         self.announce('Writing man page %s' % self.output)
-        mpw = ManPageWriter(self._parser, self)
+
+        data = {}
+        self.get_manpage_data(self, data)
+
+        mpw = ManPageWriter(self._parser, data)
         mpw.write(self.output, seealso=self.seealso)
 
 
