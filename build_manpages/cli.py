@@ -44,6 +44,8 @@ ap.add_argument("--long-description", metavar="TEXT", help="Extended description
 ap.add_argument("--author", action="append", dest="authors", metavar="[AUTHOR]",
                 help="Author of the program. Can be specified multiple times.")
 ap.add_argument("--url", help="Link to project's homepage")
+ap.add_argument("--format", default="pretty", choices=("pretty", "single-commands-section"),
+                help="Format of the generated man page. Defaults to 'pretty'.")
 ap.add_argument("--output", dest='outfile', default='-',
                 help="Output file. Defaults to stdout.")
 
@@ -73,5 +75,5 @@ def main():
 
     parser = get_parser(import_type, import_from, obj_name, obj_type, prog=args.prog)
 
-    mw = ManPageWriter(parser, args_to_manpage_data(args))
+    mw = ManPageWriter(parser, args_to_manpage_data(args), format=args.format)
     mw.write_with_manpage(args.outfile)
