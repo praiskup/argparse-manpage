@@ -1,0 +1,104 @@
+.TH OSC "1" Manual
+.SH NAME
+osc
+.SH SYNOPSIS
+.B osc
+[global opts] <command> [--help] [opts] [args] osc --help
+.SH
+COMMANDS
+.SS \fBosc build\fR
+Build a package on your local machine
+
+usage: 
+  osc [global opts] build (will try to guess a build environement)
+  osc [global opts] build REPOSITORY ARCH BUILD_DESCR
+  osc [global opts] build REPOSITORY ARCH
+  osc [global opts] build REPOSITORY (ARCH = hostarch, BUILD_DESCR is detected automatically)
+  osc [global opts] build ARCH (REPOSITORY = build_repository (config option), BUILD_DESCR is detected automatically)
+  osc [global opts] build BUILD_DESCR (REPOSITORY = build_repository (config option), ARCH = hostarch)
+  osc [global opts] build (REPOSITORY = build_repository (config option), ARCH = hostarch, BUILD_DESCR is detected automatically)
+
+Build command description.
+
+options:
+.RS 7
+.TP
+\fB\-\-clean\fR
+Delete old build root before initializing it
+
+.RE
+
+.SS \fBosc list\fR
+List sources or binaries on the server
+
+usage: 
+  osc [global opts] list [PROJECT [PACKAGE]]
+  osc [global opts] list -b [PROJECT [PACKAGE [REPO [ARCH]]]]
+
+List command description.
+
+options:
+.RS 7
+.TP
+\fB\-M\fR, \fB\-\-meta\fR
+list meta data files
+
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+print extra information
+
+.RE
+
+.SS \fBosc foo\fR
+Test command with subcommands
+
+usage: 
+  osc [global opts] foo [-h] {bar,baz} ...
+
+Some description.
+
+.SS \fBosc foo bar\fR
+help bar
+
+usage: osc [global opts] foo bar [-h] [--opt-bar1 OPT_BAR1]
+                                 [--opt-bar2 OPT_BAR2]
+
+options:
+.RS 7
+.TP
+\fB\-\-opt\-bar1\fR \fI\,OPT_BAR1\/\fR
+help opt\-bar1
+
+.TP
+\fB\-\-opt\-bar2\fR \fI\,OPT_BAR2\/\fR
+help opt\-bar2
+
+.RE
+
+.SS \fBosc foo baz\fR
+help baz
+
+usage: osc [global opts] foo baz [-h] [--opt-baz1 OPT_BAZ1]
+                                 [--opt-baz2 OPT_BAZ2]
+
+options:
+.RS 7
+.TP
+\fB\-\-opt\-baz1\fR \fI\,OPT_BAZ1\/\fR
+help opt\-baz1
+
+.TP
+\fB\-\-opt\-baz2\fR \fI\,OPT_BAZ2\/\fR
+help opt\-baz2
+
+.RE
+
+.SH AUTHORS
+.nf
+Contributors to the osc project. See the project's GIT history for the complete list.
+.fi
+
+.SH DISTRIBUTION
+The latest version of osc may be downloaded from
+.UR http://en.opensuse.org/openSUSE:OSC
+.UE

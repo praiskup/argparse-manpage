@@ -87,11 +87,14 @@ class build_manpages(Command):
         for page, data in self.manpages_data.items():
             print ("generating " + page)
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
-            mw = ManPageWriter(parser, data)
-            if not 'format' in data or data['format'] == 'pretty':
+            format = data.get('format', 'pretty')
+            mw = ManPageWriter(parser, data, format=format)
+            if format in ('pretty', 'single-commands-section'):
                 mw.write_with_manpage(page)
-            elif data['format'] == 'old':
+            elif format == 'old':
                 mw.write(page)
+            else:
+                raise ValueError("Unknown format: {}".format(format))
 
 
 def get_build_py_cmd(command):

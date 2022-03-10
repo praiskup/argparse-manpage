@@ -177,5 +177,19 @@ class TestAllExapmles:
             file_cmp(installed, expected)
             file_cmp(compiled, expected)
 
+    @pytest.mark.parametrize("installer", ["pip", "setuppy"])
+    def test_osc(self, installer):
+        with pushd('examples/osc'):
+            name = 'osc.1'
+            prefix = '/usr'
+            idir = os.path.join(os.getcwd(), installer + "_install_dir")
+            mandir = os.path.join(idir, "usr/share/man/man1")
+            _rmtree(idir)
+            run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
+
+            file_cmp(os.path.join(mandir, os.path.basename(name)), 'expected-output.1')
+            file_cmp(name, 'expected-output.1')
+
+
 if __name__ == "__main__":
     unittest.main()

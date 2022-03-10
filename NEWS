@@ -2,6 +2,8 @@
 
 New in version 3
 
+* New man page format: single-commands-section
+* Add CLI and conf options for setting the output format
 * Add CLI and conf options to explicitly specify %prog value
 * Skip showing commands with help == SUPPRESS
 * Avoid rendering docs for command aliases

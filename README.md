@@ -66,6 +66,7 @@ Supported values are:
 - pyfile - what python file the argparse object resides in
 - object - the name of arparse object in "pyfile" to import
 - function - the name of function in pyfile to call to get the argparse object
+- format - format of the generated man page: pretty (default), single-commands-section
 - author - author of the program; can be specified multiple times
 - description - description of the program
 - long_description - verbose description of the program

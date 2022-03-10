@@ -24,6 +24,7 @@ MANPAGE_DATA_ATTRS = (
     "prog",
     "url",
     "version",
+    "format",
 )
 
 
@@ -98,9 +99,10 @@ class ManPageWriter(object):
     _command = None
     _type = None
 
-    def __init__(self, parser, values):
+    def __init__(self, parser, values, format):
         self._parser = parser
         self.values = values
+        self.format = format
         self._today = datetime.date.today()
 
         if isinstance(parser, argparse.ArgumentParser):
@@ -231,7 +233,7 @@ class ManPageWriter(object):
 
 
     def write_with_manpage(self, filename):
-        man = Manpage(self._parser)
+        man = Manpage(self._parser, format=self.format)
         man = str(man) + "\n" +  self._write_footer()
         self._write_filename(filename, man)
 
@@ -263,6 +265,7 @@ class build_manpage(Command):
         attrs = list(MANPAGE_DATA_ATTRS)
         attrs.remove("authors")
         attrs.remove("prog")  # not available, copied from 'project_name' later
+        attrs.remove("format")  # not available, must be set in setup.cfg
         for attr in attrs:
             if data.get(attr, None):
                 continue
@@ -316,7 +319,7 @@ class build_manpage(Command):
         data = {}
         self.get_manpage_data(self, data)
 
-        mpw = ManPageWriter(self._parser, data)
+        mpw = ManPageWriter(self._parser, data, format="pretty")
         mpw.write(self.output, seealso=self.seealso)
 
 
