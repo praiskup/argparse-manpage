@@ -6,12 +6,19 @@ import re
 import shutil
 import subprocess
 import sys
+import sysconfig
 from contextlib import contextmanager
 
 from pkg_resources import parse_version
 import pytest
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')]+sys.path
+
+
+def _mandir(prefix, num=1):
+    data = sysconfig.get_path('data', vars={'base': prefix})
+    return os.path.join(data, 'share/man/man' + str(num))
+
 
 @contextmanager
 def pushd(path):
@@ -42,7 +49,6 @@ def _rmtree(directory):
 def run_pip(args):
     environ = os.environ.copy()
     environ['PYTHONPATH'] = ':'.join(sys.path)
-    environ["RPM_BUILD_ROOT"] = "fake"  # rhbz#2026979
     subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
                     env=environ)
 
@@ -50,7 +56,6 @@ def run_pip(args):
 def run_setup_py(args):
     environ = os.environ.copy()
     environ['PYTHONPATH'] = ':'.join(sys.path)
-    environ["RPM_BUILD_ROOT"] = "fake"  # rhbz#2026979
     with change_argv(['setup.py'] + args):
         subprocess.call([sys.executable, 'setup.py'] + args,
                         env=environ)
@@ -123,7 +128,7 @@ class TestAllExapmles:
             name = 'copr-cli.1'
             prefix = '/usr'
             idir = os.path.join(os.getcwd(), installer + "_install_dir")
-            mandir = os.path.join(idir, "usr/share/man/man1")
+            mandir = os.path.join(idir, _mandir("usr/"))
             _rmtree(idir)
             run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
 
@@ -145,7 +150,7 @@ class TestAllExapmles:
             prefix = "/usr"
             idir = os.path.join(os.getcwd(), installer + "_install_dir")
             _rmtree(idir)
-            mandir = os.path.join(idir, "usr/share/man/man1")
+            mandir = os.path.join(idir, _mandir("usr/"))
             run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
             file_cmp(os.path.join(mandir, os.path.basename(name)), 'expected-output.1')
             file_cmp(name, 'expected-output.1')
@@ -157,7 +162,7 @@ class TestAllExapmles:
             prefix = "/usr"
             idir = os.path.join(os.getcwd(), installer + "_install_dir")
             _rmtree(idir)
-            mandir = os.path.join(idir, "usr/share/man/man1")
+            mandir = os.path.join(idir, _mandir("usr/"))
             run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
             for name in ['man/resalloc.1', 'man/resalloc-maint.1']:
                 file_cmp(os.path.join(mandir, os.path.basename(name)),
@@ -170,7 +175,7 @@ class TestAllExapmles:
             prefix = "/usr"
             idir = os.path.join(os.getcwd(), installer + "_install_dir")
             _rmtree(idir)
-            mandir = os.path.join(idir, "usr/share/man/man1")
+            mandir = os.path.join(idir, _mandir("usr/"))
             run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
             compiled = os.path.join('man', 'test.1')
             base = os.path.basename(compiled)
