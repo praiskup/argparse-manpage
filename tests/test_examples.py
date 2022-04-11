@@ -42,6 +42,7 @@ def _rmtree(directory):
 def run_pip(args):
     environ = os.environ.copy()
     environ['PYTHONPATH'] = ':'.join(sys.path)
+    environ["RPM_BUILD_ROOT"] = "fake"  # rhbz#2026979
     subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
                     env=environ)
 
@@ -49,6 +50,7 @@ def run_pip(args):
 def run_setup_py(args):
     environ = os.environ.copy()
     environ['PYTHONPATH'] = ':'.join(sys.path)
+    environ["RPM_BUILD_ROOT"] = "fake"  # rhbz#2026979
     with change_argv(['setup.py'] + args):
         subprocess.call([sys.executable, 'setup.py'] + args,
                         env=environ)
