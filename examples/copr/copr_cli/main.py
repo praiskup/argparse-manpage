@@ -622,6 +622,12 @@ def setup_parser():
     ###                    Project options                ###
     #########################################################
 
+    # TEST: add a subcommand that should not be rendered in the output
+    parser_whoami = subparsers.add_parser(
+        "hidden",
+        help=argparse.SUPPRESS,
+    )
+
     parser_whoami = subparsers.add_parser(
         "whoami",
         help="Print username that the client authenticates with against copr-frontend"
@@ -631,6 +637,8 @@ def setup_parser():
     # create the parser for the "list" command
     parser_list = subparsers.add_parser(
         "list",
+        # TEST: add an alias that should not be rendered in the output
+        aliases=["ls"],
         help="List all the copr of the "
              "provided "
     )
