@@ -18,14 +18,14 @@ class HelpFormatter(argparse.RawDescriptionHelpFormatter):
                 else:
                     parts.append("%*s%-21s %s" % (self._current_indent, "", i.metavar, i.help))
             return "\n".join(parts)
-        return super()._format_action(action)
+        return super(HelpFormatter, self)._format_action(action)
 
     def _format_usage(self, usage, actions, groups, prefix):
         if usage:
             usage = usage.strip()
             usage = usage % dict(prog=self._prog)
         else:
-            usage = super()._format_usage(usage, actions, groups, prefix)
+            usage = super(HelpFormatter, self)._format_usage(usage, actions, groups, prefix)
             if usage.startswith("usage: "):
                 usage = usage[7:]
 

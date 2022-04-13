@@ -1,5 +1,10 @@
 # Copyright (C) 2017 Red Hat, Inc.
 
+# Python 2.7 hack.  Without this, 'from build_manpages.build_manpage' attempts
+# to import 'build_manpages.build_manpages.build_manpage' because of our
+# unfortunate file naming.
+from __future__ import absolute_import
+
 import argparse
 
 from build_manpages.build_manpage import ManPageWriter, get_parser, MANPAGE_DATA_ATTRS

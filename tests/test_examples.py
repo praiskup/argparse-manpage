@@ -1,7 +1,6 @@
 import errno
 import unittest
 import os
-from platform import python_version
 import re
 import shutil
 import subprocess
@@ -9,10 +8,11 @@ import sys
 import sysconfig
 from contextlib import contextmanager
 
-from pkg_resources import parse_version
 import pytest
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')]+sys.path
+
+from argparse_testlib import skip_on_python_older_than
 
 
 def _mandir(prefix, num=1):
@@ -71,10 +71,12 @@ def run_one_installer(installer, args):
     """
     Run 'pip <args> .' or 'python setup.py <args>'
     """
-    if parse_version(python_version()) < parse_version("3.10"):
-        if installer == "pip":
-            raise pytest.skip("pip install not supported with python %s" %
-                              python_version())
+
+    skip_on_python_older_than(
+        "3.10",
+        "Too old Python version for testing PIP installation",
+        installer == "pip",
+    )
     method = run_pip if installer == "pip" else run_setup_py
     method(args)
 
@@ -190,7 +192,7 @@ class TestAllExapmles:
             name = 'osc.1'
             prefix = '/usr'
             idir = os.path.join(os.getcwd(), installer + "_install_dir")
-            mandir = os.path.join(idir, "usr/share/man/man1")
+            mandir = os.path.join(idir, _mandir("usr/"))
             _rmtree(idir)
             run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
 

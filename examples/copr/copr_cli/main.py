@@ -637,8 +637,6 @@ def setup_parser():
     # create the parser for the "list" command
     parser_list = subparsers.add_parser(
         "list",
-        # TEST: add an alias that should not be rendered in the output
-        aliases=["ls"],
         help="List all the copr of the "
              "provided "
     )

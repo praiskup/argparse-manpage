@@ -138,9 +138,9 @@ PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest -vv
 %{_bindir}/argparse-manpage
 %_mandir/man1/argparse-manpage.1.*
 %if %{with python3} || %{with pyproject}
-%python3_sitelib/build_manpages/cli
+%python3_sitelib/build_manpages/cli.py
 %else
-%python2_sitelib/build_manpages/cli
+%python2_sitelib/build_manpages/cli.py
 %endif
 
 
@@ -149,7 +149,7 @@ PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest -vv
 %license LICENSE
 %python2_sitelib/build_manpages
 %python2_sitelib/argparse_manpage-%{version}*.egg-info
-%exclude %python2_sitelib/build_manpages/cli
+%exclude %python2_sitelib/build_manpages/cli.py
 %endif
 
 
@@ -162,7 +162,7 @@ PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest -vv
 %else
 %python3_sitelib/argparse_manpage-%{version}*.egg-info
 %endif
-%exclude %python3_sitelib/build_manpages/cli
+%exclude %python3_sitelib/build_manpages/cli.py
 %endif
 
 
