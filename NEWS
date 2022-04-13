@@ -8,8 +8,11 @@ New in version 3
 * Skip showing commands with help == SUPPRESS
 * Avoid rendering docs for command aliases
 * Print program name in upper case in header and footer
-* Dropped --author-email CLI option
-* The --author CLI option can be specified multiple times
+* The --author CLI option has changed, and takes arbitrary string
+  (typically 'Author Name <the@example.com>'), and newly can be specified
+  multiple times.  Therefore, it now replaces the '--author-email' option.
+  The --author-email option is kept, but is just an alias to the --author
+  option.
 * All CLI options can be specified also in setup.cfg
 * Don't render AUTHORS and DISTRIBUTION if they would contain undefined values
 * Remove '... was written by' from AUTHORS

@@ -48,6 +48,8 @@ ap.add_argument("--description", metavar="TEXT", help="Description of the progra
 ap.add_argument("--long-description", metavar="TEXT", help="Extended description of the program.")
 ap.add_argument("--author", action="append", dest="authors", metavar="[AUTHOR]",
                 help="Author of the program. Can be specified multiple times.")
+ap.add_argument("--author-email", action="append", dest="authors",
+                help=argparse.SUPPRESS)
 ap.add_argument("--url", help="Link to project's homepage")
 ap.add_argument("--format", default="pretty", choices=("pretty", "single-commands-section"),
                 help="Format of the generated man page. Defaults to 'pretty'.")
