@@ -11,8 +11,7 @@ all: argparse-manpage.spec argparse-manpage-$(VERSION).tar.gz
 .PHONY: $(TARBALL)
 $(TARBALL):
 	rm -f $(TARBALL)
-	( cd .. && git archive --prefix argparse-manpage-$(VERSION)/ HEAD ) \
-	    | gzip > "$@"
+	cd .. && python3 setup.py sdist && cp "dist/argparse-manpage-$(VERSION).tar.gz" rpm/
 
 argparse-manpage.spec: argparse-manpage.spec.tpl ../setup.py
 	@echo "  GEN $@" ; \
