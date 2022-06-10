@@ -60,7 +60,7 @@ def get_parser():
         description="Build command description.",
         prog="osc [global opts] build",
         usage=
-            "%(prog)s (will try to guess a build environement)\n"
+            "%(prog)s (will try to guess a build environment)\n"
             "%(prog)s REPOSITORY ARCH BUILD_DESCR\n"
             "%(prog)s REPOSITORY ARCH\n"
             "%(prog)s REPOSITORY (ARCH = hostarch, BUILD_DESCR is detected automatically)\n"
