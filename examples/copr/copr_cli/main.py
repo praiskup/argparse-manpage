@@ -977,13 +977,13 @@ def setup_parser():
                                        metavar="PKGNAME", required=True)
     parser_delete_package.set_defaults(func="action_delete_package")
 
-    # package reseting
+    # package resetting
     parser_reset_package = subparsers.add_parser("reset-package",
                                                  help="Resets (clears) default source of the specified package")
     parser_reset_package.add_argument("copr",
                                       help="The copr repo to list the packages of. Can be just name of project or even in format owner/project.")
     parser_reset_package.add_argument("--name",
-                                      help="Name of a package to be reseted",
+                                      help="Name of a package to be reset",
                                       metavar="PKGNAME", required=True)
     parser_reset_package.set_defaults(func="action_reset_package")
 

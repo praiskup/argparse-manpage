@@ -44,7 +44,7 @@ New in version 2
 
 * RPM spec file updated to comply with the recent (Fedora 35+) guidelines.
 
-* Drop python3-six requirment.
+* Drop python3-six requirement.
 
 * Properly highligh all option argument METAVARs.
 

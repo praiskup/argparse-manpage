@@ -184,7 +184,7 @@ class _ManpageFormatter(HelpFormatter):
 
     def format_parser(self, parser):
         """
-        Return lines Groff formated text for given parser
+        Return lines Groff formatted text for given parser
         """
         return self._format_parser(parser)
 
