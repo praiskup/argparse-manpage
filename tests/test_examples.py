@@ -49,8 +49,15 @@ def _rmtree(directory):
 def run_pip(args):
     environ = os.environ.copy()
     environ['PYTHONPATH'] = ':'.join(sys.path)
-    subprocess.call([sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
-                    env=environ)
+    from pip import __version__
+
+    pip_version = tuple([int(x) for x in __version__.split('.')[:2]])
+    if pip_version < (21, 3):
+        subprocess.call(
+            [sys.executable, '-m', 'pip'] + args + ["--use-feature=in-tree-build", "."],
+            env=environ)
+    else:
+        subprocess.call([sys.executable, '-m', 'pip'] + args + ["."], env=environ)
 
 
 def run_setup_py(args):
