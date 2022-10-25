@@ -422,9 +422,6 @@ class _ManpageFormatter(HelpFormatter):
 
         return title + description + content
 
-    def format_action(self, action):
-        return self._format_action(action)
-
     def format_text(self, text):
         return _markup(text.strip('\n')\
                .replace('\\', '\\\\')\
