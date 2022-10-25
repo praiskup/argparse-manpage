@@ -39,6 +39,12 @@ MANPAGE_DATA_ATTRS = (
 )
 
 
+def _markup(text):
+    if isinstance(text, str):
+        return text.replace('-', r'\-')
+    return text
+
+
 def get_manpage_data_from_distribution(distribution, data):
     """
     Update `data` with values from `distribution`.
@@ -70,11 +76,48 @@ def get_manpage_data_from_distribution(distribution, data):
         data["prog"] = data["project_name"]
 
 
+def _get_footer_lines(data):
+    ret = []
+    project_name = data["project_name"]
+    authors = data["authors"]
+    url = data["url"]
+
+    needs_separator = False
+    if authors:
+        ret.append('.SH AUTHORS')
+        for author in authors:
+            ret.append(".nf")
+            ret.append(author)
+            ret.append(".fi")
+        needs_separator = True
+
+    if url:
+        if needs_separator:
+            ret.append("")
+        ret.append(".SH DISTRIBUTION")
+        ret.append("The latest version of {0} may "
+                   "be downloaded from".format(_markup(project_name)))
+        ret.append(".UR {0}".format(_markup(url)))
+        ret.append(".UE")
+    return ret
+
+
+def get_footer(data):
+    """
+    Return a manual page footer based on the data returned from
+    get_manpage_data_from_distribution().  Used only by the old build_manpage
+    module.
+    """
+    return "\n".join(_get_footer_lines(data)) + "\n"
+
+
 class Manpage(object):
-    def __init__(self, parser, format='pretty'):
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, parser, data, format='pretty'):
         self.prog = parser.prog
         self.parser = parser
         self.format = format
+        self.data = data
         if not getattr(parser, '_manpage', None):
             self.parser._manpage = []
 
@@ -121,7 +164,9 @@ class Manpage(object):
             lines.append('.SH {}'.format(section['heading'].upper()))
             lines.append(self.format_text(section['content']))
 
-        return '\n'.join(lines).strip('\n') + '\n'
+        lines.append("")
+        lines.extend(self.mf.format_footer(self.data))
+        return "\n".join(lines).strip("\n") + "\n"
 
 
 def underline(text):
@@ -152,11 +197,6 @@ class _ManpageFormatter(HelpFormatter):
         self.of = old_formatter
         assert format in ("pretty", "single-commands-section")
         self.format = format
-
-    def _markup(self, text):
-        if isinstance(text, str):
-            return text.replace('-', r'\-')
-        return text
 
     @staticmethod
     def _get_aliases_str(aliases):
@@ -237,7 +277,7 @@ class _ManpageFormatter(HelpFormatter):
         parts.append('.TP')
 
         action_header = self._format_action_invocation(action)
-        parts.append(self._markup(action_header))
+        parts.append(_markup(action_header))
 
         # if there was help for the action, add lines of help text
         if action.help:
@@ -386,6 +426,13 @@ class _ManpageFormatter(HelpFormatter):
         return self._format_action(action)
 
     def format_text(self, text):
-        return self._markup(text.strip('\n')\
-                   .replace('\\', '\\\\')\
-                   .replace('\n', '\n') + '\n')
+        return _markup(text.strip('\n')\
+               .replace('\\', '\\\\')\
+               .replace('\n', '\n') + '\n')
+
+    @staticmethod
+    def format_footer(data):
+        """
+        Get lines for footer.
+        """
+        return _get_footer_lines(data)

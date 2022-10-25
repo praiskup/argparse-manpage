@@ -30,7 +30,6 @@ SIMPLE_OUTPUT = """\
 [-h] test
 .TP
 \\fBtest\\fR
-
 """
 
 
