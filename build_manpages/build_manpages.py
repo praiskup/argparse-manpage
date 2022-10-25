@@ -5,24 +5,19 @@ command.
 
 import os
 
-DEFAULT_CMD_NAME = 'build_manpages'
-
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 import shutil
 
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import SafeConfigParser as ConfigParser
-
 from .manpage import MANPAGE_DATA_ATTRS, get_manpage_data_from_distribution
+from .compat import ConfigParser
 
 # TODO: drop the "old" format support, and stop depending on ManPageWriter
 # TODO: drop the "old" format support, and move get_parser logic into this file
 # No more deps from this module, please.
 from .build_manpage import ManPageWriter, get_parser
 
+DEFAULT_CMD_NAME = 'build_manpages'
 
 def parse_manpages_spec(string):
     manpages_data = {}
