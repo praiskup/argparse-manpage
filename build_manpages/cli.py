@@ -82,5 +82,5 @@ def main():
 
     parser = get_parser(import_type, import_from, obj_name, obj_type, prog=args.prog)
 
-    mw = ManPageWriter(parser, args_to_manpage_data(args), format=args.format)
-    mw.write_with_manpage(args.outfile)
+    mpw = ManPageWriter(parser, args_to_manpage_data(args))
+    mpw.write_with_manpage(args.outfile, page_format=args.format)
