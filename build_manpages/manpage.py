@@ -422,10 +422,9 @@ class _ManpageFormatter(HelpFormatter):
 
         return title + description + content
 
-    def format_text(self, text):
-        return _markup(text.strip('\n')\
-               .replace('\\', '\\\\')\
-               .replace('\n', '\n') + '\n')
+    @staticmethod
+    def format_text(text):
+        return _markup(text.strip('\n').replace('\\', '\\\\') + "\n")
 
     @staticmethod
     def format_footer(data):
