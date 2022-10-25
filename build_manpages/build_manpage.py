@@ -11,7 +11,11 @@ from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
 from .manpage import Manpage, get_manpage_data_from_distribution
-from .tooling import get_parser_from_module, get_parser_from_file
+from .tooling import (
+    get_parser_from_file,
+    get_parser_from_module,
+    write_to_filename,
+)
 
 
 class ManPageWriter(object):
@@ -132,14 +136,6 @@ class ManPageWriter(object):
 
         return ''.join(ret)
 
-    def _write_filename(self, filename, what):
-        filename = filename if filename != '-' else '/dev/stdout'
-        dirname = os.path.dirname(filename)
-        if dirname and not os.path.exists(dirname):
-            os.makedirs(dirname)
-        with open(filename, 'w') as stream:
-            stream.write(what)
-
 
     def write(self, filename, seealso=None):
         manpage = []
@@ -148,13 +144,13 @@ class ManPageWriter(object):
         manpage.append(self._write_footer())
         if seealso:
             manpage.append(self._write_seealso(seealso))
-        self._write_filename(filename, ''.join(manpage))
+        write_to_filename(''.join(manpage), filename)
 
 
     def write_with_manpage(self, filename, page_format):
         man = Manpage(self._parser, format=page_format)
         man = str(man) + "\n" +  self._write_footer()
-        self._write_filename(filename, man)
+        write_to_filename(man, filename)
 
 
 class build_manpage(Command):
