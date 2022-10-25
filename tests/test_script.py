@@ -28,6 +28,7 @@ SIMPLE_OUTPUT = """\
 .SH SYNOPSIS
 .B {name}
 [-h] test
+
 .TP
 \\fBtest\\fR
 """

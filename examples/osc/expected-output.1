@@ -4,6 +4,7 @@ osc
 .SH SYNOPSIS
 .B osc
 [global opts] <command> [--help] [opts] [args] osc --help
+
 .SH
 COMMANDS
 .SS \fBosc build\fR
@@ -25,7 +26,6 @@ options:
 .TP
 \fB\-\-clean\fR
 Delete old build root before initializing it
-
 .RE
 
 .SS \fBosc list\fR
@@ -33,7 +33,7 @@ List sources or binaries on the server
 
 usage: 
   osc [global opts] list [PROJECT [PACKAGE]]
-  osc [global opts] list -b [PROJECT [PACKAGE [REPO [ARCH]]]]
+  osc [global opts] list \-b [PROJECT [PACKAGE [REPO [ARCH]]]]
 
 List command description.
 
@@ -46,22 +46,21 @@ list meta data files
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 print extra information
-
 .RE
 
 .SS \fBosc foo\fR
 Test command with subcommands
 
 usage: 
-  osc [global opts] foo [-h] {bar,baz} ...
+  osc [global opts] foo [\-h] {bar,baz} ...
 
 Some description.
 
 .SS \fBosc foo bar\fR
 help bar
 
-usage: osc [global opts] foo bar [-h] [--opt-bar1 OPT_BAR1]
-                                 [--opt-bar2 OPT_BAR2]
+usage: osc [global opts] foo bar [\-h] [\-\-opt\-bar1 OPT_BAR1]
+                                 [\-\-opt\-bar2 OPT_BAR2]
 
 options:
 .RS 7
@@ -72,14 +71,13 @@ help opt\-bar1
 .TP
 \fB\-\-opt\-bar2\fR \fI\,OPT_BAR2\/\fR
 help opt\-bar2
-
 .RE
 
 .SS \fBosc foo baz\fR
 help baz
 
-usage: osc [global opts] foo baz [-h] [--opt-baz1 OPT_BAZ1]
-                                 [--opt-baz2 OPT_BAZ2]
+usage: osc [global opts] foo baz [\-h] [\-\-opt\-baz1 OPT_BAZ1]
+                                 [\-\-opt\-baz2 OPT_BAZ2]
 
 options:
 .RS 7
@@ -90,7 +88,6 @@ help opt\-baz1
 .TP
 \fB\-\-opt\-baz2\fR \fI\,OPT_BAZ2\/\fR
 help opt\-baz2
-
 .RE
 
 
