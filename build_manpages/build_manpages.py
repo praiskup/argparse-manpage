@@ -11,11 +11,11 @@ import shutil
 
 from .manpage import MANPAGE_DATA_ATTRS, get_manpage_data_from_distribution
 from .compat import ConfigParser
+from .tooling import get_parser
 
 # TODO: drop the "old" format support, and stop depending on ManPageWriter
-# TODO: drop the "old" format support, and move get_parser logic into this file
 # No more deps from this module, please.
-from .build_manpage import ManPageWriter, get_parser
+from .build_manpage import ManPageWriter
 
 DEFAULT_CMD_NAME = 'build_manpages'
 
