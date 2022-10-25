@@ -9,12 +9,16 @@ from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 import shutil
 
-from .manpage import MANPAGE_DATA_ATTRS, get_manpage_data_from_distribution
+from .manpage import (
+    Manpage,
+    MANPAGE_DATA_ATTRS,
+    get_manpage_data_from_distribution,
+)
 from .compat import ConfigParser
-from .tooling import get_parser
+from .tooling import get_parser, write_to_filename
 
 # TODO: drop the "old" format support, and stop depending on ManPageWriter
-# No more deps from this module, please.
+# TODO: No more deps from this module, please.
 from .build_manpage import ManPageWriter
 
 DEFAULT_CMD_NAME = 'build_manpages'
@@ -88,10 +92,12 @@ class build_manpages(Command):
             print ("generating " + page)
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
             format = data.get('format', 'pretty')
-            mw = ManPageWriter(parser, data)
             if format in ('pretty', 'single-commands-section'):
-                mw.write_with_manpage(page, page_format=format)
+                manpage = Manpage(parser, data, format)
+                write_to_filename(str(manpage), page)
             elif format == 'old':
+                # TODO: drop this entirely
+                mw = ManPageWriter(parser, data)
                 mw.write(page)
             else:
                 raise ValueError("Unknown format: {}".format(format))

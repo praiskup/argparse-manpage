@@ -13,10 +13,16 @@ from build_manpages.manpage import Manpage
 
 class Tests(unittest.TestCase):
 
+    _fake_data = {
+        "project_name": "argparse-manpage-testsuite",
+        "authors": None,
+        "url": None,
+    }
+
     def test_backslash_escape(self):
         parser = argparse.ArgumentParser('duh')
         parser.add_argument("--jej", help="c:\\something")
-        man = Manpage(parser)
+        man = Manpage(parser, self._fake_data)
         assert 'c:\\\\something' in str(man).split('\n')
         assert '.SH OPTIONS' in str(man).split('\n')
 
@@ -27,7 +33,7 @@ class Tests(unittest.TestCase):
         parser2 = parser1.add_argument_group('g2')
         parser2.add_argument("--jej2", help="c:\\something")
         parser2.add_argument("--else", help="c:\\something")
-        man = Manpage(parser1)
+        man = Manpage(parser1, self._fake_data)
         self.assertIn('.SH G1', str(man).split('\n'))
         self.assertIn('.SH G2', str(man).split('\n'))
         self.assertNotIn('.SH OPTIONS', str(man).split('\n'))
@@ -44,7 +50,7 @@ class Tests(unittest.TestCase):
                  "provided "
         )
 
-        manpage_lines = str(Manpage(parser)).split("\n")
+        manpage_lines = str(Manpage(parser, self._fake_data)).split("\n")
         exp_line = '\\fBaliases_test\\fR \\fI\\,list\\/\\fR'
         not_exp_line = '\\fBaliases_test\\fR \\fI\\,ls\\/\\fR'
         assert exp_line in manpage_lines

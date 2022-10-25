@@ -2,7 +2,6 @@
 
 """build_manpage command -- Generate man page from setup()"""
 
-import os
 import datetime
 import optparse
 import argparse
@@ -10,7 +9,7 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from .manpage import Manpage, get_manpage_data_from_distribution
+from .manpage import get_manpage_data_from_distribution, get_footer
 from .tooling import (
     get_parser_from_file,
     get_parser_from_module,
@@ -114,43 +113,14 @@ class ManPageWriter(object):
 
         return ''.join(ret)
 
-    def _write_footer(self):
-        ret = []
-
-        project_name = self.values["project_name"]
-        authors = self.values["authors"]
-        url = self.values["url"]
-
-        if authors:
-            ret.append('.SH AUTHORS\n')
-            for author in authors:
-                ret.append(".nf\n" + author + "\n.fi")
-            ret.append("\n")
-            ret.append("\n")
-
-        if url:
-            ret.append(('.SH DISTRIBUTION\nThe latest version of %s may '
-                        'be downloaded from\n'
-                        '.UR %s\n.UE\n'
-                        % (self._markup(project_name), self._markup(url),)))
-
-        return ''.join(ret)
-
-
     def write(self, filename, seealso=None):
         manpage = []
         manpage.append(self._write_header())
         manpage.append(self._write_options())
-        manpage.append(self._write_footer())
+        manpage.append(get_footer(self.values))
         if seealso:
             manpage.append(self._write_seealso(seealso))
         write_to_filename(''.join(manpage), filename)
-
-
-    def write_with_manpage(self, filename, page_format):
-        man = Manpage(self._parser, format=page_format)
-        man = str(man) + "\n" +  self._write_footer()
-        write_to_filename(man, filename)
 
 
 class build_manpage(Command):

@@ -7,9 +7,8 @@ from __future__ import absolute_import
 
 import argparse
 
-from build_manpages.build_manpage import ManPageWriter
-from build_manpages.tooling import get_parser
-from build_manpages.manpage import MANPAGE_DATA_ATTRS
+from build_manpages.tooling import get_parser, write_to_filename
+from build_manpages.manpage import MANPAGE_DATA_ATTRS, Manpage
 
 
 description = """
@@ -83,6 +82,6 @@ def main():
         obj_name = args.function
 
     parser = get_parser(import_type, import_from, obj_name, obj_type, prog=args.prog)
-
-    mpw = ManPageWriter(parser, args_to_manpage_data(args))
-    mpw.write_with_manpage(args.outfile, page_format=args.format)
+    data = args_to_manpage_data(args)
+    manpage = Manpage(parser, data, args.format)
+    write_to_filename(str(manpage), args.outfile)
