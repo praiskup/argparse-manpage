@@ -16,7 +16,12 @@ try:
 except ImportError:
     from ConfigParser import SafeConfigParser as ConfigParser
 
-from .build_manpage import ManPageWriter, get_parser, build_manpage, MANPAGE_DATA_ATTRS
+from .manpage import MANPAGE_DATA_ATTRS, get_manpage_data_from_distribution
+
+# TODO: drop the "old" format support, and stop depending on ManPageWriter
+# TODO: drop the "old" format support, and move get_parser logic into this file
+# No more deps from this module, please.
+from .build_manpage import ManPageWriter, get_parser
 
 
 def parse_manpages_spec(string):
@@ -81,7 +86,7 @@ class build_manpages(Command):
 
         # if a value wasn't set in setup.cfg, use the value from setup.py
         for page, data in self.manpages_data.items():
-            build_manpage.get_manpage_data(self, data)
+            get_manpage_data_from_distribution(self.distribution, data)
 
     def run(self):
         for page, data in self.manpages_data.items():

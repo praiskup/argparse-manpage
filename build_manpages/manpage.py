@@ -26,6 +26,50 @@ DEFAULT_GROUP_NAMES_SUBCOMMANDS = {
 }
 
 
+# all manpage attributes that can be set via CLI or setup.cfg
+MANPAGE_DATA_ATTRS = (
+    "authors",  # just "author" in setup.cfg, can be specified multiple times
+    "description",
+    "long_description",
+    "project_name",  # maps to distribution.get_name()
+    "prog",
+    "url",
+    "version",
+    "format",
+)
+
+
+def get_manpage_data_from_distribution(distribution, data):
+    """
+    Update `data` with values from `distribution`.
+    """
+    # authors
+    if not "authors" in data:
+        author = distribution.get_author()
+        if distribution.get_author_email():
+            author += " <{}>".format(distribution.get_author_email())
+        data["authors"] = [author]
+
+    attrs = list(MANPAGE_DATA_ATTRS)
+    attrs.remove("authors")
+    attrs.remove("prog")  # not available, copied from 'project_name' later
+    attrs.remove("format")  # not available, must be set in setup.cfg
+    for attr in attrs:
+        if data.get(attr, None):
+            continue
+
+        # map data["project_name"] to distribution.get_name()
+        get_attr = "name" if attr == "project_name" else attr
+
+        getter = getattr(distribution, "get_" + get_attr)
+        value = getter()
+
+        data[attr] = value
+
+    if "prog" not in data:
+        data["prog"] = data["project_name"]
+
+
 class Manpage(object):
     def __init__(self, parser, format='pretty'):
         self.prog = parser.prog

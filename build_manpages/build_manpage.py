@@ -12,20 +12,7 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from .manpage import Manpage
-
-
-# all manpage attributes that can be set via CLI or setup.cfg
-MANPAGE_DATA_ATTRS = (
-    "authors",  # just "author" in setup.cfg, can be specified multiple times
-    "description",
-    "long_description",
-    "project_name",  # maps to distribution.get_name()
-    "prog",
-    "url",
-    "version",
-    "format",
-)
+from .manpage import Manpage, get_manpage_data_from_distribution
 
 
 def get_obj(module, objname, objtype):
@@ -249,37 +236,6 @@ class build_manpage(Command):
         ('seealso=', None, 'list of manpages to put into the SEE ALSO section (e.g. bash:1)')
         ]
 
-    @staticmethod
-    def get_manpage_data(command, data):
-        """
-        Update `data` with values from `command.distribution`.
-        """
-        # authors
-        if not "authors" in data:
-            author = command.distribution.get_author()
-            if command.distribution.get_author_email():
-                author += " <{}>".format(command.distribution.get_author_email())
-            data["authors"] = [author]
-
-        attrs = list(MANPAGE_DATA_ATTRS)
-        attrs.remove("authors")
-        attrs.remove("prog")  # not available, copied from 'project_name' later
-        attrs.remove("format")  # not available, must be set in setup.cfg
-        for attr in attrs:
-            if data.get(attr, None):
-                continue
-
-            # map data["project_name"] to distribution.get_name()
-            get_attr = "name" if attr == "project_name" else attr
-
-            getter = getattr(command.distribution, "get_" + get_attr)
-            value = getter()
-
-            data[attr] = value
-
-        if "prog" not in data:
-            data["prog"] = data["project_name"]
-
     def initialize_options(self):
         self.output = None
         self.parser = None
@@ -316,7 +272,7 @@ class build_manpage(Command):
         self.announce('Writing man page %s' % self.output)
 
         data = {}
-        self.get_manpage_data(self, data)
+        get_manpage_data_from_distribution(self.distribution, data)
 
         # the format is actually unused
         mpw = ManPageWriter(self._parser, data)
