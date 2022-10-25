@@ -40,8 +40,11 @@ MANPAGE_DATA_ATTRS = (
 
 
 def _markup(text):
+    """
+    Escape the text for the markdown format.
+    """
     if isinstance(text, str):
-        return text.replace('-', r'\-')
+        return text.replace('\\', '\\\\').replace('-', r'\-')
     return text
 
 
@@ -124,7 +127,6 @@ class Manpage(object):
         self.formatter = self.parser._get_formatter()
         self.mf = _ManpageFormatter(self.prog, self.formatter, format=self.format)
         self.synopsis = self.parser.format_usage().split(':')[-1].split()
-        self.description = self.parser.description
 
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
@@ -149,13 +151,10 @@ class Manpage(object):
             lines.append('.B {}'.format(self.synopsis[0]))
             lines.append(' '.join(self.synopsis[1:]))
 
-        # Description
-        if self.description:
-            lines.append('.SH DESCRIPTION')
-
         lines.extend(self.mf.format_parser(self.parser))
 
         if self.parser.epilog != None:
+            lines.append("")
             lines.append('.SH COMMENTS')
             lines.append(self.format_text(self.parser.epilog))
 
@@ -173,16 +172,12 @@ def underline(text):
     """
     Wrap text with \fI for underlined text
     """
-    return r'\fI\,{}\/\fR'.format(text)
+    return r'\fI\,{0}\/\fR'.format(_markup(text))
 
 
 def bold(text):
     """ Wrap text by "bold" groff tags """
-    if not text.strip().startswith(r'\fB'):
-        text = r'\fB{}'.format(text)
-    if not text.strip().endswith(r'\fR'):
-        text = r'{}\fR'.format(text)
-    return text
+    return r"\fB{0}\fR".format(_markup(text))
 
 
 def quoted(text):
@@ -238,6 +233,7 @@ class _ManpageFormatter(HelpFormatter):
         lines = []
         if subcommand:
             if self.format == "pretty":
+                lines.append("")
                 # start a new section for each command
                 first_line = ".SH COMMAND"
                 first_line += " " + underline(quoted(subcommand))
@@ -256,13 +252,25 @@ class _ManpageFormatter(HelpFormatter):
                     lines.append(help)
                     lines.append("")
 
-            lines.append(parser.format_usage())
+            lines.append(self.format_text(parser.format_usage()))
 
         if parser.description:
+            if subcommand:
+                lines.append("")
+            else:
+                lines.append(".SH DESCRIPTION")
+
             lines.append(self.format_text(parser.description))
 
+        is_subsequent_ag = True
         for group in parser._action_groups:
-            lines.extend(self._format_action_group(group, subcommand))
+            ag_lines = self._format_action_group(group, subcommand)
+            if not ag_lines:
+                continue
+            if is_subsequent_ag:
+                lines.append("")
+            lines.extend(ag_lines)
+            is_subsequent_ag = True
 
         return lines
 
@@ -277,7 +285,7 @@ class _ManpageFormatter(HelpFormatter):
         parts.append('.TP')
 
         action_header = self._format_action_invocation(action)
-        parts.append(_markup(action_header))
+        parts.append(action_header)
 
         # if there was help for the action, add lines of help text
         if action.help:
@@ -295,7 +303,7 @@ class _ManpageFormatter(HelpFormatter):
             lines.append('.TP')
             lines.append(bold(prog) + ' ' + underline(action.dest))
             if hasattr(action, 'help'):
-                lines.append(action.help)
+                lines.append(self.format_text(action.help))
 
         return '\n'.join(lines)
 
@@ -351,6 +359,7 @@ class _ManpageFormatter(HelpFormatter):
                 # don't print hidden commands
                 continue
             lines.extend(self._format_parser(choice, new_subcommand, aliases, help))
+
         return lines
 
     def _format_action_group(self, action_group, subcommand=None):
@@ -375,6 +384,10 @@ class _ManpageFormatter(HelpFormatter):
             if '--help' in action.option_strings:
                 # TODO: put out some man page comment ..
                 continue
+
+            if some_action:
+                # Separate actions
+                content.append("")
 
             some_action = True
             content.extend(self._format_action(action))
@@ -411,6 +424,7 @@ class _ManpageFormatter(HelpFormatter):
         description = []
         if action_group.description:
             description.append(self.format_text(action_group.description))
+            description.append("")
 
         if subcommand:
             if self.format == "pretty":
@@ -424,7 +438,11 @@ class _ManpageFormatter(HelpFormatter):
 
     @staticmethod
     def format_text(text):
-        return _markup(text.strip('\n').replace('\\', '\\\\') + "\n")
+        """
+        Format a block of text as it was a single line in set of other lines
+        (e.g. no trailing newline).
+        """
+        return _markup(text.strip('\n'))
 
     @staticmethod
     def format_footer(data):
