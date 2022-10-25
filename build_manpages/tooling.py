@@ -64,3 +64,16 @@ def get_parser(import_type, import_from, objname, objtype, prog=None):
     if import_type == 'pyfile':
         return get_parser_from_file(import_from, objname, objtype, prog=prog)
     return get_parser_from_module(import_from, objname, objtype, prog=prog)
+
+
+def write_to_filename(text, filename):
+    """
+    Write given text into a filename at once.  Pre-create the parent directory
+    if it doesn't exist yet.  Print to stdout if filename == '-'.
+    """
+    filename = filename if filename != '-' else '/dev/stdout'
+    dirname = os.path.dirname(filename)
+    if dirname and not os.path.exists(dirname):
+        os.makedirs(dirname)
+    with open(filename, 'w') as stream:
+        stream.write(text)
