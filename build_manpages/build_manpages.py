@@ -88,9 +88,9 @@ class build_manpages(Command):
             print ("generating " + page)
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
             format = data.get('format', 'pretty')
-            mw = ManPageWriter(parser, data, format=format)
+            mw = ManPageWriter(parser, data)
             if format in ('pretty', 'single-commands-section'):
-                mw.write_with_manpage(page)
+                mw.write_with_manpage(page, page_format=format)
             elif format == 'old':
                 mw.write(page)
             else:

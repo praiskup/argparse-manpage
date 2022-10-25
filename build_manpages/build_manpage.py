@@ -99,10 +99,9 @@ class ManPageWriter(object):
     _command = None
     _type = None
 
-    def __init__(self, parser, values, format):
+    def __init__(self, parser, values):
         self._parser = parser
         self.values = values
-        self.format = format
         self._today = datetime.date.today()
 
         if isinstance(parser, argparse.ArgumentParser):
@@ -232,8 +231,8 @@ class ManPageWriter(object):
         self._write_filename(filename, ''.join(manpage))
 
 
-    def write_with_manpage(self, filename):
-        man = Manpage(self._parser, format=self.format)
+    def write_with_manpage(self, filename, page_format):
+        man = Manpage(self._parser, format=page_format)
         man = str(man) + "\n" +  self._write_footer()
         self._write_filename(filename, man)
 
@@ -319,7 +318,8 @@ class build_manpage(Command):
         data = {}
         self.get_manpage_data(self, data)
 
-        mpw = ManPageWriter(self._parser, data, format="pretty")
+        # the format is actually unused
+        mpw = ManPageWriter(self._parser, data)
         mpw.write(self.output, seealso=self.seealso)
 
 
