@@ -20,7 +20,6 @@ setup(
     version=__version__,
     url='https://github.com/praiskup/argparse-manpage',
     license='Apache 2.0',
-    py_modules = ['build_manpage'],
     author='Gabriele Giammatteo',
     author_email='gabriele.giammatteo@eng.it',
     maintainer='Pavel Raiskup',
