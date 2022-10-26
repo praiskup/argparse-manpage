@@ -97,12 +97,16 @@ follows a list of options of format `option=value`.  Supported values are:
 - function - the name of function in pyfile to call to get the argparse object
 - format - format of the generated man page: `pretty` (default), `single-commands-section`
 - author - author of the program; can be specified multiple times
-- description - description of the program
-- long_description - verbose description of the program
+- description - description of the program, used in the NAME section, after the
+    leading 'name - ' part, see man (7) man-pages for more info
 - project_name - name of the project the program is part of
+- version - version of the project, visible in manual page footer
 - prog - value that substitutes %prog in ArgumentParser's usage
 - url - link to project download page
-- version - version of the program
+- manual_section - section of the manual, by default 1, see man (7) man-pages
+    for more info about existing sections
+- manual_title - the title of the manual, by default "Generated Python Manual",
+    see man (7) man-pages for more instructions
 
 The values from setup.cfg override values from setup.py's setup().
 

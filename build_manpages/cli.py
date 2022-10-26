@@ -44,9 +44,13 @@ obj_group.add_argument(
 
 ap.add_argument("--project-name", help="Name of the project the documented program is part of.")
 ap.add_argument("--prog", help="Substitutes %%prog in ArgumentParser's usage.")
-ap.add_argument("--version", help="Version of the program.")
-ap.add_argument("--description", metavar="TEXT", help="Description of the program.")
-ap.add_argument("--long-description", metavar="TEXT", help="Extended description of the program.")
+ap.add_argument("--version", help=(
+    "Version of the program, will be visible in the "
+    "manual page footer."))
+ap.add_argument("--description", metavar="TEXT", help=(
+    "description of the program, used in the NAME section, after the "
+    "leading 'name - ' part, see man (7) man-pages for more info"))
+ap.add_argument("--long-description", metavar="TEXT", help=argparse.SUPPRESS)
 ap.add_argument("--author", action="append", dest="authors", metavar="[AUTHOR]",
                 help="Author of the program. Can be specified multiple times.")
 ap.add_argument("--author-email", action="append", dest="authors",
@@ -56,6 +60,12 @@ ap.add_argument("--format", default="pretty", choices=("pretty", "single-command
                 help="Format of the generated man page. Defaults to 'pretty'.")
 ap.add_argument("--output", dest='outfile', default='-',
                 help="Output file. Defaults to stdout.")
+ap.add_argument("--manual-section", help=(
+    "Section of the manual, by default 1.  See man (7) man-pages for more "
+    "info about existing sections."))
+ap.add_argument("--manual-title", help=(
+    "The title of the manual, by default \"Generated Python Manual\". "
+    "See man (7) man-pages for more instructions."))
 
 
 def args_to_manpage_data(args):
