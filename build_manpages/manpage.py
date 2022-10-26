@@ -1,5 +1,6 @@
 from argparse import SUPPRESS, HelpFormatter, _SubParsersAction, _HelpAction
 from collections import OrderedDict
+import datetime
 
 
 DEFAULT_GROUP_NAMES = {
@@ -30,12 +31,14 @@ DEFAULT_GROUP_NAMES_SUBCOMMANDS = {
 MANPAGE_DATA_ATTRS = (
     "authors",  # just "author" in setup.cfg, can be specified multiple times
     "description",
-    "long_description",
+    "long_description",  # not in the manpage.py, we use parser.description
     "project_name",  # maps to distribution.get_name()
     "prog",
     "url",
     "version",
     "format",
+    "manual_section",
+    "manual_title",
 )
 
 
@@ -63,6 +66,8 @@ def get_manpage_data_from_distribution(distribution, data):
     attrs.remove("authors")
     attrs.remove("prog")  # not available, copied from 'project_name' later
     attrs.remove("format")  # not available, must be set in setup.cfg
+    # we want the utility description, not the project description
+    attrs.remove("description")
     for attr in attrs:
         if data.get(attr, None):
             continue
@@ -70,7 +75,9 @@ def get_manpage_data_from_distribution(distribution, data):
         # map data["project_name"] to distribution.get_name()
         get_attr = "name" if attr == "project_name" else attr
 
-        getter = getattr(distribution, "get_" + get_attr)
+        getter = getattr(distribution, "get_" + get_attr, None)
+        if not getter:
+            continue
         value = getter()
 
         data[attr] = value
@@ -128,6 +135,26 @@ class Manpage(object):
         self.mf = _ManpageFormatter(self.prog, self.formatter, format=self.format)
         self.synopsis = self.parser.format_usage().split(':')[-1].split()
 
+        self.date = self.data.get("date")
+        if not self.date:
+            self.date = datetime.datetime.now().strftime('%Y-%m-%d')
+
+        self.source = self.data.get("project_name")
+        if not self.source:
+            self.source = self.prog
+
+        version = self.data.get("version")
+        if version:
+            self.source += " " + str(version)
+
+        self.manual = self.data.get("manual_title")
+        if not self.manual:
+            self.manual = "Generated Python Manual"
+
+        self.section = self.data.get("manual_section")
+        if not self.section:
+            self.section = 1
+
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
         return self.mf.format_text(self.formatter._format_text(text)).strip('\n')
@@ -136,19 +163,35 @@ class Manpage(object):
         lines = []
 
         # Header
-        lines.append('.TH {prog} "1" Manual'.format(prog=self.prog.upper()))
+        # per man (7) man-pages: .TH title section date source manual
+        header = '.TH {title} "{section}" "{date}" "{source}" "{manual}"'
+        lines.append(header.format(
+            title=_markup(self.prog.upper()),
+            section=self.section,
+            date=_markup(self.date),
+            source=_markup(self.source),
+            manual=_markup(self.manual),
+        ))
 
         # Name
         lines.append('.SH NAME')
         line = self.prog
+
+        description = None
         if getattr(self.parser, 'man_short_description', None):
-            line += " \\- " + self.parser.man_short_description
-        lines.append(line)
+            # Let's keep this undocumented.  There's a way to specify this in
+            # setup.cfg: 'description'
+            description = self.parser.man_short_description
+        if self.data.get("description"):
+            description = self.data["description"]
+        if description:
+            line += " - " + description
+        lines.append(_markup(line))
 
         # Synopsis
         if self.synopsis:
             lines.append('.SH SYNOPSIS')
-            lines.append('.B {}'.format(self.synopsis[0]))
+            lines.append('.B {}'.format(_markup(self.synopsis[0])))
             lines.append(' '.join(self.synopsis[1:]))
 
         lines.extend(self.mf.format_parser(self.parser))

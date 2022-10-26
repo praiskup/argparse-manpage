@@ -51,7 +51,7 @@ class ManPageWriter(object):
         ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(prog),
                                       self._today.strftime('%Y\\-%m\\-%d'), prog, version))
 
-        description = self.values["description"]
+        description = self.values.get("description")
         if description:
             name = self._markup('%s - %s' % (prog, description.splitlines()[0]))
         else:
