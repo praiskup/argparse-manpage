@@ -9,13 +9,14 @@ from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 import shutil
 
-from .manpage import (
+from argparse_manpage.compat import ConfigParser
+from argparse_manpage.tooling import get_parser, write_to_filename
+
+from argparse_manpage.manpage import (
     Manpage,
     MANPAGE_DATA_ATTRS,
     get_manpage_data_from_distribution,
 )
-from .compat import ConfigParser
-from .tooling import get_parser, write_to_filename
 
 # TODO: drop the "old" format support, and stop depending on ManPageWriter
 # TODO: No more deps from this module, please.

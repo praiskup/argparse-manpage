@@ -27,7 +27,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'argparse-manpage=build_manpages.cli:main',
+            'argparse-manpage=argparse_manpage.cli:main',
         ],
     },
     description='Build manual page from python\'s ArgumentParser object.',

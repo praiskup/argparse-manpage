@@ -11,4 +11,4 @@ echo >&2 " !! running argparse-manpage from git, this is not supported PYTHON=$r
 echo >&2
 
 export PYTHONPATH=$srcdir/${PYTHONPATH+:$PYTHONPATH}
-exec $run_python -c 'from build_manpages.cli import main; main()' "$@"
+exec $run_python -c 'from argparse_manpage.cli import main; main()' "$@"
