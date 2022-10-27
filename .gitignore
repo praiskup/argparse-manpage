@@ -8,3 +8,5 @@ MANIFEST
 dist/
 man/
 .mypy_cache/
+tags
+TAGS
