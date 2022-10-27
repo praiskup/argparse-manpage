@@ -1,5 +1,12 @@
 import os
+import sys
 from setuptools import setup, find_packages
+
+# Simplify bootstrapping.  We don't need to have an older argparse-manpage
+# installed to successfully build argparse-manpage.
+# pylint: disable=wrong-import-position
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_DIR)
 
 from build_manpages import __version__
 from build_manpages import (
@@ -9,7 +16,6 @@ from build_manpages import (
 )
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_readme():
     with open(os.path.join(ROOT_DIR, 'README.md')) as fh:
