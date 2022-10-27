@@ -4,19 +4,17 @@ command.
 """
 
 import os
-
-from distutils.core import Command
-from distutils.errors import DistutilsOptionError
 import shutil
 
 from argparse_manpage.compat import ConfigParser
 from argparse_manpage.tooling import get_parser, write_to_filename
-
 from argparse_manpage.manpage import (
     Manpage,
     MANPAGE_DATA_ATTRS,
     get_manpage_data_from_distribution,
 )
+
+from build_manpages.compat import Command, DistutilsOptionError
 
 # TODO: drop the "old" format support, and stop depending on ManPageWriter
 # TODO: No more deps from this module, please.
