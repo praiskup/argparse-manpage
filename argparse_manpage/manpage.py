@@ -88,9 +88,9 @@ def get_manpage_data_from_distribution(distribution, data):
 
 def _get_footer_lines(data):
     ret = []
-    project_name = data["project_name"]
-    authors = data["authors"]
-    url = data["url"]
+    project_name = data.get("project_name", "")
+    authors = data.get("authors")
+    url = data.get("url")
 
     needs_separator = False
     if authors:
@@ -121,13 +121,22 @@ def get_footer(data):
     return "\n".join(_get_footer_lines(data)) + "\n"
 
 
+# This is already considered an API, and seems like a valid scenario:
+# https://github.com/pypa/pipx/blob/fd6650bcaeca3088/scripts/generate_man.py
+
 class Manpage(object):
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, parser, data, format='pretty'):
+    def __init__(self, parser, _data=None, format='pretty'):
+        """
+        Manual page abstraction.  Generates, with the help of formater, a manual
+        page by __str__() method.  Please avoid using the private _data
+        argument (see https://github.com/praiskup/argparse-manpage/issues/7),
+        instead override the `self.<ATTRIBUTE>` when needed.
+        """
         self.prog = parser.prog
         self.parser = parser
         self.format = format
-        self.data = data
+        self._data = _data or {}
         if not getattr(parser, '_manpage', None):
             self.parser._manpage = []
 
@@ -135,25 +144,27 @@ class Manpage(object):
         self.mf = _ManpageFormatter(self.prog, self.formatter, format=self.format)
         self.synopsis = self.parser.format_usage().split(':')[-1].split()
 
-        self.date = self.data.get("date")
+        self.date = self._data.get("date")
         if not self.date:
             self.date = datetime.datetime.now().strftime('%Y-%m-%d')
 
-        self.source = self.data.get("project_name")
+        self.source = self._data.get("project_name")
         if not self.source:
             self.source = self.prog
 
-        version = self.data.get("version")
+        version = self._data.get("version")
         if version:
             self.source += " " + str(version)
 
-        self.manual = self.data.get("manual_title")
+        self.manual = self._data.get("manual_title")
         if not self.manual:
             self.manual = "Generated Python Manual"
 
-        self.section = self.data.get("manual_section")
+        self.section = self._data.get("manual_section")
         if not self.section:
             self.section = 1
+
+        self.description = self._data.get("description")
 
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
@@ -182,8 +193,8 @@ class Manpage(object):
             # Let's keep this undocumented.  There's a way to specify this in
             # setup.cfg: 'description'
             description = self.parser.man_short_description
-        if self.data.get("description"):
-            description = self.data["description"]
+        if self.description:
+            description = self.description
         if description:
             line += " - " + description
         lines.append(_markup(line))
@@ -207,7 +218,7 @@ class Manpage(object):
             lines.append(self.format_text(section['content']))
 
         lines.append("")
-        lines.extend(self.mf.format_footer(self.data))
+        lines.extend(self.mf.format_footer(self._data))
         return "\n".join(lines).strip("\n") + "\n"
 
 

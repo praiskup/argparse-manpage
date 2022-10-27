@@ -93,5 +93,5 @@ def main():
 
     parser = get_parser(import_type, import_from, obj_name, obj_type, prog=args.prog)
     data = args_to_manpage_data(args)
-    manpage = Manpage(parser, data, args.format)
+    manpage = Manpage(parser, format=args.format, _data=data)
     write_to_filename(str(manpage), args.outfile)
