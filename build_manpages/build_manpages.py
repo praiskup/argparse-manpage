@@ -16,10 +16,6 @@ from argparse_manpage.manpage import (
 
 from build_manpages.compat import Command, DistutilsOptionError
 
-# TODO: drop the "old" format support, and stop depending on ManPageWriter
-# TODO: No more deps from this module, please.
-from .build_manpage import ManPageWriter
-
 DEFAULT_CMD_NAME = 'build_manpages'
 
 def parse_manpages_spec(string):
@@ -95,7 +91,9 @@ class build_manpages(Command):
                 manpage = Manpage(parser, data, format)
                 write_to_filename(str(manpage), page)
             elif format == 'old':
-                # TODO: drop this entirely
+                # TODO: drop the "old" format support, and stop depending on ManPageWriter
+                # pylint: disable=import-outside-toplevel
+                from .build_manpage import ManPageWriter
                 mw = ManPageWriter(parser, data)
                 mw.write(page)
             else:
