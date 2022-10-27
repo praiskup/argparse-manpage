@@ -9,8 +9,12 @@ import argparse
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from .manpage import get_manpage_data_from_distribution, get_footer
-from .tooling import (
+from argparse_manpage.manpage import (
+    get_manpage_data_from_distribution,
+    get_footer,
+)
+
+from argparse_manpage.tooling import (
     get_parser_from_file,
     get_parser_from_module,
     write_to_filename,

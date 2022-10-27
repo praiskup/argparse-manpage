@@ -7,8 +7,8 @@ from __future__ import absolute_import
 
 import argparse
 
-from build_manpages.tooling import get_parser, write_to_filename
-from build_manpages.manpage import MANPAGE_DATA_ATTRS, Manpage
+from argparse_manpage.tooling import get_parser, write_to_filename
+from argparse_manpage.manpage import MANPAGE_DATA_ATTRS, Manpage
 
 
 description = """
