@@ -1,12 +1,15 @@
 import os
-import sys
 from setuptools import setup, find_packages
 
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
+
 from build_manpages import __version__
-from build_manpages.build_manpages \
-    import build_manpages, get_build_py_cmd, get_install_cmd
+from build_manpages import (
+    build_manpages,
+    get_build_py_cmd,
+    get_install_cmd,
+)
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
