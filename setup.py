@@ -1,9 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-from setuptools.command.build_py import build_py
-from setuptools.command.install import install
-
 from build_manpages import __version__
 from build_manpages import (
     build_manpages,
@@ -38,7 +35,7 @@ setup(
     long_description_content_type='text/markdown',
     cmdclass={
         'build_manpages': build_manpages,
-        'build_py': get_build_py_cmd(build_py),
-        'install': get_install_cmd(install),
+        'build_py': get_build_py_cmd(),
+        'install': get_install_cmd(),
     },
 )
