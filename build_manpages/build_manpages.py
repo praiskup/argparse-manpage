@@ -93,7 +93,7 @@ class build_manpages(Command):
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
             format = data.get('format', 'pretty')
             if format in ('pretty', 'single-commands-section'):
-                manpage = Manpage(parser, data, format)
+                manpage = Manpage(parser, format=format, _data=data)
                 write_to_filename(str(manpage), page)
             elif format == 'old':
                 # TODO: drop the "old" format support, and stop depending on ManPageWriter
