@@ -44,11 +44,7 @@ setup(
         'build_py': get_build_py_cmd(),
         'install': get_install_cmd(),
     },
-    # TODO: This is only needed by 'build_manpages' module, not
-    # 'argparse_manpage'.  Switch to extras_require that will only affect
-    # the 'build_manpages' sub-package.  We need to drop EL7/Python 2.7
-    # support first.
-    install_requires=[
-        'setuptools',
-    ],
+    extras_require={
+        'setuptools': ["setuptools"]
+    },
 )
