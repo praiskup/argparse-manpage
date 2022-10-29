@@ -47,10 +47,19 @@ Alternatively those options above can be combined with
   variable.
 
 
-## Use in setup.py
+## Use with setup.py
 
-Download the `build_manpages` directory and place it somewhere on `PYTHONPATH`
-so Python can import it.  For example:
+First, you need to declare that `setup.py` uses an external package in your
+`pyproject.toml` file:
+
+```toml
+[build-system]
+requires = ["argparse-manpage[setuptools]"]
+```
+
+Alternatively you can place the `build_manpages` (sub)directory from this
+project somewhere onto `PYTHONPATH` so you can use it in `setup.py`.  For
+example:
 
 ```bash
 git submodule add --name build_manpages https://github.com/praiskup/build_manpages

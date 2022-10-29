@@ -1,4 +1,4 @@
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 9
   %bcond_without   pyproject
   %bcond_with      python2
   %bcond_with      python3
@@ -56,6 +56,8 @@ BuildRequires: python3-pytest
 
 %if %{with pyproject}
 BuildRequires: python3-devel
+# EL9 needs this explicitly
+BuildRequires: pyproject-rpm-macros
 %if %{with check}
 BuildRequires: python3-pytest
 %endif
@@ -73,6 +75,7 @@ Requires: python2-%name = %version-%release
 
 %package -n     python2-%name
 Summary:        %{sum Python 2}
+Requires:       python2-setuptools
 
 %description -n python2-%name
 %{desc}
@@ -80,9 +83,17 @@ Summary:        %{sum Python 2}
 
 %package -n     python3-%name
 Summary:        %{sum Python 3}
+%if %{without pyproject}
+Requires:       python3-setuptools
+%endif
 
 %description -n python3-%name
 %{desc}
+
+
+%if %{with pyproject}
+%pyproject_extras_subpkg -n python3-%{name} setuptools
+%endif
 
 
 %prep
