@@ -1,5 +1,36 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+WARNING: The 'build_manpage' setup.py command will be removed v5
+WARNING: We'll drop the Python 2.7 support in v5
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+News in v4
+
+* The manual page generator logic is now separated from the 'build_manpages'
+  module (which provides setup.py integration helpers).  Therefore the
+  argparse-manpage doesn't necessarily have to depend on setuptools.
+  Projects that want to integrate using 'setup.py' should though place a new
+  "extra" named 'argparse-manpage[setuptools]' into their set of build
+  requirements in project.toml file.
+
+* The old 'build_manpage' command (!= 'build_manpages') is now more
+  isolated from the rest of the code, likely never loaded.
+
+* the Manpage class API was changed in v3 so it required an additional
+  constructor 'data' argument.  This change was reverted, and the only
+  argument is again the ArgumentParser object.
+
+* The 'version' and 'description' options were fixed.
+
+* New options 'manual_section' and 'manual_title' were added.
+
+* The manual page now automatically generates a current date in headers.
+
+* Several groff escaping issues were fixed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 New in version 3
 
 * New man page format: single-commands-section
