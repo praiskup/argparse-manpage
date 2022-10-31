@@ -5,6 +5,7 @@
 import datetime
 import optparse
 import argparse
+import warnings
 
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
@@ -20,6 +21,10 @@ from argparse_manpage.tooling import (
     write_to_filename,
 )
 
+warnings.warn(
+    "The 'build_manpage' module will be removed in the next argparse-manpage "
+    "version v5.  Please migrate to 'build_manpages'.", DeprecationWarning,
+)
 
 class ManPageWriter(object):
     _parser = None
