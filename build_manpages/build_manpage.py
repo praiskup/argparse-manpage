@@ -5,6 +5,8 @@
 import datetime
 import optparse
 import argparse
+import os
+import time
 import warnings
 
 from distutils.core import Command
@@ -34,7 +36,9 @@ class ManPageWriter(object):
     def __init__(self, parser, values):
         self._parser = parser
         self.values = values
-        self._today = datetime.date.today()
+        self._today = datetime.datetime.utcfromtimestamp(
+            int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+        )
 
         if isinstance(parser, argparse.ArgumentParser):
             self._type = 'argparse'
