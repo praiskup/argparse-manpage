@@ -1,6 +1,8 @@
 from argparse import SUPPRESS, HelpFormatter, _SubParsersAction, _HelpAction
 from collections import OrderedDict
 import datetime
+import os
+import time
 
 
 DEFAULT_GROUP_NAMES = {
@@ -146,7 +148,10 @@ class Manpage(object):
 
         self.date = self._data.get("date")
         if not self.date:
-            self.date = datetime.datetime.now().strftime('%Y-%m-%d')
+            builddate = datetime.datetime.utcfromtimestamp(
+                int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+            )
+            self.date = builddate.strftime('%Y-%m-%d')
 
         self.source = self._data.get("project_name")
         if not self.source:

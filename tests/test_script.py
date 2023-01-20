@@ -8,6 +8,7 @@ import shutil
 import sys
 import subprocess
 import tempfile
+import time
 
 SIMPLE_FILE_CONTENTS = """
 import argparse
@@ -54,7 +55,9 @@ Mr. Foo <mfoo@example.com> and friends
 .fi
 """
 
-DATE = datetime.datetime.now().strftime("%Y\\-%m\\-%d")
+DATE = datetime.datetime.utcfromtimestamp(
+           int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+       ).strftime("%Y\\-%m\\-%d")
 
 class TestsArgparseManpageScript:
     def setup_method(self, _):
