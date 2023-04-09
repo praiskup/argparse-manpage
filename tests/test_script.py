@@ -45,10 +45,13 @@ FULL_OUTPUT = """\
 
 .TP
 \\fBtest\\fR
+.SH EXTRA SECTION
+This is an extra section.
 
-.SH AUTHORS
+.SH AUTHOR
 .nf
 John Doe <jdoe@example.com>
+Developer extraordinaire.
 .fi
 .nf
 Mr. Foo <mfoo@example.com> and friends
@@ -134,6 +137,7 @@ class TestsArgparseManpageScript:
             "--project-name", "Proj-On-Cmdline",
             "--description", "some description",
             "--long-description", "Some long description.",  # unused
+            "--include", "tests/extra.man",
         ]
         output = subprocess.check_output(cmd).decode("utf-8")
         name="progname"

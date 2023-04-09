@@ -13,3 +13,4 @@ include examples/copr/fake-deps/copr/README
 include examples/raw-description/bin/dg
 include examples/resalloc/bin/resalloc
 include examples/resalloc/bin/resalloc-maint
+include tests/extra.man
