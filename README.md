@@ -114,14 +114,43 @@ follows a list of options of format `option=value`.  Supported values are:
     for more info about existing sections
 - manual_title - the title of the manual, by default "Generated Python Manual",
     see man (7) man-pages for more instructions
+- include - a file of extra material to include; see below for the format
 
 The values from setup.cfg override values from setup.py's setup().
-
 
 Then run `setup.py build_manpages` to build a manpages for your project.  Also,
 if you used `get_build_py` helper, `setup.py build` then transitively builds the
 manual pages.
 
+## Include file format
+
+The include file format is based on GNU `help2man`'s `--include` format.
+
+The format is simple:
+
+```
+[section]
+text
+
+/pattern/
+text
+```
+
+Blocks of verbatim *roff text are inserted into the output either at
+the start of the given `section` (case insensitive), or after a
+paragraph matching `pattern`, a Python regular expression.
+
+Lines before the first section are silently ignored and may be used for
+comments and the like.
+
+Other sections are prepended to the automatically produced output for the
+standard sections given above, or included near the bottom of the man page,
+before the `AUTHOR` section, in the order they occur in the include file.
+
+Placement of the text within the section may be explicitly requested by
+using the syntax `[<section]`, `[=section]` or `[>section]` to place the
+additional text before, in place of, or after the default output
+respectively.
 
 ## Installation
 

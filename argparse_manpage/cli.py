@@ -66,6 +66,8 @@ ap.add_argument("--manual-section", help=(
 ap.add_argument("--manual-title", help=(
     "The title of the manual, by default \"Generated Python Manual\". "
     "See man (7) man-pages for more instructions."))
+ap.add_argument("--include", metavar="FILE", help=(
+    "File that contains extra material for the man page."))
 
 
 def args_to_manpage_data(args):

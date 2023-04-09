@@ -3,6 +3,7 @@ from collections import OrderedDict
 import datetime
 import os
 import time
+import re
 
 
 DEFAULT_GROUP_NAMES = {
@@ -41,6 +42,17 @@ MANPAGE_DATA_ATTRS = (
     "format",
     "manual_section",
     "manual_title",
+    "include",
+)
+
+# manpage sections that are handled specially, so need special treatment
+# when --include'ing extra material; see Manpage.add_section.
+SPECIAL_MANPAGE_SECTIONS = (
+    "author",
+    "comments",
+    "description",
+    "distribution",
+    "synopsis",
 )
 
 
@@ -96,7 +108,7 @@ def _get_footer_lines(data):
 
     needs_separator = False
     if authors:
-        ret.append('.SH AUTHORS')
+        ret.append('.SH AUTHOR')
         for author in authors:
             ret.append(".nf")
             ret.append(author)
@@ -139,6 +151,7 @@ class Manpage(object):
         self.parser = parser
         self.format = format
         self._data = _data or {}
+        self._match_texts = []
         if not getattr(parser, '_manpage', None):
             self.parser._manpage = []
 
@@ -170,6 +183,10 @@ class Manpage(object):
             self.section = 1
 
         self.description = self._data.get("description")
+
+        include = self._data.get("include")
+        if include is not None:
+            self.parse_include(include)
 
     def format_text(self, text):
         # Wrap by parser formatter and convert to manpage format
@@ -205,26 +222,114 @@ class Manpage(object):
         lines.append(_markup(line))
 
         # Synopsis
-        if self.synopsis:
+        synopsis_section = self.get_extra_section("synopsis")
+        if self.synopsis or synopsis_section:
             lines.append('.SH SYNOPSIS')
-            lines.append('.B {}'.format(_markup(self.synopsis[0])))
-            lines.append(' '.join(self.synopsis[1:]))
+            if synopsis_section:
+                lines.append(synopsis_section.content)
+            else:
+                lines.append('.B {}'.format(_markup(self.synopsis[0])))
+                lines.append(' '.join(self.synopsis[1:]))
 
-        lines.extend(self.mf.format_parser(self.parser))
+        extra_description = None
+        description_section = self.get_extra_section("description")
+        if description_section:
+            extra_description = description_section.content
+        lines.extend(self.mf.format_parser(self.parser, extra_description=extra_description))
 
-        if self.parser.epilog != None:
+        comments_section = self.get_extra_section("comments")
+        if self.parser.epilog or comments_section:
             lines.append("")
             lines.append('.SH COMMENTS')
-            lines.append(self.format_text(self.parser.epilog))
+            if comments_section:
+                lines.append(comments_section.content)
+            else:
+                lines.append(self.format_text(self.parser.epilog))
 
-        # Additional Section
-        for section in self.parser._manpage:
-            lines.append('.SH {}'.format(section['heading'].upper()))
-            lines.append(self.format_text(section['content']))
+        # Additional sections
+        for section in self.parser._manpage: # pylint: disable=protected-access
+            if section["heading"] not in SPECIAL_MANPAGE_SECTIONS:
+                lines.append('.SH {}'.format(section['heading'].upper()))
+                lines.append(section['content'])
 
         lines.append("")
         lines.extend(self.mf.format_footer(self._data))
-        return "\n".join(lines).strip("\n") + "\n"
+
+        # Finally add --include sections that match text in the page
+        final_lines = []
+        for line in lines:
+            final_lines.append(line)
+            for match in self._match_texts:
+                if re.search(match['match_text'], line):
+                    final_lines.append(match['content'])
+
+        return "\n".join(final_lines).strip("\n") + "\n"
+
+    def get_extra_section(self, heading):
+        """
+        Return supplementary section for the `Manpage` (created with
+        `--include`), or `None`
+        """
+        for section in self.parser._manpage: # pylint: disable=protected-access
+            if section["heading"] == heading:
+                return section
+        return None
+
+    def add_section(self, heading, position, content):
+        """
+        Add a supplementary section to a `Manpage`
+        """
+        # Sections that need special treatment
+        heading = heading.lower()
+        if heading in ("author", "distribution"):
+            if heading == "author":
+                self._data['authors'] = [content]
+            elif heading == "distribution":
+                self._data['url'] = content
+        section = self.get_extra_section(heading)
+        if section is None:
+            section = {"heading": heading, "content": ""}
+            self.parser._manpage.append(section) # pylint: disable=protected-access
+        if position == '<':
+            section["content"] = content + section["content"]
+        elif position == '=':
+            section["content"] = content
+        elif position == '>':
+            section["content"] += content
+        else:
+            raise ValueError("invalid position " + position)
+
+    def parse_include(self, file):
+        """
+        Parse include file and add its contents to the man page
+        """
+        def get_section(lines, n):
+            for i, line in enumerate(lines[n:]):
+                if re.match(r'[\[/]', line):
+                    return n + i, lines[n:n + i]
+            return len(lines), lines[n:]
+
+        with open(file) as f:
+            lines = f.readlines()
+            i = 0
+            while i < len(lines):
+                # Parse a header line
+                m = re.match(r"/([^/]+)/$", lines[i])
+                if m:
+                    match_text = m.group(1)
+                    i, section_lines = get_section(lines, i + 1)
+                    self._match_texts.append({"match_text": match_text, "content": "".join(section_lines).strip()})
+                else:
+                    m = re.match(r"\[([<=>])?([^\]]+)\]$", lines[i])
+                    if m:
+                        position = m.group(1) or '<'
+                        heading = m.group(2).upper()
+                        if heading == "NAME":
+                            raise ValueError("Invalid include section " + heading)
+                        i, section_lines = get_section(lines, i + 1)
+                        self.add_section(heading, position, "".join(section_lines).strip())
+                    else:
+                        raise ValueError("Invalid or missing section header in include file %s:\n%s" % (file, lines[i]))
 
 
 def underline(text):
@@ -280,7 +385,7 @@ class _ManpageFormatter(HelpFormatter):
                                             underline(args_string)))
         return ', '.join(parts)
 
-    def _format_parser(self, parser, subcommand=None, aliases=None, help=None):
+    def _format_parser(self, parser, subcommand=None, aliases=None, help=None, extra_description=None):
         # The parser "tree" looks like
         # ----------------------------
         # Parser -> [ActionGroup, ActionGroup, ..]
@@ -313,13 +418,16 @@ class _ManpageFormatter(HelpFormatter):
 
             lines.append(self.format_text(parser.format_usage()))
 
-        if parser.description:
+        if parser.description or extra_description:
             if subcommand:
                 lines.append("")
             else:
                 lines.append(".SH DESCRIPTION")
 
-            lines.append(self.format_text(parser.description))
+            if extra_description:
+                lines.append(extra_description)
+            if parser.description:
+                lines.append(self.format_text(parser.description))
 
         is_subsequent_ag = True
         for group in parser._action_groups:
@@ -333,11 +441,11 @@ class _ManpageFormatter(HelpFormatter):
 
         return lines
 
-    def format_parser(self, parser):
+    def format_parser(self, parser, extra_description=None):
         """
         Return lines Groff formatted text for given parser
         """
-        return self._format_parser(parser)
+        return self._format_parser(parser, extra_description=extra_description)
 
     def _format_action(self, action):
         parts = []
