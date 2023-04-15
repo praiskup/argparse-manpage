@@ -2,4 +2,4 @@
 argparse_manpage project
 """
 
-__version__ = '4'
+__version__ = '4.1'

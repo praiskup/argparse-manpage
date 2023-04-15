@@ -5,6 +5,18 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.1
+
+* A new `--include` feature, inspired by `help2man --include`.
+
+* Allow overriding build date with SOURCE_DATE_EPOCH environment variable
+  in order to make builds reproducible.  See this link for more info:
+  https://reproducible-builds.org/specs/source-date-epoch/
+
+* The AUTHORS section was changed to more standard AUTHOR.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 News in v4
 
 * The manual page generator logic is now separated from the 'build_manpages'
