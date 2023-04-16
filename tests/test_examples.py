@@ -64,8 +64,8 @@ def run_setup_py(args):
     environ = os.environ.copy()
     environ['PYTHONPATH'] = ':'.join(sys.path)
     with change_argv(['setup.py'] + args):
-        subprocess.call([sys.executable, 'setup.py'] + args,
-                        env=environ)
+        return subprocess.call([sys.executable, 'setup.py'] + args,
+                               env=environ)
 
 def skip_if_older_python(min_version):
     def _get_int(version):
@@ -112,7 +112,7 @@ def file_cmp(file1, file2, filter_string=None):
                 assert left == right
 
 
-class TestAllExapmles:
+class TestAllExamples:
     def test_old_example(self):
         with pushd('examples/old_format'):
             try:

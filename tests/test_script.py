@@ -9,8 +9,14 @@ import sys
 import subprocess
 import tempfile
 import time
+import warnings
+from distutils.version import StrictVersion
 
-SIMPLE_FILE_CONTENTS = """
+import setuptools
+
+from test_examples import run_setup_py
+
+SIMPLE_FILE_CONTENTS = """\
 import argparse
 
 def get_parser():
@@ -18,13 +24,16 @@ def get_parser():
         parser.add_argument("test")
         return parser
 
-if __name__ == "__main__":
+def main():
         print("here")
         get_parser().parse_args()
+
+if __name__ == "__main__":
+        main()
 """
 
 SIMPLE_OUTPUT = """\
-.TH {NAME} "1" "{DATE}" "{name}" "Generated Python Manual"
+.TH {NAME} "1" "{DATE}" "{name}{version}" "Generated Python Manual"
 .SH NAME
 {name}
 .SH SYNOPSIS
@@ -58,6 +67,26 @@ Mr. Foo <mfoo@example.com> and friends
 .fi
 """
 
+SETUP_PY_FILE_CONTENTS = """\
+from build_manpages import build_manpages, get_install_cmd, get_build_py_cmd
+from setuptools import setup
+
+setup(
+    cmdclass={
+        'build_manpages': build_manpages,
+        'build_py': get_build_py_cmd(),
+        'install': get_install_cmd(),
+    }
+)
+"""
+
+PYPROJECT_TOML_FILE_CONTENTS = """\
+[tool.build_manpages]
+manpages = [
+    "some-file.1:project_name=some-file:module=somefile:function=get_parser",
+]
+"""
+
 DATE = datetime.datetime.utcfromtimestamp(
            int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
        ).strftime("%Y\\-%m\\-%d")
@@ -66,6 +95,7 @@ class TestsArgparseManpageScript:
     def setup_method(self, _):
         self.workdir = tempfile.mkdtemp(prefix="argparse-manpage-tests-")
         os.environ["PYTHON"] = sys.executable
+        os.environ["PYTHONPATH"] = os.getcwd()
 
     def teardown_method(self, _):
         shutil.rmtree(self.workdir)
@@ -92,7 +122,7 @@ class TestsArgparseManpageScript:
             "--function", "get_parser",
         ]
         output = subprocess.check_output(cmd).decode("utf-8")
-        assert output == SIMPLE_OUTPUT.format(name=expname,
+        assert output == SIMPLE_OUTPUT.format(name=expname, version="",
                                               NAME=expname.upper(), DATE=DATE)
 
     def test_filepath_prog(self):
@@ -113,7 +143,7 @@ class TestsArgparseManpageScript:
         ]
         output = subprocess.check_output(cmd).decode("utf-8")
         name="progname"
-        assert output == SIMPLE_OUTPUT.format(name=expname,
+        assert output == SIMPLE_OUTPUT.format(name=expname, version="",
                                               NAME=expname.upper(), DATE=DATE)
 
     def test_full_args(self):
@@ -143,3 +173,33 @@ class TestsArgparseManpageScript:
         name="progname"
         assert output == FULL_OUTPUT.format(name=name, NAME=name.upper(),
                                             DATE=DATE)
+
+    def test_pyproject_toml(self):
+        """
+        Test that we can read information from pyproject.toml.
+        """
+        current_dir = os.getcwd()
+        try:
+            os.chdir(self.workdir)
+            with open("pyproject.toml", "w+") as script_fd:
+                script_fd.write(PYPROJECT_TOML_FILE_CONTENTS.format(gitdir=current_dir))
+            with open("setup.py", "w+") as script_fd:
+                script_fd.write(SETUP_PY_FILE_CONTENTS)
+
+            modname = "somefile"
+            name = r"some\-file"
+            os.mkdir(modname)
+            with open(os.path.join(modname, "__init__.py"), "w+") as script_fd:
+                script_fd.write(SIMPLE_FILE_CONTENTS.format(ap_arguments=""))
+
+            assert 0 == run_setup_py(["build"])
+            if StrictVersion(setuptools.__version__) >= StrictVersion("62.2.0"):
+                with open("some-file.1") as script_fd:
+                    output = script_fd.read()
+                    assert output == SIMPLE_OUTPUT.format(name=name, version=" 0.0.0",
+                                                          NAME=name.upper(), DATE=DATE)
+            else:
+                warnings.warn("setuptools >= 62.2.0 required to generate man pages with pyprojects.toml")
+
+        finally:
+            os.chdir(current_dir)

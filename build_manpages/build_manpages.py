@@ -6,7 +6,14 @@ command.
 import os
 import shutil
 
-from argparse_manpage.compat import ConfigParser
+try:
+    import tomllib
+    from tomllib import TOMLDecodeError
+except ImportError:
+    import toml as tomllib
+    from toml import TomlDecodeError as TOMLDecodeError
+
+from argparse_manpage.compat import ConfigParser, NoSectionError
 from argparse_manpage.tooling import get_parser, write_to_filename
 from argparse_manpage.manpage import (
     Manpage,
@@ -66,6 +73,21 @@ def parse_manpages_spec(string):
 
     return manpages_data
 
+def get_pyproject_settings():
+    """Parse and handle errors of a toml configuration file."""
+    try:
+        with open("pyproject.toml", mode="r") as fp:
+            content = tomllib.loads(fp.read())
+    except TOMLDecodeError:
+        return None
+
+    try:
+        value = content["tool"][DEFAULT_CMD_NAME]["manpages"]
+        if isinstance(value, list):
+            value = "\n".join(value)
+        return str(value)
+    except KeyError:
+        return None
 
 class build_manpages(Command):
     description = 'Generate set of man pages from setup().'
@@ -78,10 +100,10 @@ class build_manpages(Command):
 
 
     def finalize_options(self):
-        if not self.manpages:
+        manpages = self.manpages or get_pyproject_settings()
+        if not manpages:
             raise DistutilsOptionError('\'manpages\' option is required')
-
-        self.manpages_data = parse_manpages_spec(self.manpages)
+        self.manpages_data = parse_manpages_spec(manpages)
 
         # if a value wasn't set in setup.cfg, use the value from setup.py
         for page, data in self.manpages_data.items():
@@ -135,7 +157,13 @@ def get_install_cmd(command=install):
             """
             config = ConfigParser()
             config.read('setup.cfg')
-            spec = config.get(DEFAULT_CMD_NAME, 'manpages')
+            try:
+                spec = config.get(DEFAULT_CMD_NAME, 'manpages')
+            except NoSectionError:
+                spec = get_pyproject_settings()
+            if spec is None:
+                raise ValueError("'manpage' configuration not found in setup.cfg or pyproject.toml")
+
             data = parse_manpages_spec(spec)
 
             mandir = os.path.join(self.install_data, 'share/man/man1')
