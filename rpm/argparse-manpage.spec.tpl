@@ -38,6 +38,7 @@ Source0:        https://github.com/praiskup/%{name}/archive/v%{version}/%{name}-
 
 %if %{with python2}
 BuildRequires: python2-setuptools python2-devel
+BuildRequires: python2-toml
 %if %{with check}
 %if 0%{?rhel} && 0%{?rhel} == 7
 BuildRequires: pytest
@@ -49,6 +50,7 @@ BuildRequires: python2-pytest
 
 %if %{with python3}
 BuildRequires: python3-setuptools python3-devel
+BuildRequires: python3-toml
 %if %{with check}
 BuildRequires: python3-pytest
 %endif

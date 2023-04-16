@@ -1,0 +1,10 @@
+[build-system]
+requires = [
+    "setuptools",
+    "toml;python_version<'3.11'",
+]
+
+[tool.build_manpages]
+manpages = [
+    "some-file.1:pyfile=some-file:function=get_parser",
+]

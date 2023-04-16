@@ -21,6 +21,11 @@ def get_readme():
     with open(os.path.join(ROOT_DIR, 'README.md')) as fh:
         return ''.join(fh.readlines())
 
+if sys.version_info >= (3,):
+    install_requires = ['toml;python_version<"3.11"']
+else:
+    install_requires = ['toml']
+
 setup(
     name='argparse-manpage',
     version=__version__,
@@ -44,6 +49,7 @@ setup(
         'build_py': get_build_py_cmd(),
         'install': get_install_cmd(),
     },
+    install_requires=install_requires,
     extras_require={
         'setuptools': ["setuptools"]
     },

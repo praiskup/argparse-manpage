@@ -7,9 +7,9 @@ import sys
 # Drop once Python 2.7 is dropped
 # pylint: disable=unused-import
 try:
-    from configparser import ConfigParser
+    from configparser import ConfigParser, NoSectionError
 except ImportError:
-    from ConfigParser import SafeConfigParser as ConfigParser  # type: ignore
+    from ConfigParser import SafeConfigParser as ConfigParser, NoSectionError  # type: ignore
 
 if sys.version_info < (3, 0):
     import imp  # pylint: disable=deprecated-module

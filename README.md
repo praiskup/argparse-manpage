@@ -84,7 +84,7 @@ setup(
 )
 ```
 
-And in the `setup.cfg` configure the manual pages you want to automatically
+And in `setup.cfg` configure the manual pages you want to automatically
 generate and install:
 
 ```
@@ -93,6 +93,17 @@ manpages =
     man/foo.1:object=parser:pyfile=bin/foo.py
     man/bar.1:function=get_parser:pyfile=bin/bar
     man/baz.1:function=get_parser:pyfile=bin/bar:prog=baz
+```
+
+Or in `pyproject.toml` (requires setuptools >= 62.2.0):
+
+```toml
+[build_manpages]
+manpages = [
+    "man/foo.1:object=parser:pyfile=bin/foo.py",
+    "man/bar.1:function=get_parser:pyfile=bin/bar",
+    "man/baz.1:function=get_parser:pyfile=bin/bar:prog=baz",
+]
 ```
 
 The format of those lines is a colon separated list of arguments/options.  The
