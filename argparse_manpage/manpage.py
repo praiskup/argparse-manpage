@@ -71,10 +71,15 @@ def get_manpage_data_from_distribution(distribution, data):
     """
     # authors
     if not "authors" in data:
-        author = distribution.get_author()
-        if distribution.get_author_email():
-            author += " <{}>".format(distribution.get_author_email())
-        data["authors"] = [author]
+        author = None
+        if distribution.get_author():
+            author = distribution.get_author()
+            if distribution.get_author_email():
+                author += " <{}>".format(distribution.get_author_email())
+        elif distribution.get_author_email():
+            author = distribution.get_author_email()
+        if author:
+            data["authors"] = [author]
 
     attrs = list(MANPAGE_DATA_ATTRS)
     attrs.remove("authors")
