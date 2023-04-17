@@ -226,7 +226,7 @@ class Manpage(object):
         if self.synopsis or synopsis_section:
             lines.append('.SH SYNOPSIS')
             if synopsis_section:
-                lines.append(synopsis_section.content)
+                lines.append(synopsis_section["content"])
             else:
                 lines.append('.B {}'.format(_markup(self.synopsis[0])))
                 lines.append(' '.join(self.synopsis[1:]))
@@ -234,7 +234,7 @@ class Manpage(object):
         extra_description = None
         description_section = self.get_extra_section("description")
         if description_section:
-            extra_description = description_section.content
+            extra_description = description_section["content"]
         lines.extend(self.mf.format_parser(self.parser, extra_description=extra_description))
 
         comments_section = self.get_extra_section("comments")
@@ -242,7 +242,7 @@ class Manpage(object):
             lines.append("")
             lines.append('.SH COMMENTS')
             if comments_section:
-                lines.append(comments_section.content)
+                lines.append(comments_section["content"])
             else:
                 lines.append(self.format_text(self.parser.epilog))
 
