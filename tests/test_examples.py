@@ -58,12 +58,6 @@ def run_setup_py(args):
         return subprocess.call([sys.executable, 'setup.py'] + args,
                                env=environ)
 
-def skip_if_older_python(min_version):
-    def _get_int(version):
-        int_v = [int(sv) for sv in version.split(".")]
-
-
-
 
 def run_one_installer(installer, args):
     """
