@@ -15,6 +15,7 @@ from distutils.version import StrictVersion
 import setuptools
 
 from test_examples import run_setup_py
+from argparse_testlib import pushd
 
 SIMPLE_FILE_CONTENTS = """\
 import argparse
@@ -179,8 +180,7 @@ class TestsArgparseManpageScript:
         Test that we can read information from pyproject.toml.
         """
         current_dir = os.getcwd()
-        try:
-            os.chdir(self.workdir)
+        with pushd(self.workdir):
             with open("pyproject.toml", "w+") as script_fd:
                 script_fd.write(PYPROJECT_TOML_FILE_CONTENTS.format(gitdir=current_dir))
             with open("setup.py", "w+") as script_fd:
@@ -200,6 +200,3 @@ class TestsArgparseManpageScript:
                                                           NAME=name.upper(), DATE=DATE)
             else:
                 warnings.warn("setuptools >= 62.2.0 required to generate man pages with pyprojects.toml")
-
-        finally:
-            os.chdir(current_dir)

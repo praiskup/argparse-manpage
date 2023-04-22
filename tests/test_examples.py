@@ -12,22 +12,13 @@ import pytest
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')]+sys.path
 
-from argparse_testlib import skip_on_python_older_than
+from argparse_testlib import skip_on_python_older_than, pushd
 
 
 def _mandir(prefix, num=1):
     data = sysconfig.get_path('data', vars={'base': prefix})
     return os.path.join(data, 'share/man/man' + str(num))
 
-
-@contextmanager
-def pushd(path):
-    old_dir = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(old_dir)
 
 @contextmanager
 def change_argv(argv):

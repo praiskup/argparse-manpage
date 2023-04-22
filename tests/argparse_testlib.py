@@ -2,8 +2,10 @@
 unit-tests helpers
 """
 
+import os
 from platform import python_version
 from pkg_resources import parse_version
+from contextlib import contextmanager
 
 import pytest
 
@@ -22,3 +24,12 @@ def skip_on_python_older_than(minimal_version, message, condition=None):
             python_version(),
         )
         raise pytest.skip("{0} ({1})".format(message, generic_msg))
+
+@contextmanager
+def pushd(path):
+    old_dir = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(old_dir)
