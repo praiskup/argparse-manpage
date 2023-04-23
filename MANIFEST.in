@@ -10,6 +10,7 @@ include examples/resalloc/expected/man/resalloc-maint.1
 include examples/resalloc/expected/man/resalloc.1
 include examples/copr/fake-deps/HACK
 include examples/copr/fake-deps/copr/README
+include examples/pre-written-man-page/psutils.1
 include examples/raw-description/bin/dg
 include examples/resalloc/bin/resalloc
 include examples/resalloc/bin/resalloc-maint

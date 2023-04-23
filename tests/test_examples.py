@@ -206,6 +206,18 @@ class TestAllExapmles:
             file_cmp(os.path.join(mandir, os.path.basename(name)), 'expected-output.1')
             file_cmp(name, 'expected-output.1')
 
+    @pytest.mark.parametrize("installer", ["pip", "setuppy"])
+    def test_pre_written_man_page(self, installer):
+        with pushd('examples/pre-written-man-page'):
+            name = 'psutils.1'
+            prefix = '/usr'
+            idir = os.path.join(os.getcwd(), installer + "_install_dir")
+            mandir = os.path.join(idir, _mandir("usr/"))
+            _rmtree(idir)
+            run_one_installer(installer, ['install', '--root', idir, '--prefix', prefix])
+
+            file_cmp(os.path.join(mandir, name), name)
+
 
 if __name__ == "__main__":
     unittest.main()

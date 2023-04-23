@@ -89,6 +89,9 @@ class build_manpages(Command):
 
     def run(self):
         for page, data in self.manpages_data.items():
+            if data.get('manfile'):
+                print ("using pre-written " + page)
+                return
             print ("generating " + page)
             parser = get_parser(data['import_type'], data['import_from'], data['objname'], data['objtype'], data.get('prog', None))
             format = data.get('format', 'pretty')
