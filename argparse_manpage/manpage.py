@@ -43,6 +43,7 @@ MANPAGE_DATA_ATTRS = (
     "manual_section",
     "manual_title",
     "include",
+    "manfile",
 )
 
 # manpage sections that are handled specially, so need special treatment
@@ -160,6 +161,12 @@ class Manpage(object):
         if not getattr(parser, '_manpage', None):
             self.parser._manpage = []
 
+        self.manfile = self._data.get("manfile")
+        if self.manfile:
+            if len(self._data) > 1:
+                raise ValueError("manfile set, so no other key is allowed")
+            return
+
         self.formatter = self.parser._get_formatter()
         self.mf = _ManpageFormatter(self.prog, self.formatter, format=self.format)
         self.synopsis = self.parser.format_usage().split(':')[-1].split()
@@ -198,6 +205,10 @@ class Manpage(object):
         return self.mf.format_text(self.formatter._format_text(text)).strip('\n')
 
     def __str__(self):
+        if self.manfile:
+            with open(self.manfile) as fd:
+                return fd.read()
+
         lines = []
 
         # Header

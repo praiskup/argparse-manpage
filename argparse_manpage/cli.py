@@ -68,6 +68,8 @@ ap.add_argument("--manual-title", help=(
     "See man (7) man-pages for more instructions."))
 ap.add_argument("--include", metavar="FILE", help=(
     "File that contains extra material for the man page."))
+ap.add_argument("--manfile", metavar="FILE", help=(
+    "File containing a complete man page."))
 
 
 def args_to_manpage_data(args):
