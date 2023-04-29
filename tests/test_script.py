@@ -10,7 +10,8 @@ import subprocess
 import tempfile
 import time
 import warnings
-from distutils.version import StrictVersion
+
+from packaging import version
 
 import setuptools
 
@@ -193,7 +194,7 @@ class TestsArgparseManpageScript:
                 script_fd.write(SIMPLE_FILE_CONTENTS.format(ap_arguments=""))
 
             assert 0 == run_setup_py(["build"])
-            if StrictVersion(setuptools.__version__) >= StrictVersion("62.2.0"):
+            if version.parse(setuptools.__version__) >= version.parse("62.2.0"):
                 with open("some-file.1") as script_fd:
                     output = script_fd.read()
                     assert output == SIMPLE_OUTPUT.format(name=name, version=" 0.0.0",

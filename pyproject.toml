@@ -2,6 +2,7 @@
 requires = [
     "setuptools",
     "toml;python_version<'3.11'",
+    "packaging",
 ]
 
 [tool.build_manpages]
