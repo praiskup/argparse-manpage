@@ -5,6 +5,22 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.2
+
+* Support for pyproject.toml specification of manpages added.
+
+* Support for pre-written man pages (the --manfile option)
+
+Bugfixes in version 4.2
+
+* Incorrect dict access for --include support fixed.
+
+* Provide useful AUTHORS section with e-mail from
+  Distribution.get_author_email() even if Distribution.get_author() returns
+  None.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 News in v4.1
 
 * A new `--include` feature, inspired by `help2man --include`.
