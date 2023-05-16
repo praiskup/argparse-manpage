@@ -52,7 +52,7 @@ BuildRequires: python2-pytest
 %if %{with python3}
 BuildRequires: python3-setuptools python3-devel
 BuildRequires: python3-packaging
-BuildRequires: python3-toml
+BuildRequires: python3-tomli
 %if %{with check}
 BuildRequires: python3-pytest
 %endif
