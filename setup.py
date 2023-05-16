@@ -22,7 +22,7 @@ def get_readme():
         return ''.join(fh.readlines())
 
 if sys.version_info >= (3,):
-    install_requires = ['toml;python_version<"3.11"']
+    install_requires = ['tomli;python_version<"3.11"']
 else:
     install_requires = ['toml']
 

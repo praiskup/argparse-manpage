@@ -10,8 +10,12 @@ try:
     import tomllib
     from tomllib import TOMLDecodeError
 except ImportError:
-    import toml as tomllib
-    from toml import TomlDecodeError as TOMLDecodeError
+    try:
+        import tomli as tomllib
+        from tomli import TOMLDecodeError
+    except ImportError:
+        import toml as tomllib
+        from toml import TomlDecodeError as TOMLDecodeError
 
 from argparse_manpage.compat import ConfigParser, NoSectionError
 from argparse_manpage.tooling import get_parser, write_to_filename
