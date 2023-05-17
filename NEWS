@@ -5,6 +5,13 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.3
+
+* The pyproject.toml parsing feature now depends on the python3-tomli library
+  instead of python-toml for "python_environment >3, <=3.10".
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 News in v4.2
 
 * Support for pyproject.toml specification of manpages added.
