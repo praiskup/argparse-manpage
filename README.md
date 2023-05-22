@@ -127,6 +127,7 @@ follows a list of options of format `option=value`.  Supported values are:
     see man (7) man-pages for more instructions
 - include - a file of extra material to include; see below for the format
 - manfile - a file containing a complete man page that just needs to be installed
+    (such files must also be listed in `MANIFEST.in`)
 
 The values from setup.cfg override values from setup.py's setup(). Note that
 when `manfile` is set for a particular page, no other option is allowed.
