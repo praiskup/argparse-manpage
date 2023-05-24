@@ -184,7 +184,7 @@ branch–are available in Fedora Copr build system
 
 The `argparse-manpage` project is provided natively on many distributions:
 
-![build status](https://repology.org/badge/vertical-allrepos/argparse-manpage.svg?exclude_unsupported=1&header=argparse-manpage)
+![build status](https://repology.org/badge/vertical-allrepos/python:argparse-manpage.svg?exclude_unsupported=1&header=argparse-manpage)
 
 Try your package manager directly (e.g. on Fedora `dnf install -y
 argparse-manpage`).
