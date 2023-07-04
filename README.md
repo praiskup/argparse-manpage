@@ -98,7 +98,7 @@ manpages =
 Or in `pyproject.toml` (requires setuptools >= 62.2.0):
 
 ```toml
-[build_manpages]
+[tool.build_manpages]
 manpages = [
     "man/foo.1:object=parser:pyfile=bin/foo.py",
     "man/bar.1:function=get_parser:pyfile=bin/bar",
