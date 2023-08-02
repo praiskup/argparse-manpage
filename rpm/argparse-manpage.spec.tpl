@@ -80,6 +80,7 @@ Requires: python2-%name = %version-%release
 %package -n     python2-%name
 Summary:        %{sum Python 2}
 Requires:       python2-setuptools
+Requires:       python2-toml
 
 %description -n python2-%name
 %{desc}
