@@ -30,7 +30,7 @@ setup(
     name='argparse-manpage',
     version=__version__,
     url='https://github.com/praiskup/argparse-manpage',
-    license='Apache 2.0',
+    license='Apache-2.0',
     author='Gabriele Giammatteo',
     author_email='gabriele.giammatteo@eng.it',
     maintainer='Pavel Raiskup',
