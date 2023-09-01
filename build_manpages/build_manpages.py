@@ -39,6 +39,8 @@ def parse_manpages_spec(string):
     for spec in string.strip().split('\n'):
         manpagedata = {}
         output = True
+
+        basename = None
         for option in spec.split(':'):
             if output:
                 outputfile = option
@@ -57,7 +59,7 @@ def parse_manpages_spec(string):
                 manpagedata['import_type'] = oname
                 manpagedata['import_from'] = ovalue
                 if oname == 'pyfile':
-                    manpagedata['prog'] = os.path.basename(ovalue)
+                    basename = os.path.basename(ovalue)
 
             elif oname == 'format':
                 assert(not 'format' in manpagedata)
@@ -72,6 +74,9 @@ def parse_manpages_spec(string):
 
             else:
                 raise ValueError("Unknown manpage configuration option: {}".format(oname))
+
+        if "prog" not in manpagedata and basename:
+            manpagedata["prog"] = basename
 
         manpages_data[outputfile] = manpagedata
 
