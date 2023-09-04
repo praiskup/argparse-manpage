@@ -5,6 +5,13 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.4
+
+* The `prog=` specifier (in setup.py/setup.cfg/pyproject.toml) is now
+  better handled so it doesn't conflict with ArgumentParser(prog=..).
+  Fixes https://github.com/praiskup/argparse-manpage/issues/79
+
+
 News in v4.3
 
 * The pyproject.toml parsing feature now depends on the python3-tomli library
