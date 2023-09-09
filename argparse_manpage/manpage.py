@@ -169,7 +169,7 @@ class Manpage(object):
 
         self.formatter = self.parser._get_formatter()
         self.mf = _ManpageFormatter(self.prog, self.formatter, format=self.format)
-        self.synopsis = self.parser.format_usage().split(':')[-1].split()
+        self.synopsis = self.parser.format_usage().split(':', 1)[-1].split()
 
         self.date = self._data.get("date")
         if not self.date:
