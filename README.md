@@ -47,24 +47,47 @@ Alternatively those options above can be combined with
   variable.
 
 
-## Use with setup.py
+## Use with pyproject.toml
 
-First, you need to declare that `setup.py` uses an external package in your
-`pyproject.toml` file:
+First, you need to declare in `pyproject.toml` that argparse-manpage is needed
+at build-time and use the setuptools.builds_meta` backend:
 
 ```toml
 [build-system]
 requires = ["argparse-manpage[setuptools]"]
+build-backend = "setuptools.build_meta"
 ```
 
-Alternatively you can place the `build_manpages` (sub)directory from this
-project somewhere onto `PYTHONPATH` so you can use it in `setup.py`.  For
+Alternatively, you can place the `build_manpages` (sub)directory from this
+project somewhere onto `PYTHONPATH` so you can use it at build time.  For
 example:
 
 ```bash
 git submodule add --name build_manpages https://github.com/praiskup/build_manpages
 git submodule update --init
 ```
+
+Then in `pyproject.toml` (re)define `cmdclass` commands:
+
+```toml
+[tool.setuptools.cmdclass]
+build_py = "build_manpages.build_py"
+install = "build_manpages.install"
+build_manpages = "build_manpages.build_manpages"
+```
+
+And specify the list of built manual pages:
+
+```toml
+[tool.build_manpages]
+manpages = [
+    "man/foo.1:object=parser:pyfile=bin/foo.py",
+    "man/bar.1:function=get_parser:pyfile=bin/bar",
+    "man/baz.1:function=get_parser:pyfile=bin/bar:prog=baz",
+]
+```
+
+## Use with setup.py
 
 In your `setup.py` use pattern like:
 
@@ -95,16 +118,7 @@ manpages =
     man/baz.1:function=get_parser:pyfile=bin/bar:prog=baz
 ```
 
-Or in `pyproject.toml` (requires setuptools >= 62.2.0):
-
-```toml
-[tool.build_manpages]
-manpages = [
-    "man/foo.1:object=parser:pyfile=bin/foo.py",
-    "man/bar.1:function=get_parser:pyfile=bin/bar",
-    "man/baz.1:function=get_parser:pyfile=bin/bar:prog=baz",
-]
-```
+## List of manual pages
 
 The format of those lines is a colon separated list of arguments/options.  The
 first argument determines the filename of the generated manual page.  Then
