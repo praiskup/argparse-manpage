@@ -5,6 +5,14 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.5
+
+* We newly provide `build_manpages.build_py` and `build_manpages.install`
+  command classes that are re-usable from `pyproject.toml`.  No need to
+  provide `setup.py` because of `argparse-manpage`.  Solved issue#85.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 News in v4.4
 
 * The `prog=` specifier (in setup.py/setup.cfg/pyproject.toml) is now
