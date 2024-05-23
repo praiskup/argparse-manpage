@@ -3,7 +3,7 @@ BUILD_HELPER := ./build-helper
 
 VERSION = $(shell $(BUILD_HELPER) --version)
 RELEASE = $(shell $(BUILD_HELPER) --release)
-DATE = $(shell date +'%a %b %d %Y')
+DATE = $(shell LC_ALL=C date +'%a %b %d %Y')
 TARBALL = argparse-manpage-$(VERSION).tar.gz
 
 all: argparse-manpage.spec argparse-manpage-$(VERSION).tar.gz
