@@ -1,0 +1,1009 @@
+.TH COPR "1" "2024\-05\-22" "example setup\-py\-overriden" "Generated Python Manual"
+.SH NAME
+copr
+.SH SYNOPSIS
+.B copr
+[-h] [--debug] [--config CONFIG] [--version] {hidden,whoami,list,mock-config,create,modify,delete,fork,build,buildpypi,buildgem,buildfedpkg,buildtito,buildmock,status,download-build,cancel,watch-build,delete-build,edit-chroot,get-chroot,add-package-tito,edit-package-tito,add-package-pypi,edit-package-pypi,add-package-mockscm,edit-package-mockscm,add-package-rubygems,edit-package-rubygems,list-packages,list-package-names,get-package,delete-package,reset-package,build-package,build-module} ...
+
+.SH OPTIONS
+.TP
+\fB\-\-debug\fR
+Enable debug output
+
+.TP
+\fB\-\-config\fR \fI\,CONFIG\/\fR
+Path to an alternative configuration file
+
+.TP
+\fB\-\-version\fR
+show program's version number and exit
+
+.SH
+ACTIONS
+.TP
+\fBcopr\fR \fI\,whoami\/\fR
+Print username that the client authenticates with against copr\-frontend
+.TP
+\fBcopr\fR \fI\,list\/\fR
+List all the copr of the provided 
+.TP
+\fBcopr\fR \fI\,mock\-config\/\fR
+Get the mock profile (similar to koji mock\-config)
+.TP
+\fBcopr\fR \fI\,create\/\fR
+Create a new copr
+.TP
+\fBcopr\fR \fI\,modify\/\fR
+Modify existing copr
+.TP
+\fBcopr\fR \fI\,delete\/\fR
+Deletes the entire project
+.TP
+\fBcopr\fR \fI\,fork\/\fR
+Fork the project and builds in it
+.TP
+\fBcopr\fR \fI\,build\/\fR
+Build packages to a specified copr
+.TP
+\fBcopr\fR \fI\,buildpypi\/\fR
+Build PyPI package to a specified copr
+.TP
+\fBcopr\fR \fI\,buildgem\/\fR
+Build gem from rubygems.org to a specified copr
+.TP
+\fBcopr\fR \fI\,buildfedpkg\/\fR
+Build package from pkgs.fedoraproject.org
+.TP
+\fBcopr\fR \fI\,buildtito\/\fR
+submit a build from Git repository via Tito to a specified copr
+.TP
+\fBcopr\fR \fI\,buildmock\/\fR
+submit a build from SCM repository via Mock to a specified copr
+.TP
+\fBcopr\fR \fI\,status\/\fR
+Get build status of build specified by its ID
+.TP
+\fBcopr\fR \fI\,download\-build\/\fR
+Fetches built packages
+.TP
+\fBcopr\fR \fI\,cancel\/\fR
+Cancel build specified by its ID
+.TP
+\fBcopr\fR \fI\,watch\-build\/\fR
+Watch status and progress of build(s) specified by their ID
+.TP
+\fBcopr\fR \fI\,delete\-build\/\fR
+Delete build specified by its ID
+.TP
+\fBcopr\fR \fI\,edit\-chroot\/\fR
+Edit chroot of a project
+.TP
+\fBcopr\fR \fI\,get\-chroot\/\fR
+Get chroot of a project
+.TP
+\fBcopr\fR \fI\,add\-package\-tito\/\fR
+Creates a new Tito package
+.TP
+\fBcopr\fR \fI\,edit\-package\-tito\/\fR
+Edits an existing Tito package
+.TP
+\fBcopr\fR \fI\,add\-package\-pypi\/\fR
+Creates a new PyPI package
+.TP
+\fBcopr\fR \fI\,edit\-package\-pypi\/\fR
+Edits an existing PyPI package
+.TP
+\fBcopr\fR \fI\,add\-package\-mockscm\/\fR
+Creates a new Mock\-SCM package
+.TP
+\fBcopr\fR \fI\,edit\-package\-mockscm\/\fR
+Edits an existing Mock\-SCM package
+.TP
+\fBcopr\fR \fI\,add\-package\-rubygems\/\fR
+Creates a new RubyGems package
+.TP
+\fBcopr\fR \fI\,edit\-package\-rubygems\/\fR
+Edits a new RubyGems package
+.TP
+\fBcopr\fR \fI\,list\-packages\/\fR
+Returns list of packages in the given copr
+.TP
+\fBcopr\fR \fI\,list\-package\-names\/\fR
+Returns list of package names in the given copr
+.TP
+\fBcopr\fR \fI\,get\-package\/\fR
+Returns package of the given name in the given copr
+.TP
+\fBcopr\fR \fI\,delete\-package\/\fR
+Deletes the specified package
+.TP
+\fBcopr\fR \fI\,reset\-package\/\fR
+Resets (clears) default source of the specified package
+.TP
+\fBcopr\fR \fI\,build\-package\/\fR
+Builds the package from its default source
+.TP
+\fBcopr\fR \fI\,build\-module\/\fR
+Builds a given module in Copr
+
+.SH COMMAND \fI\,'copr whoami'\/\fR
+usage: copr whoami [\-h]
+
+.SH COMMAND \fI\,'copr list'\/\fR
+usage: copr list [\-h] [username|@groupname]
+
+.TP
+\fBusername|@groupname\fR
+The username or @groupname that you would like to list the coprs of (defaults
+to current user)
+
+.SH COMMAND \fI\,'copr mock\-config'\/\fR
+usage: copr mock\-config [\-h] project chroot
+
+.TP
+\fBproject\fR
+Expected format is <user>/<project>, <group>/<project> (including '@') or
+<project> (name of project you own).
+
+.TP
+\fBchroot\fR
+chroot id, e.g. 'fedora\-rawhide\-x86_64'
+
+.SH COMMAND \fI\,'copr create'\/\fR
+usage: copr create [\-h] [\-\-chroot CHROOTS] [\-\-repo REPOS]
+                   [\-\-initial\-pkgs INITIAL_PKGS] [\-\-description DESCRIPTION]
+                   [\-\-instructions INSTRUCTIONS]
+                   [\-\-disable_createrepo DISABLE_CREATEREPO]
+                   [\-\-enable\-net {on,off}] [\-\-unlisted\-on\-hp {on,off}]
+                   [\-\-persistent] [\-\-auto\-prune {on,off}]
+                   name
+
+.TP
+\fBname\fR
+The name of the copr to create
+
+.SH OPTIONS \fI\,'copr create'\/\fR
+.TP
+\fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+Chroot to use for this copr
+
+.TP
+\fB\-\-repo\fR \fI\,REPOS\/\fR
+Repository to add to this copr
+
+.TP
+\fB\-\-initial\-pkgs\fR \fI\,INITIAL_PKGS\/\fR
+List of packages URL to build in this new copr
+
+.TP
+\fB\-\-description\fR \fI\,DESCRIPTION\/\fR
+Description of the copr
+
+.TP
+\fB\-\-instructions\fR \fI\,INSTRUCTIONS\/\fR
+Instructions for the copr
+
+.TP
+\fB\-\-disable_createrepo\fR \fI\,DISABLE_CREATEREPO\/\fR
+Disable metadata auto generation
+
+.TP
+\fB\-\-enable\-net\fR \fI\,{on,off}\/\fR
+If net should be enabled for builds in this project (default is off)
+
+.TP
+\fB\-\-unlisted\-on\-hp\fR \fI\,{on,off}\/\fR
+The project will not be shown on COPR home page
+
+.TP
+\fB\-\-persistent\fR
+Project and its builds will be undeletable. This option can only be specified
+by a COPR admin.
+
+.TP
+\fB\-\-auto\-prune\fR \fI\,{on,off}\/\fR
+If auto\-deletion of project's obsoleted builds should be enabled (default is
+on). This option can only be specified by a COPR admin.
+
+.SH COMMAND \fI\,'copr modify'\/\fR
+usage: copr modify [\-h] [\-\-chroot CHROOTS] [\-\-description DESCRIPTION]
+                   [\-\-instructions INSTRUCTIONS] [\-\-repo REPOS]
+                   [\-\-disable_createrepo DISABLE_CREATEREPO]
+                   [\-\-enable\-net {on,off}] [\-\-unlisted\-on\-hp {on,off}]
+                   [\-\-auto\-prune {on,off}]
+                   name
+
+.TP
+\fBname\fR
+The name of the copr to modify
+
+.SH OPTIONS \fI\,'copr modify'\/\fR
+.TP
+\fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+Chroot to use for this copr
+
+.TP
+\fB\-\-description\fR \fI\,DESCRIPTION\/\fR
+Description of the copr
+
+.TP
+\fB\-\-instructions\fR \fI\,INSTRUCTIONS\/\fR
+Instructions for the copr
+
+.TP
+\fB\-\-repo\fR \fI\,REPOS\/\fR
+Repository to add to this copr
+
+.TP
+\fB\-\-disable_createrepo\fR \fI\,DISABLE_CREATEREPO\/\fR
+Disable metadata auto generation
+
+.TP
+\fB\-\-enable\-net\fR \fI\,{on,off}\/\fR
+If net should be enabled for builds in this project (default is "don't
+change")
+
+.TP
+\fB\-\-unlisted\-on\-hp\fR \fI\,{on,off}\/\fR
+The project will not be shown on COPR home page
+
+.TP
+\fB\-\-auto\-prune\fR \fI\,{on,off}\/\fR
+If auto\-deletion of project's obsoleted builds should be enabled. This option
+can only be specified by a COPR admin.
+
+.SH COMMAND \fI\,'copr delete'\/\fR
+usage: copr delete [\-h] copr
+
+.TP
+\fBcopr\fR
+Name of your project to be deleted.
+
+.SH COMMAND \fI\,'copr fork'\/\fR
+usage: copr fork [\-h] [\-\-confirm] src dst
+
+.TP
+\fBsrc\fR
+Which project should be forked
+
+.TP
+\fBdst\fR
+Name of the new project
+
+.SH OPTIONS \fI\,'copr fork'\/\fR
+.TP
+\fB\-\-confirm\fR
+Confirm forking into existing project
+
+.SH COMMAND \fI\,'copr build'\/\fR
+usage: copr build [\-h] [\-\-memory MEMORY] [\-\-timeout TIMEOUT] [\-\-nowait]
+                  [\-r CHROOTS] [\-\-background]
+                  copr pkgs [pkgs ...]
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.TP
+\fBpkgs\fR
+filename of SRPM or URL of packages to build
+
+.SH OPTIONS \fI\,'copr build'\/\fR
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.SH COMMAND \fI\,'copr buildpypi'\/\fR
+usage: copr buildpypi [\-h] [\-\-pythonversions [VERSION ...]]
+                      [\-\-packageversion PYPIVERSION] \-\-packagename PYPINAME
+                      [\-\-memory MEMORY] [\-\-timeout TIMEOUT] [\-\-nowait]
+                      [\-r CHROOTS] [\-\-background]
+                      copr
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr buildpypi'\/\fR
+.TP
+\fB\-\-pythonversions\fR \fI\,[VERSION ...]\/\fR
+For what Python versions to build (by default: 3 2)
+
+.TP
+\fB\-\-packageversion\fR \fI\,PYPIVERSION\/\fR
+Version of the PyPI package to be built (by default latest)
+
+.TP
+\fB\-\-packagename\fR \fI\,PYPINAME\/\fR
+Name of the PyPI package to be built, required.
+
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.SH COMMAND \fI\,'copr buildgem'\/\fR
+usage: copr buildgem [\-h] [\-\-gem GEM] [\-\-memory MEMORY] [\-\-timeout TIMEOUT]
+                     [\-\-nowait] [\-r CHROOTS] [\-\-background]
+                     copr
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr buildgem'\/\fR
+.TP
+\fB\-\-gem\fR \fI\,GEM\/\fR
+Specify gem name
+
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.SH COMMAND \fI\,'copr buildfedpkg'\/\fR
+usage: copr buildfedpkg [\-h] \-\-clone\-url URL [\-\-branch BRANCH]
+                        [\-\-memory MEMORY] [\-\-timeout TIMEOUT] [\-\-nowait]
+                        [\-r CHROOTS] [\-\-background]
+                        copr
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr buildfedpkg'\/\fR
+.TP
+\fB\-\-clone\-url\fR \fI\,URL\/\fR
+Specify clone url for the distgit repository
+
+.TP
+\fB\-\-branch\fR \fI\,BRANCH\/\fR
+Specify branch to be used
+
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.SH COMMAND \fI\,'copr buildtito'\/\fR
+usage: copr buildtito [\-h] \-\-git\-url URL [\-\-git\-dir DIRECTORY]
+                      [\-\-git\-branch BRANCH] [\-\-test {on,off}]
+                      [\-\-memory MEMORY] [\-\-timeout TIMEOUT] [\-\-nowait]
+                      [\-r CHROOTS] [\-\-background]
+                      copr
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr buildtito'\/\fR
+.TP
+\fB\-\-git\-url\fR \fI\,URL\/\fR
+URL to a project managed by Tito
+
+.TP
+\fB\-\-git\-dir\fR \fI\,DIRECTORY\/\fR
+Relative path from Git root to directory containing .spec file
+
+.TP
+\fB\-\-git\-branch\fR \fI\,BRANCH\/\fR
+Git branch that you want to build from
+
+.TP
+\fB\-\-test\fR \fI\,{on,off}\/\fR
+Build the last commit instead of the last release tag
+
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.SH COMMAND \fI\,'copr buildmock'\/\fR
+usage: copr buildmock [\-h] [\-\-scm\-type TYPE] [\-\-scm\-url URL]
+                      [\-\-scm\-branch BRANCH] [\-\-spec FILE] [\-\-memory MEMORY]
+                      [\-\-timeout TIMEOUT] [\-\-nowait] [\-r CHROOTS]
+                      [\-\-background]
+                      copr
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr buildmock'\/\fR
+.TP
+\fB\-\-scm\-type\fR \fI\,TYPE\/\fR
+specify versioning tool, default is 'git'
+
+.TP
+\fB\-\-scm\-url\fR \fI\,URL\/\fR
+url to a project versioned by Git or SVN, required
+
+.TP
+\fB\-\-scm\-branch\fR \fI\,BRANCH\/\fR
+
+.TP
+\fB\-\-spec\fR \fI\,FILE\/\fR
+relative path from SCM root to .spec file, required
+
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.SH COMMAND \fI\,'copr status'\/\fR
+usage: copr status [\-h] build_id
+
+.TP
+\fBbuild_id\fR
+Build ID
+
+.SH COMMAND \fI\,'copr download\-build'\/\fR
+usage: copr download\-build [\-h] [\-r CHROOTS] [\-\-dest DEST] build_id
+
+.TP
+\fBbuild_id\fR
+Build ID
+
+.SH OPTIONS \fI\,'copr download\-build'\/\fR
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+Select chroots to fetch
+
+.TP
+\fB\-\-dest\fR \fI\,DEST\/\fR, \fB\-d\fR \fI\,DEST\/\fR
+Base directory to store packages
+
+.SH COMMAND \fI\,'copr cancel'\/\fR
+usage: copr cancel [\-h] build_id
+
+.TP
+\fBbuild_id\fR
+Build ID
+
+.SH COMMAND \fI\,'copr watch\-build'\/\fR
+usage: copr watch\-build [\-h] build_id [build_id ...]
+
+.TP
+\fBbuild_id\fR
+Build ID
+
+.SH COMMAND \fI\,'copr delete\-build'\/\fR
+usage: copr delete\-build [\-h] build_id
+
+.TP
+\fBbuild_id\fR
+Build ID
+
+.SH COMMAND \fI\,'copr edit\-chroot'\/\fR
+usage: copr edit\-chroot [\-h] [\-\-upload\-comps FILEPATH | \-\-delete\-comps]
+                        [\-\-packages PACKAGES] [\-\-repos REPOS]
+                        coprchroot
+
+.TP
+\fBcoprchroot\fR
+Path to a project chroot as owner/project/chroot or project/chroot
+
+.SH OPTIONS \fI\,'copr edit\-chroot'\/\fR
+.TP
+\fB\-\-upload\-comps\fR \fI\,FILEPATH\/\fR
+filepath to the comps.xml file to be uploaded
+
+.TP
+\fB\-\-delete\-comps\fR
+deletes already existing comps.xml for the chroot
+
+.TP
+\fB\-\-packages\fR \fI\,PACKAGES\/\fR
+space separated string of package names to be added to buildroot
+
+.TP
+\fB\-\-repos\fR \fI\,REPOS\/\fR
+space separated string of additional repo urls for chroot
+
+.SH COMMAND \fI\,'copr get\-chroot'\/\fR
+usage: copr get\-chroot [\-h] coprchroot
+
+.TP
+\fBcoprchroot\fR
+Path to a project chroot as owner/project/chroot or project/chroot
+
+.SH COMMAND \fI\,'copr add\-package\-tito'\/\fR
+usage: copr add\-package\-tito [\-h] \-\-git\-url URL [\-\-git\-dir DIRECTORY]
+                             [\-\-git\-branch BRANCH] [\-\-test {on,off}]
+                             \-\-name PKGNAME [\-\-webhook\-rebuild {on,off}]
+                             copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr add\-package\-tito'\/\fR
+.TP
+\fB\-\-git\-url\fR \fI\,URL\/\fR
+URL to a project managed by Tito
+
+.TP
+\fB\-\-git\-dir\fR \fI\,DIRECTORY\/\fR
+Relative path from Git root to directory containing .spec file
+
+.TP
+\fB\-\-git\-branch\fR \fI\,BRANCH\/\fR
+Git branch that you want to build from
+
+.TP
+\fB\-\-test\fR \fI\,{on,off}\/\fR
+Build the last commit instead of the last release tag
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr edit\-package\-tito'\/\fR
+usage: copr edit\-package\-tito [\-h] \-\-git\-url URL [\-\-git\-dir DIRECTORY]
+                              [\-\-git\-branch BRANCH] [\-\-test {on,off}]
+                              \-\-name PKGNAME [\-\-webhook\-rebuild {on,off}]
+                              copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr edit\-package\-tito'\/\fR
+.TP
+\fB\-\-git\-url\fR \fI\,URL\/\fR
+URL to a project managed by Tito
+
+.TP
+\fB\-\-git\-dir\fR \fI\,DIRECTORY\/\fR
+Relative path from Git root to directory containing .spec file
+
+.TP
+\fB\-\-git\-branch\fR \fI\,BRANCH\/\fR
+Git branch that you want to build from
+
+.TP
+\fB\-\-test\fR \fI\,{on,off}\/\fR
+Build the last commit instead of the last release tag
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr add\-package\-pypi'\/\fR
+usage: copr add\-package\-pypi [\-h] [\-\-pythonversions [VERSION ...]]
+                             [\-\-packageversion PYPIVERSION]
+                             \-\-packagename PYPINAME \-\-name PKGNAME
+                             [\-\-webhook\-rebuild {on,off}]
+                             copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr add\-package\-pypi'\/\fR
+.TP
+\fB\-\-pythonversions\fR \fI\,[VERSION ...]\/\fR
+For what Python versions to build (by default: 3 2)
+
+.TP
+\fB\-\-packageversion\fR \fI\,PYPIVERSION\/\fR
+Version of the PyPI package to be built (by default latest)
+
+.TP
+\fB\-\-packagename\fR \fI\,PYPINAME\/\fR
+Name of the PyPI package to be built, required.
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr edit\-package\-pypi'\/\fR
+usage: copr edit\-package\-pypi [\-h] [\-\-pythonversions [VERSION ...]]
+                              [\-\-packageversion PYPIVERSION]
+                              \-\-packagename PYPINAME \-\-name PKGNAME
+                              [\-\-webhook\-rebuild {on,off}]
+                              copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr edit\-package\-pypi'\/\fR
+.TP
+\fB\-\-pythonversions\fR \fI\,[VERSION ...]\/\fR
+For what Python versions to build (by default: 3 2)
+
+.TP
+\fB\-\-packageversion\fR \fI\,PYPIVERSION\/\fR
+Version of the PyPI package to be built (by default latest)
+
+.TP
+\fB\-\-packagename\fR \fI\,PYPINAME\/\fR
+Name of the PyPI package to be built, required.
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr add\-package\-mockscm'\/\fR
+usage: copr add\-package\-mockscm [\-h] [\-\-scm\-type TYPE] [\-\-scm\-url URL]
+                                [\-\-scm\-branch BRANCH] [\-\-spec FILE]
+                                \-\-name PKGNAME [\-\-webhook\-rebuild {on,off}]
+                                copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr add\-package\-mockscm'\/\fR
+.TP
+\fB\-\-scm\-type\fR \fI\,TYPE\/\fR
+specify versioning tool, default is 'git'
+
+.TP
+\fB\-\-scm\-url\fR \fI\,URL\/\fR
+url to a project versioned by Git or SVN, required
+
+.TP
+\fB\-\-scm\-branch\fR \fI\,BRANCH\/\fR
+
+.TP
+\fB\-\-spec\fR \fI\,FILE\/\fR
+relative path from SCM root to .spec file, required
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr edit\-package\-mockscm'\/\fR
+usage: copr edit\-package\-mockscm [\-h] [\-\-scm\-type TYPE] [\-\-scm\-url URL]
+                                 [\-\-scm\-branch BRANCH] [\-\-spec FILE]
+                                 \-\-name PKGNAME [\-\-webhook\-rebuild {on,off}]
+                                 copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr edit\-package\-mockscm'\/\fR
+.TP
+\fB\-\-scm\-type\fR \fI\,TYPE\/\fR
+specify versioning tool, default is 'git'
+
+.TP
+\fB\-\-scm\-url\fR \fI\,URL\/\fR
+url to a project versioned by Git or SVN, required
+
+.TP
+\fB\-\-scm\-branch\fR \fI\,BRANCH\/\fR
+
+.TP
+\fB\-\-spec\fR \fI\,FILE\/\fR
+relative path from SCM root to .spec file, required
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr add\-package\-rubygems'\/\fR
+usage: copr add\-package\-rubygems [\-h] [\-\-gem GEM] \-\-name PKGNAME
+                                 [\-\-webhook\-rebuild {on,off}]
+                                 copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr add\-package\-rubygems'\/\fR
+.TP
+\fB\-\-gem\fR \fI\,GEM\/\fR
+Specify gem name
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr edit\-package\-rubygems'\/\fR
+usage: copr edit\-package\-rubygems [\-h] [\-\-gem GEM] \-\-name PKGNAME
+                                  [\-\-webhook\-rebuild {on,off}]
+                                  copr
+
+.TP
+\fBcopr\fR
+The copr repo for the package. Can be just name of project or even in format
+username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr edit\-package\-rubygems'\/\fR
+.TP
+\fB\-\-gem\fR \fI\,GEM\/\fR
+Specify gem name
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of the package to be edited or created
+
+.TP
+\fB\-\-webhook\-rebuild\fR \fI\,{on,off}\/\fR
+Enable auto\-rebuilding.
+
+.SH COMMAND \fI\,'copr list\-packages'\/\fR
+usage: copr list\-packages [\-h] [\-\-with\-latest\-build]
+                          [\-\-with\-latest\-succeeded\-build] [\-\-with\-all\-builds]
+                          copr
+
+.TP
+\fBcopr\fR
+The copr repo to list the packages of. Can be just name of project or even in
+format owner/project.
+
+.SH OPTIONS \fI\,'copr list\-packages'\/\fR
+.TP
+\fB\-\-with\-latest\-build\fR
+Also display data related to the latest build for the package.
+
+.TP
+\fB\-\-with\-latest\-succeeded\-build\fR
+Also display data related to the latest succeeded build for the package.
+
+.TP
+\fB\-\-with\-all\-builds\fR
+Also display data related to the builds for the package.
+
+.SH COMMAND \fI\,'copr list\-package\-names'\/\fR
+usage: copr list\-package\-names [\-h] copr
+
+.TP
+\fBcopr\fR
+The copr repo to list the packages of. Can be just name of project or even in
+format owner/project.
+
+.SH COMMAND \fI\,'copr get\-package'\/\fR
+usage: copr get\-package [\-h] \-\-name PKGNAME [\-\-with\-latest\-build]
+                        [\-\-with\-latest\-succeeded\-build] [\-\-with\-all\-builds]
+                        copr
+
+.TP
+\fBcopr\fR
+The copr repo to list the packages of. Can be just name of project or even in
+format owner/project.
+
+.SH OPTIONS \fI\,'copr get\-package'\/\fR
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of a single package to be displayed
+
+.TP
+\fB\-\-with\-latest\-build\fR
+Also display data related to the latest build for each package.
+
+.TP
+\fB\-\-with\-latest\-succeeded\-build\fR
+Also display data related to the latest succeeded build for each package.
+
+.TP
+\fB\-\-with\-all\-builds\fR
+Also display data related to the builds for each package.
+
+.SH COMMAND \fI\,'copr delete\-package'\/\fR
+usage: copr delete\-package [\-h] \-\-name PKGNAME copr
+
+.TP
+\fBcopr\fR
+The copr repo to list the packages of. Can be just name of project or even in
+format owner/project.
+
+.SH OPTIONS \fI\,'copr delete\-package'\/\fR
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of a package to be deleted
+
+.SH COMMAND \fI\,'copr reset\-package'\/\fR
+usage: copr reset\-package [\-h] \-\-name PKGNAME copr
+
+.TP
+\fBcopr\fR
+The copr repo to list the packages of. Can be just name of project or even in
+format owner/project.
+
+.SH OPTIONS \fI\,'copr reset\-package'\/\fR
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of a package to be reset
+
+.SH COMMAND \fI\,'copr build\-package'\/\fR
+usage: copr build\-package [\-h] [\-\-memory MEMORY] [\-\-timeout TIMEOUT]
+                          [\-\-nowait] [\-r CHROOTS] [\-\-background]
+                          \-\-name PKGNAME
+                          copr
+
+.TP
+\fBcopr\fR
+The copr repo to build the package in. Can be just name of project or even in
+format username/project or @groupname/project.
+
+.SH OPTIONS \fI\,'copr build\-package'\/\fR
+.TP
+\fB\-\-memory\fR \fI\,MEMORY\/\fR
+
+.TP
+\fB\-\-timeout\fR \fI\,TIMEOUT\/\fR
+
+.TP
+\fB\-\-nowait\fR
+Don't wait for build
+
+.TP
+\fB\-r\fR \fI\,CHROOTS\/\fR, \fB\-\-chroot\fR \fI\,CHROOTS\/\fR
+If you don't need this build for all the project's chroots. You can use it
+several times for each chroot you need.
+
+.TP
+\fB\-\-background\fR
+Mark the build as a background job. It will have lesser priority than regular
+builds.
+
+.TP
+\fB\-\-name\fR \fI\,PKGNAME\/\fR
+Name of a package to be built
+
+.SH COMMAND \fI\,'copr build\-module'\/\fR
+usage: copr build\-module [\-h] (\-\-url URL | \-\-yaml YAML) [copr]
+
+.TP
+\fBcopr\fR
+The copr repo to list the packages of. Can be just name of project or even in
+format owner/project.
+
+.SH OPTIONS \fI\,'copr build\-module'\/\fR
+.TP
+\fB\-\-url\fR \fI\,URL\/\fR
+SCM with modulemd file in yaml format
+
+.TP
+\fB\-\-yaml\fR \fI\,YAML\/\fR
+Path to modulemd file in yaml format
+
+.SH COMMENTS
+dummy text
+
+.SH AUTHOR
+.nf
+John Doe <jd@example.com>
+.fi
+
+.SH DISTRIBUTION
+The latest version of example may be downloaded from
+.UR http://example.com
+.UE

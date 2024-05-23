@@ -144,7 +144,7 @@ PYTHONPATH=%buildroot%python2_sitearch %__python2 -m pytest -vv
 PYTHONPATH=%buildroot%python3_sitearch %__python3 -m pytest -vv
 %endif
 %if %{with pyproject}
-%pytest
+%pytest -vv
 %endif
 %endif
 

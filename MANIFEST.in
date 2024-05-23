@@ -2,7 +2,7 @@ include argparse-manpage
 include AUTHORS
 include LICENSE
 include NEWS
-recursive-include examples *.py *.cfg *.md expected-output.1 expected/**.1 requirements.txt
+recursive-include examples *.py *.cfg *.md expected-output.1* expected/**.1 requirements.txt
 recursive-include tests *.py
 recursive-include unittests *.py
 include examples/argument_groups/bin/test
