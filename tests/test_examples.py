@@ -73,28 +73,43 @@ def run_one_installer(installer, args):
     method(args)
 
 
-def file_cmp(file1, file2, filter_string=None):
-    with open(file1, 'r') as f1:
-        with open(file2, 'r') as f2:
-            a1 = f1.readlines()
-            a2 = f2.readlines()
-            if len(a1) != len(a2):
-                # get the pretty diff
-                assert a1 == a2
+def _file_cmp_1(list1, list2, filter_string=None):
+    first = True
+    for left, right in zip(list1, list2):
+        if first:
+            left  = re.sub('[0-9]{4}\\\\-[0-9]{2}\\\\-[0-9]{2}', '!!DATE!!', left)
+            left = left.replace("-dev", ".dev0") # issue #50, setuptools < v60
+            right = re.sub('[0-9]{4}\\\\-[0-9]{2}\\\\-[0-9]{2}', '!!DATE!!', right)
+            first = False
 
-            first = True
-            for left, right in zip(a1, a2):
-                if first:
-                    left  = re.sub('[0-9]{4}\\\\-[0-9]{2}\\\\-[0-9]{2}', '!!DATE!!', left)
-                    left = left.replace("-dev", ".dev0") # issue #50, setuptools < v60
-                    right = re.sub('[0-9]{4}\\\\-[0-9]{2}\\\\-[0-9]{2}', '!!DATE!!', right)
-                    first = False
+        if filter_string is not None:
+            left = filter_string(left)
+            right = filter_string(right)
 
-                if filter_string is not None:
-                    left = filter_string(left)
-                    right = filter_string(right)
+        if left != right:
+            print("Expected: ", right)
+            print("Got:      ", left)
+            return False
+    return True
 
-                assert left == right
+
+def file_cmp(input_file, expected_outputs, filter_string=None):
+    """
+    Compare the generated INPUT_FILE with EXPECTED_OUTPUTS.  EXPECTED_OUTPUTS
+    might be a filename, or list of filenames.  Filter string is an optional
+    string-filter method, if specified - applied on every line on both sides.
+    """
+    with open(input_file, 'r') as f1:
+        if not isinstance(expected_outputs, list):
+            expected_outputs = [expected_outputs]
+        for expected in expected_outputs:
+            with open(expected, 'r') as f2:
+                list1 = f1.readlines()
+                list2 = f2.readlines()
+                if _file_cmp_1(list1, list2, filter_string):
+                    return
+        print("None of ", expected_outputs, " matches ", input_file)
+        assert False
 
 
 class TestAllExamples:
@@ -131,9 +146,10 @@ class TestAllExamples:
                                       '[VERSION ...]')
 
             file_cmp(os.path.join(mandir, os.path.basename(name)),
-                     'expected-output.1',
+                     ['expected-output.1', "expected-output.1.python3.13"],
                      filter_string=version_version_filter)
-            file_cmp(name, 'expected-output.1',
+            file_cmp(name,
+                     ['expected-output.1', "expected-output.1.python3.13"],
                      filter_string=version_version_filter)
 
 
