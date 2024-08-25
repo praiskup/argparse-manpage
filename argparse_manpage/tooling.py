@@ -71,9 +71,11 @@ def write_to_filename(text, filename):
     Write given text into a filename at once.  Pre-create the parent directory
     if it doesn't exist yet.  Print to stdout if filename == '-'.
     """
-    filename = filename if filename != '-' else '/dev/stdout'
-    dirname = os.path.dirname(filename)
-    if dirname and not os.path.exists(dirname):
-        os.makedirs(dirname)
-    with open(filename, 'w') as stream:
-        stream.write(text)
+    if filename == '-':
+        sys.stdout.write(text)
+    else:
+        dirname = os.path.dirname(filename)
+        if dirname and not os.path.exists(dirname):
+            os.makedirs(dirname)
+        with open(filename, 'w') as stream:
+            stream.write(text)
