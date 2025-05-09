@@ -6,7 +6,7 @@ import importlib
 import os
 import sys
 
-from .compat import load_file_as_module, get_module_object
+from .compat import get_module_object, load_file_as_module
 
 
 def _environ_hack():
@@ -18,7 +18,7 @@ def get_parser_from_module(module, objname, objtype='object', prog=None):
     Read the given module and return the requested object from there.
     """
     _environ_hack()
-    # We need to set argv[0] to properly so argparse returns appropriate "usage"
+    # We need to fix up argv[0] so argparse returns appropriate "usage"
     # strings.  Like "usage: argparse-manpage [-h] ...", instead of
     # "usage: setup.py ...".
     backup_argv = sys.argv
@@ -28,7 +28,7 @@ def get_parser_from_module(module, objname, objtype='object', prog=None):
     mod = importlib.import_module(module)
     obj = get_module_object(mod, objname, objtype)
 
-    # Restore callee's argv
+    # Restore caller's argv
     sys.argv = backup_argv
     return obj
 
@@ -39,7 +39,7 @@ def get_parser_from_file(filename, objname, objtype='object', prog=None):
     there.
     """
     _environ_hack()
-    # We need to set argv[0] to properly so argparse returns appropriate "usage"
+    # We need to fix up argv[0] so argparse returns appropriate "usage"
     # strings.  Like "usage: argparse-manpage [-h] ...", instead of
     # "usage: setup.py ...".
     backup_argv = sys.argv
@@ -52,7 +52,7 @@ def get_parser_from_file(filename, objname, objtype='object', prog=None):
     module_loaded = load_file_as_module(filename)
     obj = get_module_object(module_loaded, objname, objtype)
 
-    # Restore callee's argv
+    # Restore caller's argv
     sys.argv = backup_argv
     return obj
 
