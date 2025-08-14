@@ -4,7 +4,7 @@ unit-tests helpers
 
 import os
 from platform import python_version
-from pkg_resources import parse_version
+from packaging import version
 from contextlib import contextmanager
 
 import pytest
@@ -18,7 +18,7 @@ def skip_on_python_older_than(minimal_version, message, condition=None):
     if condition is not None and not condition:
         return
 
-    if parse_version(python_version()) < parse_version(minimal_version):
+    if version.parse(python_version()) < version.parse(minimal_version):
         generic_msg = "Python {0} required, have {1}".format(
             minimal_version,
             python_version(),

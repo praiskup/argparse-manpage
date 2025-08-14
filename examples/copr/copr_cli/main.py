@@ -34,8 +34,6 @@ import copr.exceptions as copr_exceptions
 from .util import ProgressBar
 from .build_config import MockProfile
 
-import pkg_resources
-
 ON_OFF_MAP = {
     'on': True,
     'off': False,
@@ -593,7 +591,13 @@ def version():
         # doesn't matter as the version in the manual page is read directly from
         # setuptools.
         return 'fake'
-    return pkg_resources.require('copr-cli')[0].version
+    try:
+        from importlib.metadata import version
+        return version('copr-cli')
+    except ImportError:
+        # importlib.metadata does not exist in Python <3.8.
+        import pkg_resources
+        return pkg_resources.require('copr-cli')[0].version
 
 
 def setup_parser():
