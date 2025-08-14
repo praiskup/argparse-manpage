@@ -36,8 +36,9 @@ class ManPageWriter(object):
     def __init__(self, parser, values):
         self._parser = parser
         self.values = values
-        self._today = datetime.datetime.utcfromtimestamp(
-            int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+        self._today = datetime.datetime.fromtimestamp(
+            int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
+            datetime.timezone.utc
         )
 
         if isinstance(parser, argparse.ArgumentParser):

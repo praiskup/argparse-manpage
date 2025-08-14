@@ -89,8 +89,9 @@ manpages = [
 ]
 """
 
-DATE = datetime.datetime.utcfromtimestamp(
-           int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+DATE = datetime.datetime.fromtimestamp(
+           int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
+           datetime.timezone.utc
        ).strftime("%Y\\-%m\\-%d")
 
 class TestsArgparseManpageScript:

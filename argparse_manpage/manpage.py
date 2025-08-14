@@ -173,8 +173,9 @@ class Manpage(object):
 
         self.date = self._data.get("date")
         if not self.date:
-            builddate = datetime.datetime.utcfromtimestamp(
-                int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+            builddate = datetime.datetime.fromtimestamp(
+                int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
+                datetime.timezone.utc
             )
             self.date = builddate.strftime('%Y-%m-%d')
 
