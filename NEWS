@@ -5,6 +5,24 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.7
+
+* sys.stdout used instead of /dev/stdout
+
+* fixed build compatibility with newer setuptools
+
+* fixed deprecation warnings for datetime and setuptools
+
+* new compat method for handling SOURCE_DATE_EPOCH
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+News in v4.6
+
+* Fix the build against Python 3.13
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 News in v4.5
 
 * We newly provide `build_manpages.build_py` and `build_manpages.install`
