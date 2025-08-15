@@ -1,3 +1,5 @@
+%global pip_module_name argparse_manpage
+
 %if 0%{?fedora} || 0%{?rhel} >= 9
   %bcond_without   pyproject
   %bcond_with      python2
@@ -34,7 +36,7 @@ BuildArch:      noarch
 
 License:        Apache-2.0
 URL:            https://github.com/praiskup/%{name}
-Source0:        https://github.com/praiskup/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/praiskup/%{name}/archive/v%{version}/%{pip_module_name}-%{version}.tar.gz
 
 %if %{with python2}
 BuildRequires: python2-setuptools python2-devel
@@ -102,7 +104,7 @@ Requires:       python3-setuptools
 
 
 %prep
-%setup -q
+%setup -q -n %{pip_module_name}-%{version}
 
 %if %{with pyproject}
 %generate_buildrequires

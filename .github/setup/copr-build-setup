@@ -12,6 +12,7 @@ PROJECT_PR=praiskup/argparse-manpage-pull-requests
 build_deps=(
     git
     make
+    python3-build
     python3-setuptools
     python-unversioned-command
 )
