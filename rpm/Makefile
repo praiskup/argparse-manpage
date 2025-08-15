@@ -4,14 +4,14 @@ BUILD_HELPER := ./build-helper
 VERSION = $(shell $(BUILD_HELPER) --version)
 RELEASE = $(shell $(BUILD_HELPER) --release)
 DATE = $(shell LC_ALL=C date +'%a %b %d %Y')
-TARBALL = argparse-manpage-$(VERSION).tar.gz
+TARBALL = argparse_manpage-$(VERSION).tar.gz
 
-all: argparse-manpage.spec argparse-manpage-$(VERSION).tar.gz
+all: argparse-manpage.spec $(TARBALL)
 
 .PHONY: $(TARBALL)
 $(TARBALL):
 	rm -f $(TARBALL)
-	cd .. && python3 setup.py sdist && cp "dist/argparse-manpage-$(VERSION).tar.gz" rpm/
+	cd .. && python -m build && cp "dist/argparse_manpage-$(VERSION).tar.gz" rpm/
 
 argparse-manpage.spec: argparse-manpage.spec.tpl ../setup.py
 	@echo "  GEN $@" ; \
