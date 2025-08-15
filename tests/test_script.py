@@ -2,13 +2,11 @@
 Tests for the 'argparse-manpage' script.
 """
 
-import datetime
 import os
 import shutil
 import sys
 import subprocess
 import tempfile
-import time
 import warnings
 
 from packaging import version
@@ -17,6 +15,7 @@ import setuptools
 
 from test_examples import run_setup_py
 from argparse_testlib import pushd
+from argparse_manpage.compat import get_reproducible_date
 
 SIMPLE_FILE_CONTENTS = """\
 import argparse
@@ -89,10 +88,7 @@ manpages = [
 ]
 """
 
-DATE = datetime.datetime.fromtimestamp(
-           int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
-           datetime.timezone.utc
-       ).strftime("%Y\\-%m\\-%d")
+DATE = get_reproducible_date().replace("-", "\\-")
 
 class TestsArgparseManpageScript:
     def setup_method(self, _):

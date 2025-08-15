@@ -2,11 +2,8 @@
 
 """build_manpage command -- Generate man page from setup()"""
 
-import datetime
 import optparse
 import argparse
-import os
-import time
 import warnings
 
 from distutils.core import Command
@@ -23,6 +20,8 @@ from argparse_manpage.tooling import (
     write_to_filename,
 )
 
+from argparse_manpage.compat import get_reproducible_date
+
 warnings.warn(
     "The 'build_manpage' module will be removed in the next argparse-manpage "
     "version v5.  Please migrate to 'build_manpages'.", DeprecationWarning,
@@ -36,10 +35,7 @@ class ManPageWriter(object):
     def __init__(self, parser, values):
         self._parser = parser
         self.values = values
-        self._today = datetime.datetime.fromtimestamp(
-            int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
-            datetime.timezone.utc
-        )
+        self._today = get_reproducible_date().replace("-", "\\-")
 
         if isinstance(parser, argparse.ArgumentParser):
             self._type = 'argparse'
@@ -62,8 +58,8 @@ class ManPageWriter(object):
         prog = self.values["prog"]
         ret = []
 
-        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(prog),
-                                      self._today.strftime('%Y\\-%m\\-%d'), prog, version))
+        ret.append('.TH %s 1 %s "%s v.%s"\n' % (self._markup(prog), self._today,
+                                                prog, version))
 
         description = self.values.get("description")
         if description:

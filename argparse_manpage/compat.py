@@ -2,7 +2,17 @@
 Compatibility hacks for the argparse-manpage project.
 """
 
+import os
 import sys
+import time
+
+import datetime
+try:
+    import datetime.timezone
+    _TZ_ARGS = [datetime.timezone.utc]
+except ImportError:
+    _TZ_ARGS = []
+
 
 # Drop once Python 2.7 is dropped
 # pylint: disable=unused-import
@@ -46,3 +56,13 @@ def load_file_as_module(filename):
     # with Python 2.7 where the imported object did not see it's own
     # globals/imported modules (including the 'argparse' module).
     return load_py_file(filename)
+
+
+def get_reproducible_date():
+    """
+    Return current datetime string, but respect SOURCE_DATE_EPOCH environment
+    variable if specified.
+    """
+    return datetime.datetime.fromtimestamp(
+        int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
+        *_TZ_ARGS).strftime('%Y-%m-%d')
