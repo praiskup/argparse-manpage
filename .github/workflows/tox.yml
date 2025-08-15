@@ -13,7 +13,7 @@ jobs:
   tox_test:
     name: Tox test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run Tox tests
         id: test
         uses: fedora-python/tox-github-action@main
@@ -22,7 +22,15 @@ jobs:
     strategy:
       matrix:
         # sync with tox.ini!
-        tox_env: [py36, py37, py38, py39, py310, py311]
+        tox_env:
+          - py36
+          - py38
+          - py39
+          - py310
+          - py311
+          - py312
+          - py313
+          - py314
 
     # Use GitHub's Linux Docker host
     runs-on: ubuntu-latest
