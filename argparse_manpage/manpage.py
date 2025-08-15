@@ -1,10 +1,8 @@
 from argparse import SUPPRESS, HelpFormatter, _SubParsersAction, _HelpAction
 from collections import OrderedDict
-import datetime
-import os
-import time
 import re
 
+from argparse_manpage.compat import get_reproducible_date
 
 DEFAULT_GROUP_NAMES = {
     # We replace ArgumentGroup title (value) with alias (key).
@@ -173,11 +171,7 @@ class Manpage(object):
 
         self.date = self._data.get("date")
         if not self.date:
-            builddate = datetime.datetime.fromtimestamp(
-                int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
-                datetime.timezone.utc
-            )
-            self.date = builddate.strftime('%Y-%m-%d')
+            self.date = get_reproducible_date()
 
         self.source = self._data.get("project_name")
         if not self.source:
