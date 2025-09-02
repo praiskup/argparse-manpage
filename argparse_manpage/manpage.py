@@ -480,7 +480,7 @@ class _ManpageFormatter(HelpFormatter):
                 continue
             lines.append('.TP')
             lines.append(bold(prog) + ' ' + underline(action.dest))
-            if hasattr(action, 'help'):
+            if hasattr(action, 'help') and action.help:
                 lines.append(self.format_text(action.help))
 
         return '\n'.join(lines)
