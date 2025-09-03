@@ -50,7 +50,7 @@ Alternatively those options above can be combined with
 ## Use with pyproject.toml
 
 First, you need to declare in `pyproject.toml` that argparse-manpage is needed
-at build-time and use the setuptools.builds_meta` backend:
+at build-time and use the `setuptools.builds_meta` backend:
 
 ```toml
 [build-system]
