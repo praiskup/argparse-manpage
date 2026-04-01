@@ -4,6 +4,7 @@ command.
 """
 
 import os
+import re
 import shutil
 
 try:
@@ -34,27 +35,38 @@ from .compat import (
 
 DEFAULT_CMD_NAME = 'build_manpages'
 
+OPTION_RE = re.compile(
+    r':(?P<name>[^:=]+)=(?:"(?P<quoted>[^"]*)"|(?P<plain>[^:]*))'
+)
+
+
 def parse_manpages_spec(string):
     manpages_data = {}
     for spec in string.strip().split('\n'):
         manpagedata = {}
-        output = True
-
         basename = None
-        for option in spec.split(':'):
-            if output:
-                outputfile = option
-                output = False
-                continue
+        outputfile, separator, remainder = spec.partition(':')
+        tail = separator + remainder
+        while tail:
+            match = OPTION_RE.match(tail)
+            if not match:
+                option, _, _ = tail[1:].partition(':')
+                raise ValueError(
+                    "Invalid manpage configuration option {!r}".format(option)
+                )
 
-            oname, ovalue = option.split('=')
+            oname = match.group('name')
+            ovalue = match.group('quoted')
+            if ovalue is None:
+                ovalue = match.group('plain')
+            tail = tail[match.end():]
 
-            if oname == 'function' or oname == 'object':
+            if oname in ('function', 'object'):
                 assert(not 'objtype' in manpagedata)
                 manpagedata['objtype'] = oname
                 manpagedata['objname'] = ovalue
 
-            elif oname == 'pyfile' or oname == 'module':
+            elif oname in ('pyfile', 'module'):
                 assert(not 'import_type' in manpagedata)
                 manpagedata['import_type'] = oname
                 manpagedata['import_from'] = ovalue
