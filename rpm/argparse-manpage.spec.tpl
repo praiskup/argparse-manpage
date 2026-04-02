@@ -139,6 +139,10 @@ Requires:       python3-setuptools
 
 %if %{with check}
 %check
+# Disable pip build isolation to make the tests work in offline environment
+# Fixes https://bugzilla.redhat.com/2417959
+export PIP_NO_BUILD_ISOLATION=0
+
 %if %{with python2}
 PYTHONPATH=%buildroot%python2_sitearch %__python2 -m pytest -vv
 %endif
