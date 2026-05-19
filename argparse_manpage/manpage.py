@@ -362,7 +362,7 @@ def quoted(text):
 
 class _ManpageFormatter(HelpFormatter):
     def __init__(self, prog, old_formatter, format):
-        super().__init__(prog)
+        super(_ManpageFormatter, self).__init__(prog)
         self._prog = prog
         self.of = old_formatter
         assert format in ("pretty", "single-commands-section")
