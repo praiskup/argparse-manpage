@@ -153,6 +153,7 @@ class Manpage(object):
         """
         self.prog = parser.prog
         self.parser = parser
+        self.parser.color = False
         self.format = format
         self._data = _data or {}
         self._match_texts = []
@@ -427,6 +428,7 @@ class _ManpageFormatter(HelpFormatter):
                     lines.append(help)
                     lines.append("")
 
+            parser.color = False
             lines.append(self.format_text(parser.format_usage()))
 
         if parser.description or extra_description:

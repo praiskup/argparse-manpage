@@ -50,6 +50,16 @@ class Tests(unittest.TestCase):
         assert not_exp_line not in manpage_lines
         assert 1 == sum([1 if "COMMAND" in line else 0 for line in manpage_lines])
 
+    def test_no_color_escapes(self):
+        os.environ['FORCE_COLOR'] = '1'
+        parser = argparse.ArgumentParser("color_test")
+        parser.add_argument("--option", help="something")
+        subparsers = parser.add_subparsers(title="actions")
+        subparser = subparsers.add_parser("subparser", help="something else")
+        subparser.add_argument("--actually", help="something")
+        man = Manpage(parser)
+        self.assertNotIn('\x1b', str(man))
+
 
 if __name__ == "__main__":
     unittest.main()
