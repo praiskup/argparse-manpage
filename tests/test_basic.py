@@ -51,6 +51,10 @@ class Tests(unittest.TestCase):
         assert 1 == sum([1 if "COMMAND" in line else 0 for line in manpage_lines])
 
     def test_no_color_escapes(self):
+        """
+        Pyhon 3.14+ adds ANSI escape sequencies by default which should not be
+        presented in generated man pages
+        """
         os.environ['FORCE_COLOR'] = '1'
         parser = argparse.ArgumentParser("color_test")
         parser.add_argument("--option", help="something")
