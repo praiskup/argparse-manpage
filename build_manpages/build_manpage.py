@@ -39,6 +39,7 @@ class ManPageWriter(object):
 
         if isinstance(parser, argparse.ArgumentParser):
             self._type = 'argparse'
+            self._parser.color = False
             if parser.formatter_class == argparse.HelpFormatter:
                 # Hack for issue #36, to have reproducible manual page content
                 # regardless the terminal window size.  Long term we should avoid
