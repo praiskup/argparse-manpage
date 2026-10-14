@@ -5,6 +5,16 @@ WARNING: We'll drop the Python 2.7 support in v5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+News in v4.8
+
+* escape sequences are no longer propagated into the generated man pages
+
+* fixed a traceback when an action has no help text (action.help == None)
+
+* double-quoted values are newly supported in the manpages spec parsing
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 News in v4.7
 
 * sys.stdout used instead of /dev/stdout
