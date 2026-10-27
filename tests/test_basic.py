@@ -12,6 +12,38 @@ from build_manpages.manpage import Manpage
 
 
 class Tests(unittest.TestCase):
+    def test_help_option(self):
+        """Include argparse's help option in the manual's options section."""
+        parser = argparse.ArgumentParser('help_test')
+        lines = str(Manpage(parser)).split('\n')
+        self.assertIn('.SH OPTIONS', lines)
+        self.assertIn(r'\fB\-h\fR, \fB\-\-help\fR', lines)
+        self.assertIn('show this help message and exit', lines)
+
+    def test_subcommand_help_option(self):
+        """Include the help option of each parser in a command hierarchy."""
+        parser = argparse.ArgumentParser('help_test')
+        subparsers = parser.add_subparsers(title='actions')
+        subparsers.add_parser('run', help='Run the command')
+        for output_format in ('pretty', 'single-commands-section'):
+            man = str(Manpage(parser, format=output_format))
+            self.assertEqual(man.count(r'\fB\-h\fR, \fB\-\-help\fR'), 2)
+
+    def test_help_disabled(self):
+        """Do not invent a help option for a parser that disables it."""
+        parser = argparse.ArgumentParser('help_test', add_help=False)
+        man = str(Manpage(parser))
+        self.assertNotIn(r'\fB\-h\fR', man)
+        self.assertNotIn('.SH OPTIONS', man)
+
+    def test_help_suppressed(self):
+        """Keep explicitly suppressed help options out of the manual."""
+        parser = argparse.ArgumentParser('help_test', add_help=False)
+        parser.add_argument('--help', action='help', help=argparse.SUPPRESS)
+        man = str(Manpage(parser))
+        self.assertNotIn(r'\fB\-\-help\fR', man)
+        self.assertNotIn('.SH OPTIONS', man)
+
     def test_backslash_escape(self):
         parser = argparse.ArgumentParser('duh')
         parser.add_argument("--jej", help="c:\\something")
@@ -29,7 +61,7 @@ class Tests(unittest.TestCase):
         man = Manpage(parser1)
         self.assertIn('.SH G1', str(man).split('\n'))
         self.assertIn('.SH G2', str(man).split('\n'))
-        self.assertNotIn('.SH OPTIONS', str(man).split('\n'))
+        self.assertIn('.SH OPTIONS', str(man).split('\n'))
 
     def test_aliases(self):
         skip_on_python_older_than("3", "Python 2 doesn't support aliases=")

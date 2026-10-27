@@ -43,6 +43,11 @@ SIMPLE_OUTPUT = """\
 
 .TP
 \\fBtest\\fR
+
+.SH OPTIONS
+.TP
+\\fB\\-h\\fR, \\fB\\-\\-help\\fR
+show this help message and exit
 """
 
 FULL_OUTPUT = """\
@@ -55,6 +60,11 @@ FULL_OUTPUT = """\
 
 .TP
 \\fBtest\\fR
+
+.SH OPTIONS
+.TP
+\\fB\\-h\\fR, \\fB\\-\\-help\\fR
+show this help message and exit
 .SH EXTRA SECTION
 This is an extra section.
 
