@@ -146,7 +146,7 @@ class Manpage(object):
     # pylint: disable=too-many-instance-attributes
     def __init__(self, parser, _data=None, format='pretty'):
         """
-        Manual page abstraction.  Generates, with the help of formater, a manual
+        Manual page abstraction.  Generates, with the help of formatter, a manual
         page by __str__() method.  Please avoid using the private _data
         argument (see https://github.com/praiskup/argparse-manpage/issues/7),
         instead override the `self.<ATTRIBUTE>` when needed.

@@ -21,7 +21,7 @@ except ImportError:
 
 # A separate try-except block from the one above.  This is more likely to fail
 # than the above setuptools part and we would start using distutils just
-# beacause of the exception.
+# because of the exception.
 try:
     from setuptools.errors import OptionError as DistutilsOptionError
 except ImportError:

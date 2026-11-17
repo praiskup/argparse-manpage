@@ -52,7 +52,7 @@ class Tests(unittest.TestCase):
 
     def test_no_color_escapes(self):
         """
-        Pyhon 3.14+ adds ANSI escape sequencies by default which should not be
+        Python 3.14+ adds ANSI escape sequences by default which should not be
         presented in generated man pages
         """
         os.environ['FORCE_COLOR'] = '1'
