@@ -561,10 +561,6 @@ class _ManpageFormatter(HelpFormatter):
                 return self._format_subparsers(action_group, action,
                                                subcommand)
 
-            if '--help' in action.option_strings:
-                # TODO: put out some man page comment ..
-                continue
-
             if some_action:
                 # Separate actions
                 content.append("")

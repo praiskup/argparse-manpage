@@ -7,6 +7,10 @@ resalloc
 
 .SH OPTIONS
 .TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
+.TP
 \fB\-\-connection\fR \fI\,CONNECTION\/\fR
 
 .TP
@@ -33,6 +37,10 @@ usage: resalloc ticket [\-h] \-\-tag TAGS
 
 .SH OPTIONS \fI\,'resalloc ticket'\/\fR
 .TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
+.TP
 \fB\-\-tag\fR \fI\,TAGS\/\fR
 What tag the Resource should have
 
@@ -43,6 +51,11 @@ usage: resalloc ticket\-check [\-h] ticket
 \fBticket\fR
 Get the ticket
 
+.SH OPTIONS \fI\,'resalloc ticket\-check'\/\fR
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
 .SH COMMAND \fI\,'resalloc ticket\-wait'\/\fR
 usage: resalloc ticket\-wait [\-h] ticket
 
@@ -50,12 +63,22 @@ usage: resalloc ticket\-wait [\-h] ticket
 \fBticket\fR
 ID of ticket to wait for
 
+.SH OPTIONS \fI\,'resalloc ticket\-wait'\/\fR
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
 .SH COMMAND \fI\,'resalloc ticket\-close'\/\fR
 usage: resalloc ticket\-close [\-h] ticket
 
 .TP
 \fBticket\fR
 ID of ticket to be closed
+
+.SH OPTIONS \fI\,'resalloc ticket\-close'\/\fR
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
 
 .SH AUTHOR
 .nf

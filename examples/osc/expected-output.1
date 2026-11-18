@@ -5,6 +5,11 @@ osc \- openSUSE commander command\-line
 .B osc
 [global opts] <command> [--help] [opts] [args] osc --help
 
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
 .SH
 COMMANDS
 .SS \fBosc build\fR
@@ -24,6 +29,10 @@ Build command description.
 options:
 .RS 7
 .TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
+.TP
 \fB\-\-clean\fR
 Delete old build root before initializing it
 .RE
@@ -39,6 +48,10 @@ List command description.
 
 options:
 .RS 7
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
 .TP
 \fB\-M\fR, \fB\-\-meta\fR
 list meta data files
@@ -56,6 +69,14 @@ usage:
 
 Some description.
 
+options:
+.RS 7
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.RE
+
+
 .SS \fBosc foo bar\fR
 help bar
 
@@ -64,6 +85,10 @@ usage: osc [global opts] foo bar [\-h] [\-\-opt\-bar1 OPT_BAR1]
 
 options:
 .RS 7
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
 .TP
 \fB\-\-opt\-bar1\fR \fI\,OPT_BAR1\/\fR
 help opt\-bar1
@@ -81,6 +106,10 @@ usage: osc [global opts] foo baz [\-h] [\-\-opt\-baz1 OPT_BAZ1]
 
 options:
 .RS 7
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+
 .TP
 \fB\-\-opt\-baz1\fR \fI\,OPT_BAZ1\/\fR
 help opt\-baz1
